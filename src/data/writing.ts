@@ -6,8 +6,8 @@ export interface ArticleItem {
   date: string;
   readTime: string;
   url: string;
-  image?: string;
   tags: string[];
+  accentColor: string;
   featured?: boolean;
 }
 
@@ -21,8 +21,8 @@ export const articles: ArticleItem[] = [
     date: "Medium Story",
     readTime: "6 min read",
     url: "https://singhcod3r.medium.com/i-almost-quit-open-source-after-gsoc-2026-then-system-config-printer-changed-everything-49ff8c2707d1",
-    image: "/projects/system-config-printer_preview1.png",
     tags: ["Linux", "OpenPrinting", "Open Source", "system-config-printer", "GSoC"],
+    accentColor: "#00f5d4",
     featured: true,
   },
   {
@@ -34,8 +34,8 @@ export const articles: ArticleItem[] = [
     date: "Technical Analysis",
     readTime: "7 min read",
     url: "https://singhcod3r.medium.com/ai-agents-are-getting-more-powerful-the-next-big-problem-is-containing-them-18c318ebbd29",
-    image: "/projects/Aurai_landing.png",
     tags: ["AI Agents", "LLM Security", "Sandboxing", "Infrastructure", "Systems"],
+    accentColor: "#a855f7",
     featured: true,
   },
   {
@@ -47,8 +47,8 @@ export const articles: ArticleItem[] = [
     date: "Engineering Note",
     readTime: "4 min read",
     url: "https://singhcod3r.medium.com/fixing-a-dead-upstream-url-in-openprinting-a-small-but-important-contribution-e07f94526d09",
-    image: "/projects/system-config-printer-preview2.png",
     tags: ["OpenPrinting", "CUPS", "Linux", "Metadata", "Infrastructure"],
+    accentColor: "#38bdf8",
     featured: true,
   },
   {
@@ -60,8 +60,8 @@ export const articles: ArticleItem[] = [
     date: "Merged PR Story",
     readTime: "5 min read",
     url: "https://singhcod3r.medium.com/my-pull-request-to-openprinting-got-merged-fixing-splix-driver-metadata-23558cb44dfc",
-    image: "/projects/system-config-printer-preview2.png",
     tags: ["OpenPrinting", "SpliX", "CUPS", "PPD Drivers", "Linux"],
+    accentColor: "#f59e0b",
     featured: true,
   },
   {
@@ -73,9 +73,8 @@ export const articles: ArticleItem[] = [
     date: "Milestone Story",
     readTime: "5 min read",
     url: "https://singhcod3r.medium.com/my-first-merged-pull-request-regenerating-printer-data-from-foomatic-db-eba2f7324b34",
-    image: "/projects/system-config-printer_preview1.png",
     tags: ["Foomatic-DB", "Linux", "OpenPrinting", "First PR", "CUPS"],
+    accentColor: "#10b981",
     featured: true,
   },
 ];
-
