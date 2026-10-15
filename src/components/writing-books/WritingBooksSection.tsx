@@ -45,7 +45,7 @@ export function WritingBooksSection() {
   const renderArticleCard = (article: ArticleItem, keyPrefix: string, index: number) => (
     <div
       key={`${keyPrefix}-${article.id}-${index}`}
-      className="w-[300px] sm:w-[360px] md:w-[390px] h-[215px] sm:h-[225px] flex-shrink-0 rounded-2xl glass-panel border border-white/15 hover:border-[#00f5d4]/50 transition-all duration-300 flex flex-col justify-between group p-4 sm:p-5 bg-gradient-to-br from-[#0d111a]/95 via-[#080a0f]/95 to-black relative overflow-hidden select-none hover:-translate-y-1 hover:shadow-[0_15px_30px_-10px_rgba(0,245,212,0.2)]"
+      className="w-[300px] sm:w-[360px] md:w-[390px] h-[215px] sm:h-[225px] flex-shrink-0 rounded-2xl bg-[#0c1018] border border-white/12 hover:border-[#00f5d4]/50 transition-all duration-300 flex flex-col justify-between group p-4 sm:p-5 relative overflow-hidden select-none hover:-translate-y-1 hover:shadow-[0_15px_30px_-10px_rgba(0,245,212,0.2)]"
     >
       {/* Top Ambient Glow */}
       <div

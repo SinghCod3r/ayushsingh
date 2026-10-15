@@ -32,8 +32,8 @@ export function CanvasBackground() {
     }
 
     const isMobile = window.innerWidth < 768;
-    const particleCount = prefersReducedMotion ? 30 : isMobile ? 55 : 130;
-    const maxDistance = isMobile ? 65 : 85;
+    const particleCount = prefersReducedMotion ? 25 : isMobile ? 40 : 70;
+    const maxDistance = isMobile ? 60 : 75;
 
     // Scene, Camera, Renderer
     const scene = new THREE.Scene();
@@ -54,7 +54,7 @@ export function CanvasBackground() {
         alpha: true,
         powerPreference: "high-performance",
       });
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.75));
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.25));
       renderer.setSize(window.innerWidth, window.innerHeight);
       renderer.setClearColor(0x000000, 0);
       container.appendChild(renderer.domElement);
@@ -217,27 +217,35 @@ export function CanvasBackground() {
       }
       particleGeometry.attributes.position.needsUpdate = true;
 
-      // Dynamic Network Lines between nearby particles
+      // Dynamic Network Lines between nearby particles (optimized squared distance check)
       let lineVertexIndex = 0;
       let colorVertexIndex = 0;
+      const maxDistanceSq = maxDistance * maxDistance;
 
       for (let i = 0; i < particleCount; i++) {
-        for (let j = i + 1; j < particleCount; j++) {
-          const dx = positions[i * 3] - positions[j * 3];
-          const dy = positions[i * 3 + 1] - positions[j * 3 + 1];
-          const dz = positions[i * 3 + 2] - positions[j * 3 + 2];
-          const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
+        const i3 = i * 3;
+        const piX = positions[i3];
+        const piY = positions[i3 + 1];
+        const piZ = positions[i3 + 2];
 
-          if (dist < maxDistance && lineVertexIndex < maxLineSegments * 6 - 6) {
+        for (let j = i + 1; j < particleCount; j++) {
+          const j3 = j * 3;
+          const dx = piX - positions[j3];
+          const dy = piY - positions[j3 + 1];
+          const dz = piZ - positions[j3 + 2];
+          const distSq = dx * dx + dy * dy + dz * dz;
+
+          if (distSq < maxDistanceSq && lineVertexIndex < maxLineSegments * 6 - 6) {
+            const dist = Math.sqrt(distSq);
             // Point A
-            linePositions[lineVertexIndex++] = positions[i * 3];
-            linePositions[lineVertexIndex++] = positions[i * 3 + 1];
-            linePositions[lineVertexIndex++] = positions[i * 3 + 2];
+            linePositions[lineVertexIndex++] = piX;
+            linePositions[lineVertexIndex++] = piY;
+            linePositions[lineVertexIndex++] = piZ;
 
             // Point B
-            linePositions[lineVertexIndex++] = positions[j * 3];
-            linePositions[lineVertexIndex++] = positions[j * 3 + 1];
-            linePositions[lineVertexIndex++] = positions[j * 3 + 2];
+            linePositions[lineVertexIndex++] = positions[j3];
+            linePositions[lineVertexIndex++] = positions[j3 + 1];
+            linePositions[lineVertexIndex++] = positions[j3 + 2];
 
             const alpha = 1.0 - dist / maxDistance;
             // Cyan-tinted lines

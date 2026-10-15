@@ -34,7 +34,7 @@ import {
   FaMicrochip,
   FaAws,
 } from "react-icons/fa";
-import { Sparkles, Terminal, CheckCircle2 } from "lucide-react";
+import { Sparkles, CheckCircle2, Cpu } from "lucide-react";
 import { techStackCategories, TechItem } from "@/data/techstack";
 
 // Map each technology name to its authentic brand icon and color
@@ -91,28 +91,62 @@ function getTechMeta(name: string) {
 }
 
 export function TechStackSection() {
-  const [selectedCategory, setSelectedCategory] = useState<string>("ALL");
+  // Active selected tech inspected in the 3D console
   const [activeTech, setActiveTech] = useState<TechItem>(techStackCategories[0].items[0]);
-  const [cardTilt, setCardTilt] = useState<{ [key: string]: { x: number; y: number } }>({});
 
-  const displayedCategories =
-    selectedCategory === "ALL"
-      ? techStackCategories
-      : techStackCategories.filter((c) => c.title === selectedCategory);
+  // Group technologies into two continuous streams
+  // Row 1: Systems, Linux, Languages, and AI Runtimes
+  const row1Categories = techStackCategories.slice(0, 3);
+  const row1Tech: TechItem[] = row1Categories.flatMap((c) => c.items);
+  const stream1: TechItem[] = [...row1Tech, ...row1Tech, ...row1Tech];
 
-  const handleCardMouseMove = (title: string, e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = ((e.clientY - rect.top) / rect.height - 0.5) * -10;
-    const y = ((e.clientX - rect.left) / rect.width - 0.5) * 10;
-    setCardTilt((prev) => ({ ...prev, [title]: { x, y } }));
-  };
-
-  const handleCardMouseLeave = (title: string) => {
-    setCardTilt((prev) => ({ ...prev, [title]: { x: 0, y: 0 } }));
-  };
+  // Row 2: Backend, Frontend, Databases, and DevOps Infrastructure
+  const row2Categories = techStackCategories.slice(3);
+  const row2Tech: TechItem[] = row2Categories.flatMap((c) => c.items);
+  const stream2: TechItem[] = [...row2Tech, ...row2Tech, ...row2Tech];
 
   const activeMeta = getTechMeta(activeTech.name);
   const ActiveIcon = activeMeta.icon;
+
+  const renderTechPill = (tech: TechItem, prefix: string, idx: number) => {
+    const meta = getTechMeta(tech.name);
+    const Icon = meta.icon;
+    const isSelected = activeTech.name === tech.name;
+
+    return (
+      <button
+        key={`${prefix}-${tech.name}-${idx}`}
+        onClick={() => setActiveTech(tech)}
+        type="button"
+        className={`flex items-center gap-3 px-4 py-2.5 rounded-2xl transition-all duration-200 select-none cursor-pointer flex-shrink-0 border ${
+          isSelected
+            ? "bg-white/15 text-white font-bold border-[#00f5d4] shadow-[0_0_20px_rgba(0,245,212,0.3)] scale-[1.03]"
+            : "bg-[#0b0e15] border-white/10 hover:border-white/25 text-neutral-300 hover:text-white hover:bg-[#121622]"
+        }`}
+        style={{
+          boxShadow: isSelected ? `0 0 18px ${meta.color}40` : undefined,
+        }}
+      >
+        <div
+          className="w-7 h-7 rounded-xl flex items-center justify-center shrink-0 border"
+          style={{
+            backgroundColor: `${meta.color}15`,
+            borderColor: `${meta.color}35`,
+          }}
+        >
+          <Icon className="w-4 h-4" style={{ color: meta.color }} />
+        </div>
+        <div className="flex flex-col text-left">
+          <span className="text-xs font-mono font-bold leading-tight truncate max-w-[150px]">
+            {tech.name}
+          </span>
+          <span className="text-[10px] font-mono text-neutral-400">
+            {tech.category}
+          </span>
+        </div>
+      </button>
+    );
+  };
 
   return (
     <section
@@ -123,203 +157,121 @@ export function TechStackSection() {
       {/* Section Motif */}
       <div
         aria-hidden="true"
-        className="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-8 text-xs font-mono text-neutral-400 tracking-wider"
+        className="flex items-center gap-3 sm:gap-4 mb-5 sm:mb-6 text-xs font-mono text-neutral-400 tracking-wider"
       >
         <span className="w-6 sm:w-8 h-[1px] bg-[#00f5d4]" />
         <span className="text-[#00f5d4]">SECTION 04</span>
         <span className="text-neutral-600">//</span>
-        <span>MODERN 3D TECH STACK & ARCHITECTURAL LOGOS</span>
+        <span>CONTINUOUS 3D TECH STACK STREAM</span>
       </div>
 
       {/* Header */}
-      <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-5 pb-8 sm:pb-12 border-b border-white/10 w-full">
+      <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 pb-6 sm:pb-8 border-b border-white/10 w-full">
         <div>
           <h2 className="text-3xl sm:text-5xl md:text-6xl font-black tracking-tight text-white">
             Practical Tech Stack
           </h2>
-          <p className="mt-3 text-sm sm:text-base md:text-lg text-neutral-300 max-w-2xl font-light">
-            Engineered toolchains across open-source daemons, compiler runtimes, and local AI pipelines.
-            Contextualized with authentic brand icons and real production usage.
+          <p className="mt-2 text-sm sm:text-base md:text-lg text-neutral-300 max-w-2xl font-light">
+            Continuous dual-track architectural stream. Click any technology to inspect its production context without stopping the stream.
           </p>
         </div>
 
-        {/* Filter by Category */}
-        <div className="flex flex-wrap gap-1.5 sm:gap-2">
-          <button
-            onClick={() => setSelectedCategory("ALL")}
-            type="button"
-            className={`px-3 py-1.5 rounded-full text-[11px] sm:text-xs font-mono transition cursor-pointer ${
-              selectedCategory === "ALL"
-                ? "bg-[#00f5d4] text-[#08090c] font-bold shadow-[0_0_15px_rgba(0,245,212,0.3)]"
-                : "bg-white/5 text-neutral-400 hover:text-white border border-white/10"
-            }`}
-          >
-            All
-          </button>
-          {techStackCategories.map((c) => (
-            <button
-              key={c.title}
-              onClick={() => setSelectedCategory(c.title)}
-              type="button"
-              className={`px-3 py-1.5 rounded-full text-[11px] sm:text-xs font-mono transition cursor-pointer ${
-                selectedCategory === c.title
-                  ? "bg-[#00f5d4] text-[#08090c] font-bold shadow-[0_0_15px_rgba(0,245,212,0.3)]"
-                  : "bg-white/5 text-neutral-400 hover:text-white border border-white/10"
-              }`}
-            >
-              {c.title}
-            </button>
-          ))}
+        <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-mono text-neutral-300 self-start">
+          <Cpu className="w-3.5 h-3.5 text-[#00f5d4]" />
+          <span>32+ Systems & Architectural Modules</span>
         </div>
       </div>
 
       {/* 3D HOLOGRAPHIC CONTEXT INSPECTOR CONSOLE */}
-      {activeTech && (
+      <div
+        className="mt-6 rounded-2xl sm:rounded-3xl glass-panel border border-white/15 p-5 sm:p-7 relative overflow-hidden bg-gradient-to-br from-[#00f5d4]/[0.06] via-black/80 to-[#0c121e] shadow-2xl transition-all duration-300 w-full"
+        style={{
+          boxShadow: `0 20px 45px -15px ${activeMeta.color}30`,
+        }}
+      >
+        {/* Subtle Ambient Backlight */}
         <div
-          className="mt-8 rounded-2xl sm:rounded-3xl glass-panel border border-[#00f5d4]/40 p-5 sm:p-7 relative overflow-hidden bg-gradient-to-br from-[#00f5d4]/[0.08] via-black/80 to-[#0c121e] shadow-2xl transition-all duration-300 w-full"
-          style={{
-            boxShadow: `0 20px 50px -15px ${activeMeta.color}35`,
-          }}
-        >
-          {/* Subtle Dynamic Ambient Backlight */}
-          <div
-            aria-hidden="true"
-            className="absolute top-0 right-0 w-80 h-80 rounded-full blur-3xl opacity-20 pointer-events-none"
-            style={{ backgroundColor: activeMeta.color }}
-          />
+          aria-hidden="true"
+          className="absolute top-0 right-0 w-72 h-72 rounded-full blur-3xl opacity-20 pointer-events-none"
+          style={{ backgroundColor: activeMeta.color }}
+        />
 
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 relative z-10">
-            <div className="flex items-center gap-4 sm:gap-6">
-              {/* 3D Rotating Logo Emblem */}
-              <div
-                className="w-14 h-14 sm:w-18 sm:h-18 rounded-2xl border flex items-center justify-center p-3 shadow-xl shrink-0 group transition-transform duration-300 hover:scale-105"
-                style={{
-                  backgroundColor: `${activeMeta.color}15`,
-                  borderColor: `${activeMeta.color}50`,
-                  boxShadow: `0 10px 30px -5px ${activeMeta.color}40`,
-                }}
-              >
-                <ActiveIcon
-                  className="w-8 h-8 sm:w-10 sm:h-10 transition-transform duration-500 group-hover:rotate-6"
-                  style={{ color: activeMeta.color }}
-                />
-              </div>
-
-              <div>
-                <div className="flex flex-wrap items-center gap-2 mb-1">
-                  <h3 className="text-xl sm:text-2xl md:text-3xl font-black text-white tracking-tight">
-                    {activeTech.name}
-                  </h3>
-                  <span
-                    className="px-2.5 py-0.5 rounded text-[10px] font-mono font-bold border uppercase"
-                    style={{
-                      backgroundColor: `${activeMeta.color}20`,
-                      color: activeMeta.color,
-                      borderColor: `${activeMeta.color}50`,
-                    }}
-                  >
-                    {activeTech.proficiencyLevel || "Core Focus"}
-                  </span>
-                  <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-white/5 text-neutral-400 border border-white/10">
-                    {activeTech.category}
-                  </span>
-                </div>
-
-                <p className="text-xs sm:text-sm text-neutral-200 font-light max-w-3xl leading-relaxed mt-1">
-                  <span className="text-[#00f5d4] font-mono font-medium">Production Context: </span>
-                  {activeTech.context}
-                </p>
-              </div>
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-5 relative z-10">
+          <div className="flex items-center gap-4 sm:gap-5">
+            {/* 3D Logo Emblem */}
+            <div
+              className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl border flex items-center justify-center p-3 shadow-xl shrink-0 group transition-transform duration-300 hover:scale-105"
+              style={{
+                backgroundColor: `${activeMeta.color}15`,
+                borderColor: `${activeMeta.color}50`,
+                boxShadow: `0 10px 25px -5px ${activeMeta.color}40`,
+              }}
+            >
+              <ActiveIcon
+                className="w-8 h-8 sm:w-9 sm:h-9 transition-transform duration-500 group-hover:rotate-6"
+                style={{ color: activeMeta.color }}
+              />
             </div>
 
-            <div className="flex items-center gap-2 text-xs font-mono text-neutral-400 shrink-0 self-start lg:self-center border-t lg:border-t-0 pt-3 lg:pt-0 border-white/10 w-full lg:w-auto justify-between lg:justify-end">
-              <span className="flex items-center gap-1.5 text-emerald-400">
-                <CheckCircle2 className="w-3.5 h-3.5" />
-                <span>Verified in Codebase</span>
-              </span>
+            <div>
+              <div className="flex flex-wrap items-center gap-2 mb-1">
+                <h3 className="text-xl sm:text-2xl md:text-3xl font-black text-white tracking-tight">
+                  {activeTech.name}
+                </h3>
+                <span
+                  className="px-2.5 py-0.5 rounded text-[10px] font-mono font-bold border uppercase"
+                  style={{
+                    backgroundColor: `${activeMeta.color}20`,
+                    color: activeMeta.color,
+                    borderColor: `${activeMeta.color}50`,
+                  }}
+                >
+                  {activeTech.proficiencyLevel || "Core Focus"}
+                </span>
+                <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-white/5 text-neutral-400 border border-white/10">
+                  {activeTech.category}
+                </span>
+              </div>
+
+              <p className="text-xs sm:text-sm text-neutral-200 font-light max-w-3xl leading-relaxed mt-0.5">
+                <span className="text-[#00f5d4] font-mono font-medium">Production Context: </span>
+                {activeTech.context}
+              </p>
             </div>
           </div>
+
+          <div className="flex items-center gap-2 text-xs font-mono text-neutral-400 shrink-0 self-start lg:self-center border-t lg:border-t-0 pt-2 lg:pt-0 border-white/10 w-full lg:w-auto justify-between lg:justify-end">
+            <span className="flex items-center gap-1.5 text-emerald-400 text-xs font-mono">
+              <CheckCircle2 className="w-3.5 h-3.5" />
+              <span>Verified in Codebase</span>
+            </span>
+          </div>
         </div>
-      )}
+      </div>
 
-      {/* 3D CATEGORIES GRID WITH AUTHENTIC BRAND LOGOS */}
-      <div className="mt-8 sm:mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
-        {displayedCategories.map((cat) => {
-          const tilt = cardTilt[cat.title] || { x: 0, y: 0 };
-          return (
-            <div
-              key={cat.title}
-              className="perspective-[1000px] w-full"
-              onMouseMove={(e) => handleCardMouseMove(cat.title, e)}
-              onMouseLeave={() => handleCardMouseLeave(cat.title)}
-            >
-              <div
-                className="p-5 sm:p-6 rounded-2xl sm:rounded-3xl glass-panel border border-white/15 flex flex-col justify-between transition-transform duration-200 ease-out h-full bg-gradient-to-br from-[#0c0f16]/90 via-[#07090f]/95 to-black relative overflow-hidden"
-                style={{
-                  transform: `rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`,
-                  boxShadow: "0 20px 40px -15px rgba(0, 0, 0, 0.6)",
-                }}
-              >
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-[11px] font-mono text-[#00f5d4] uppercase tracking-wider font-bold">
-                      {cat.tag}
-                    </span>
-                    <span className="text-[10px] font-mono text-neutral-400">
-                      {cat.items.length} Modules
-                    </span>
-                  </div>
+      {/* DUAL-LINE CONTINUOUS NON-STOP TECH STREAM WITH ZERO EDGE CUTOFF */}
+      <div className="mt-8 relative w-full overflow-hidden py-2 space-y-3.5">
+        {/* Left Gradient Fade Mask (prevents left edge cutoff) */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-y-0 left-0 w-16 sm:w-28 bg-gradient-to-r from-[#08090c] to-transparent z-10"
+        />
 
-                  <h3 className="text-xl font-bold text-white tracking-tight">{cat.title}</h3>
-                  <p className="mt-1 text-xs text-neutral-300 font-light leading-relaxed">
-                    {cat.subtitle}
-                  </p>
+        {/* Right Gradient Fade Mask (prevents right edge cutoff) */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-y-0 right-0 w-16 sm:w-28 bg-gradient-to-l from-[#08090c] to-transparent z-10"
+        />
 
-                  {/* 3D Interactive Technology Badges with Real Brand Logos */}
-                  <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    {cat.items.map((tech) => {
-                      const meta = getTechMeta(tech.name);
-                      const Icon = meta.icon;
-                      const isInspected = activeTech?.name === tech.name;
+        {/* STREAM 1 (Top Line): Glides continuously left without stopping on hover or click */}
+        <div className="animate-tech-stream-left gap-3.5">
+          {stream1.map((tech, i) => renderTechPill(tech, "s1", i))}
+        </div>
 
-                      return (
-                        <button
-                          key={tech.name}
-                          onClick={() => setActiveTech(tech)}
-                          type="button"
-                          className={`flex items-center gap-2.5 p-2 rounded-xl text-xs font-mono transition-all duration-200 text-left cursor-pointer border ${
-                            isInspected
-                              ? "bg-white/15 text-white font-bold border-[#00f5d4] shadow-[0_0_15px_rgba(0,245,212,0.25)] scale-[1.02]"
-                              : "bg-white/5 hover:bg-white/10 border-white/10 text-neutral-300 hover:text-white hover:border-white/20"
-                          }`}
-                        >
-                          <div
-                            className="w-6 h-6 rounded-lg flex items-center justify-center shrink-0 border"
-                            style={{
-                              backgroundColor: `${meta.color}15`,
-                              borderColor: `${meta.color}30`,
-                            }}
-                          >
-                            <Icon
-                              className="w-3.5 h-3.5"
-                              style={{ color: meta.color }}
-                            />
-                          </div>
-                          <span className="truncate">{tech.name}</span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                <div className="mt-6 pt-3 border-t border-white/5 flex items-center justify-between text-[10px] font-mono text-neutral-500">
-                  <span>Interactive 3D Deck</span>
-                  <span className="text-neutral-400">Click node to inspect</span>
-                </div>
-              </div>
-            </div>
-          );
-        })}
+        {/* STREAM 2 (Bottom Line): Glides continuously in reverse right without stopping on hover or click */}
+        <div className="animate-tech-stream-right gap-3.5">
+          {stream2.map((tech, i) => renderTechPill(tech, "s2", i))}
+        </div>
       </div>
     </section>
   );

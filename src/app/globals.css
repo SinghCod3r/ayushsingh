@@ -130,12 +130,16 @@ body {
 .animate-marquee-left {
   display: flex;
   width: max-content;
+  will-change: transform;
+  transform: translateZ(0);
   animation: marquee-left 34s linear infinite;
 }
 
 .animate-marquee-right {
   display: flex;
   width: max-content;
+  will-change: transform;
+  transform: translateZ(0);
   animation: marquee-right 34s linear infinite;
 }
 
@@ -144,5 +148,53 @@ body {
 .pause-marquee:hover .animate-marquee-left,
 .pause-marquee:hover .animate-marquee-right {
   animation-play-state: paused;
+}
+
+/* Non-pausing continuous infinite tech streams (no stop on hover or click, 60fps GPU accelerated) */
+.animate-tech-stream-left {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+  transform: translateZ(0);
+  animation: marquee-left 30s linear infinite !important;
+}
+
+.animate-tech-stream-right {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+  transform: translateZ(0);
+  animation: marquee-right 30s linear infinite !important;
+}
+
+/* Click Shockwave & Sparkle Keyframes */
+@keyframes click-ripple {
+  0% {
+    transform: translate(-50%, -50%) scale(0.2);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(2.2);
+    opacity: 0;
+  }
+}
+
+@keyframes sparkle-fade {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0);
+    opacity: 0;
+  }
+}
+
+.animate-click-ripple {
+  animation: click-ripple 600ms cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+}
+
+.animate-sparkle-fade {
+  animation: sparkle-fade 500ms ease-out forwards;
 }
 
