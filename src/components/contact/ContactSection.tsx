@@ -10,6 +10,7 @@ import {
   Clock,
   MapPin,
   ArrowUpRight,
+  FileText,
 } from "lucide-react";
 import { GithubIcon, LinkedinIcon } from "@/components/ui/Icons";
 import { identity } from "@/data/identity";
@@ -97,6 +98,26 @@ export function ContactSection() {
               </button>
             </div>
           </div>
+
+          {/* Download Verified Resume / CV Card */}
+          <a
+            href="/Ayush_Singh_Resume.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            download="Ayush_Singh_Resume.pdf"
+            className="p-4 sm:p-5 rounded-xl glass-panel border border-[#00f5d4]/40 bg-[#00f5d4]/[0.06] hover:bg-[#00f5d4]/[0.12] transition flex items-center justify-between group cursor-pointer w-full"
+          >
+            <div className="flex items-center gap-3">
+              <div className="p-2.5 rounded-lg bg-[#00f5d4]/10 text-[#00f5d4] group-hover:scale-105 transition shrink-0">
+                <FileText className="w-5 h-5" />
+              </div>
+              <div>
+                <span className="text-[11px] font-mono text-[#00f5d4] block">Verified Curriculum Vitae</span>
+                <span className="text-xs sm:text-sm font-bold text-white font-mono">Download Ayush Singh CV (PDF)</span>
+              </div>
+            </div>
+            <ArrowUpRight className="w-4 h-4 text-[#00f5d4] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition shrink-0" />
+          </a>
 
           {/* Social Presence Links */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 w-full">

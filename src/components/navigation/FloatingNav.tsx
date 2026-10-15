@@ -99,6 +99,18 @@ export function FloatingNav() {
 
           {/* Right Action Icons */}
           <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+            {/* Download CV Pill */}
+            <a
+              href="/Ayush_Singh_Resume.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              download="Ayush_Singh_Resume.pdf"
+              aria-label="Download Ayush Singh Resume PDF"
+              className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#00f5d4]/10 hover:bg-[#00f5d4]/20 border border-[#00f5d4]/30 text-[#00f5d4] transition text-[11px] font-mono font-bold"
+            >
+              <span>CV</span>
+            </a>
+
             {/* Social Direct Links */}
             <div className="flex items-center gap-0.5 sm:gap-1">
               <a
@@ -178,7 +190,17 @@ export function FloatingNav() {
               })}
             </ul>
 
-            <div className="pt-4 border-t border-white/10 flex items-center justify-between text-xs font-mono text-neutral-400">
+            <div className="pt-4 border-t border-white/10 flex flex-col gap-3 font-mono text-xs">
+              <a
+                href="/Ayush_Singh_Resume.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                download="Ayush_Singh_Resume.pdf"
+                className="flex items-center justify-center gap-2 py-2.5 rounded-xl bg-[#00f5d4] text-[#08090c] font-bold"
+              >
+                <span>Download Resume / CV (PDF)</span>
+              </a>
+
               <a
                 href={`mailto:${identity.email}`}
                 className="flex items-center gap-2 text-neutral-300 hover:text-[#00f5d4] break-all"

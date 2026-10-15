@@ -203,71 +203,102 @@ export function WritingBooksSection() {
 
       {/* TECHNICAL ARTICLES */}
       <div className="mt-12 sm:mt-16 w-full">
-        <div className="flex items-center justify-between mb-6 pb-3 border-b border-white/10">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 pb-3 border-b border-white/10">
           <div>
             <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
-              Technical Writing & Essays
+              Technical Writing & Open Source Retrospectives
             </h3>
             <p className="text-xs font-mono text-neutral-400 mt-0.5">
-              Architectural retrospectives
+              Published on Medium // Systems, Sandboxing & Linux Infrastructure
             </p>
           </div>
 
-          <span className="text-xs font-mono text-[#00f5d4]">Medium Ready</span>
+          <a
+            href="https://singhcod3r.medium.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 hover:border-[#00f5d4]/40 text-xs font-mono text-[#00f5d4] transition self-start sm:self-auto cursor-pointer"
+          >
+            <span>Medium @SinghCod3r</span>
+            <ExternalLink className="w-3.5 h-3.5" />
+          </a>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 w-full">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 w-full">
           {articles.map((article) => (
             <div
               key={article.id}
-              className="p-4 sm:p-6 rounded-2xl glass-panel border border-white/10 hover:border-white/20 transition flex flex-col justify-between group w-full"
+              className="rounded-2xl glass-panel border border-white/10 hover:border-[#00f5d4]/30 transition-all duration-300 flex flex-col justify-between group w-full overflow-hidden bg-gradient-to-b from-white/[0.02] to-black/40"
             >
               <div>
-                <div className="flex items-center justify-between text-xs font-mono text-neutral-400 mb-2">
-                  <span className="text-[#00f5d4]">{article.category}</span>
-                  <div className="flex items-center gap-1">
-                    <Clock className="w-3 h-3" />
-                    <span>{article.readTime}</span>
+                {/* Visual Article Preview Banner */}
+                {article.image && (
+                  <a
+                    href={article.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block relative aspect-[16/9] w-full overflow-hidden bg-black/60 border-b border-white/10 group-hover:opacity-95 transition"
+                  >
+                    <img
+                      src={article.image}
+                      alt={article.title}
+                      className="w-full h-full object-cover object-top group-hover:scale-[1.03] transition duration-500 ease-out"
+                      loading="lazy"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#08090c] via-transparent to-transparent opacity-80" />
+                    <span className="absolute top-3 left-3 px-2 py-0.5 rounded text-[10px] font-mono bg-black/70 backdrop-blur-md text-[#00f5d4] border border-white/10">
+                      {article.category}
+                    </span>
+                  </a>
+                )}
+
+                <div className="p-4 sm:p-5">
+                  <div className="flex items-center justify-between text-xs font-mono text-neutral-400 mb-2">
+                    <span className="text-[11px] text-neutral-400">{article.date}</span>
+                    <div className="flex items-center gap-1 text-[11px]">
+                      <Clock className="w-3 h-3 text-[#00f5d4]" />
+                      <span>{article.readTime}</span>
+                    </div>
                   </div>
+
+                  <a
+                    href={article.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block group/link"
+                  >
+                    <h4 className="text-base sm:text-lg font-bold text-white group-hover/link:text-[#00f5d4] transition leading-snug line-clamp-2">
+                      {article.title}
+                    </h4>
+                  </a>
+
+                  <p className="mt-2.5 text-xs sm:text-sm text-neutral-300 font-light leading-relaxed line-clamp-3">
+                    {article.description}
+                  </p>
                 </div>
-
-                <h4 className="text-base sm:text-lg font-bold text-white group-hover:text-[#00f5d4] transition leading-snug">
-                  {article.title}
-                </h4>
-
-                <p className="mt-2 text-xs sm:text-sm text-neutral-300 font-light leading-relaxed">
-                  {article.description}
-                </p>
               </div>
 
-              <div className="mt-5 pt-3.5 border-t border-white/5">
-                <div className="flex flex-wrap gap-1 mb-3">
-                  {article.tags.map((tag) => (
+              <div className="px-4 sm:px-5 pb-4 sm:pb-5 pt-3 border-t border-white/5">
+                <div className="flex flex-wrap gap-1 mb-3.5">
+                  {article.tags.slice(0, 4).map((tag) => (
                     <span
                       key={tag}
-                      className="px-2 py-0.5 rounded text-[10px] font-mono bg-white/5 text-neutral-400"
+                      className="px-2 py-0.5 rounded text-[10px] font-mono bg-white/5 text-neutral-400 border border-white/5"
                     >
                       #{tag}
                     </span>
                   ))}
                 </div>
 
-                {article.url ? (
-                  <a
-                    href={article.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-1 text-xs font-mono text-[#00f5d4] hover:underline"
-                  >
-                    <span>Read on Medium</span>
-                    <ExternalLink className="w-3.5 h-3.5" />
-                  </a>
-                ) : (
-                  <div className="flex items-center justify-between text-[11px] font-mono text-neutral-400">
-                    <span>{article.date}</span>
-                    <span className="text-neutral-400 italic">Article Entry</span>
-                  </div>
-                )}
+                <a
+                  href={article.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-between w-full px-3 py-2 rounded-xl bg-white/5 group-hover:bg-[#00f5d4]/10 border border-white/10 group-hover:border-[#00f5d4]/30 text-xs font-mono text-[#00f5d4] transition cursor-pointer"
+                >
+                  <span className="font-semibold">Read on Medium</span>
+                  <ExternalLink className="w-3.5 h-3.5" />
+                </a>
               </div>
             </div>
           ))}

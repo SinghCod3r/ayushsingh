@@ -6,6 +6,7 @@ import {
   Cpu,
   Copy,
   Check,
+  FileText,
 } from "lucide-react";
 import { identity } from "@/data/identity";
 
@@ -106,6 +107,17 @@ export function HeroIdentity() {
           >
             <Cpu className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#00f5d4]" />
             <span>Featured Systems</span>
+          </a>
+
+          <a
+            href="/Ayush_Singh_Resume.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            download="Ayush_Singh_Resume.pdf"
+            className="flex items-center gap-2 px-3.5 sm:px-4 py-2.5 sm:py-3 rounded-full border border-[#00f5d4]/40 bg-[#00f5d4]/10 hover:bg-[#00f5d4]/20 text-[#00f5d4] transition cursor-pointer text-xs sm:text-sm font-mono"
+          >
+            <FileText className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+            <span>Download CV</span>
           </a>
 
           <button
