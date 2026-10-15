@@ -202,7 +202,7 @@ export function CinematicIntro({ onComplete, forcePlay = false }: CinematicIntro
                 : stage === "ayush"
                 ? "opacity-100 translate-y-0 blur-none scale-100 text-[#f1f3f7]"
                 : "opacity-40 -translate-y-4 scale-95 text-neutral-500"
-            } text-6xl sm:text-8xl md:text-9xl lg:text-[13rem] leading-none`}
+            } text-[clamp(2.75rem,13vw,12rem)] leading-none`}
             style={{
               fontFamily: "var(--font-geist-sans), sans-serif",
               letterSpacing: stage === "ayush" ? "-0.04em" : "0.02em",
@@ -213,7 +213,7 @@ export function CinematicIntro({ onComplete, forcePlay = false }: CinematicIntro
         </div>
 
         {/* Stage 2: SINGH */}
-        <div className="relative overflow-hidden py-2 -mt-4 sm:-mt-8 md:-mt-12">
+        <div className="relative overflow-hidden py-2 -mt-2 sm:-mt-6 md:-mt-10">
           <h2
             className={`font-black tracking-tighter uppercase transition-all duration-700 ease-out ${
               stage === "boot" || stage === "ayush"
@@ -221,7 +221,7 @@ export function CinematicIntro({ onComplete, forcePlay = false }: CinematicIntro
                 : stage === "singh"
                 ? "opacity-100 translate-y-0 blur-none scale-100 text-white glow-cyan"
                 : "opacity-90 translate-y-0 scale-100 text-white"
-            } text-6xl sm:text-8xl md:text-9xl lg:text-[13rem] leading-none`}
+            } text-[clamp(2.5rem,12vw,11.5rem)] leading-none`}
             style={{
               fontFamily: "var(--font-geist-sans), sans-serif",
               letterSpacing: stage === "singh" ? "-0.04em" : "-0.02em",
@@ -267,9 +267,10 @@ export function CinematicIntro({ onComplete, forcePlay = false }: CinematicIntro
         </div>
 
         <div className="text-[11px] text-neutral-400 flex items-center gap-2">
-          <span>AKTU 2026 // SRM-CEM LUCKNOW // CGPA 8.6</span>
+          <span>SinghCod3r // Systems · Open Source · AI</span>
         </div>
       </div>
     </div>
   );
 }
+

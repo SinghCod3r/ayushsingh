@@ -81,3 +81,4 @@ export const experiences: ExperienceItem[] = [
     badge: "CGPA: 8.6",
   },
 ];
+

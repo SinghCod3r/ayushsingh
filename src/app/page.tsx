@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { CanvasBackground } from "@/components/three/CanvasBackground";
 import { CinematicIntro } from "@/components/intro/CinematicIntro";
 import { FloatingNav } from "@/components/navigation/FloatingNav";
@@ -16,30 +16,19 @@ import { ContactSection } from "@/components/contact/ContactSection";
 import { GiantFooter } from "@/components/footer/GiantFooter";
 
 export default function Home() {
-  const [replayKey, setReplayKey] = useState(0);
-
-  const handleReplayIntro = () => {
-    // Reset session storage flag and trigger forcePlay
-    if (typeof window !== "undefined") {
-      sessionStorage.removeItem("ayush_singh_intro_seen");
-      window.scrollTo({ top: 0, behavior: "smooth" });
-      setReplayKey((prev) => prev + 1);
-    }
-  };
-
   return (
-    <div className="relative min-h-screen bg-[#08090c] text-[#f1f3f7] selection:bg-[#00f5d4]/20 selection:text-white">
+    <div className="relative min-h-screen bg-[#08090c] text-[#f1f3f7] selection:bg-[#00f5d4]/20 selection:text-white overflow-x-hidden">
       {/* Background Interactive Three.js WebGL Scene */}
       <CanvasBackground />
 
       {/* Cinematic Opening & Identity Reveal Experience */}
-      <CinematicIntro key={replayKey} forcePlay={replayKey > 0} />
+      <CinematicIntro />
 
       {/* Floating Glassmorphism Navigation */}
-      <FloatingNav onReplayIntro={handleReplayIntro} />
+      <FloatingNav />
 
       {/* Main Narrative Flow */}
-      <main className="relative z-10 flex flex-col gap-12 sm:gap-16">
+      <main className="relative z-10 flex flex-col gap-12 sm:gap-16 w-full overflow-x-hidden">
         {/* Section 01: Hero Identity */}
         <HeroIdentity />
 
@@ -69,7 +58,7 @@ export default function Home() {
       </main>
 
       {/* Section 10: Monumental Giant AYUSH SINGH Footer */}
-      <GiantFooter onReplayIntro={handleReplayIntro} />
+      <GiantFooter />
     </div>
   );
 }

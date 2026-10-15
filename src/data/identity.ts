@@ -5,7 +5,6 @@ export interface IdentityData {
   title: string;
   subtitle: string;
   location: string;
-  status: string;
   email: string;
   github: string;
   linkedin: string;
@@ -30,8 +29,7 @@ export const identity: IdentityData = {
   handle: "SinghCod3r",
   title: "Computer Science Engineer",
   subtitle: "Linux OpenPrinting Contributor · Systems & Full-Stack Builder · AI Developer",
-  location: "Lucknow / India (IST, UTC+5:30)",
-  status: "Available for engineering roles · 2026",
+  location: "Lucknow, India (IST, UTC+5:30)",
   email: "ayushsinghceee@gmail.com",
   github: "https://github.com/SinghCod3r",
   linkedin: "https://linkedin.com/in/singhcod3r",
@@ -50,19 +48,19 @@ export const identity: IdentityData = {
       detail: "Merged in Linux system-config-printer",
     },
     {
-      label: "Academic CGPA",
+      label: "Academic Merit",
       value: "8.6",
-      detail: "B.Tech Computer Science (2026)",
+      detail: "B.Tech CSE · Class of 2026",
     },
     {
       label: "System Layer",
       value: "Linux / CUPS",
-      detail: "GTK, GLib, D-Bus, IPP daemon architecture",
+      detail: "GTK, GLib, D-Bus, IPP architecture",
     },
     {
       label: "Local AI Tooling",
-      value: "53 Tests Passing",
-      detail: "SkillFoundry CLI with 0 Pyright errors",
+      value: "53 Tests",
+      detail: "SkillFoundry CLI · 0 Pyright errors",
     },
   ],
 };

@@ -1,15 +1,11 @@
 "use client";
 
 import React from "react";
-import { ArrowUp, Terminal, Mail, Play, Heart } from "lucide-react";
+import { ArrowUp, Mail } from "lucide-react";
 import { GithubIcon, LinkedinIcon } from "@/components/ui/Icons";
 import { identity } from "@/data/identity";
 
-interface GiantFooterProps {
-  onReplayIntro?: () => void;
-}
-
-export function GiantFooter({ onReplayIntro }: GiantFooterProps) {
+export function GiantFooter() {
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -17,76 +13,71 @@ export function GiantFooter({ onReplayIntro }: GiantFooterProps) {
   return (
     <footer
       aria-label="Portfolio Footer and Identity Monument"
-      className="relative bg-gradient-to-t from-black via-[#06070a] to-[#08090c] pt-24 pb-12 px-4 sm:px-6 lg:px-12 border-t border-white/10 overflow-hidden z-10"
+      className="relative bg-gradient-to-t from-black via-[#06070a] to-[#08090c] pt-16 sm:pt-24 pb-10 sm:pb-12 px-4 sm:px-6 lg:px-12 border-t border-white/10 overflow-hidden z-10 w-full"
     >
-      <div className="max-w-7xl mx-auto flex flex-col justify-between min-h-[70vh]">
+      <div className="max-w-7xl mx-auto flex flex-col justify-between min-h-[60vh] w-full">
         {/* Top Controls Strip */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 pb-12 border-b border-white/10 text-xs font-mono">
-          <div className="flex items-center gap-3 text-neutral-400">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-8 sm:pb-12 border-b border-white/10 text-xs font-mono w-full">
+          <div className="flex items-center gap-2.5 text-neutral-400">
             <span className="w-2 h-2 rounded-full bg-[#00f5d4]" />
             <span className="text-white font-bold">SinghCod3r</span>
             <span className="text-neutral-600">//</span>
-            <span>COMPUTER SCIENCE & SYSTEMS ENGINEER</span>
+            <span>SYSTEMS & OPEN SOURCE</span>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3">
-            {onReplayIntro && (
-              <button
-                onClick={onReplayIntro}
-                type="button"
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/10 hover:border-[#00f5d4]/40 bg-white/5 hover:bg-white/10 text-neutral-300 hover:text-white transition cursor-pointer"
-              >
-                <Play className="w-3 h-3 text-[#00f5d4]" />
-                <span>Replay Intro</span>
-              </button>
-            )}
-
-            <button
-              onClick={scrollToTop}
-              type="button"
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/10 hover:border-white/30 bg-white/5 hover:bg-white/10 text-neutral-300 hover:text-white transition cursor-pointer"
-            >
-              <span>Back to Top</span>
-              <ArrowUp className="w-3.5 h-3.5" />
-            </button>
-          </div>
+          <button
+            onClick={scrollToTop}
+            type="button"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/10 hover:border-white/30 bg-white/5 hover:bg-white/10 text-neutral-300 hover:text-white transition cursor-pointer text-xs"
+          >
+            <span>Back to Top</span>
+            <ArrowUp className="w-3.5 h-3.5" />
+          </button>
         </div>
 
         {/* Quick Links Matrix */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 py-12 text-xs font-mono">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 py-8 sm:py-12 text-xs font-mono w-full">
           <div>
-            <span className="text-neutral-500 uppercase tracking-widest block mb-3">Navigation</span>
-            <ul className="space-y-2 text-neutral-300">
-              <li><a href="#hero" className="hover:text-[#00f5d4] transition">Hero Identity</a></li>
-              <li><a href="#open-source" className="hover:text-[#00f5d4] transition">Open Source (11+ PRs)</a></li>
-              <li><a href="#architecture" className="hover:text-[#00f5d4] transition">PPD Freeze Solution</a></li>
+            <span className="text-neutral-500 uppercase tracking-widest block mb-2 sm:mb-3">
+              Navigation
+            </span>
+            <ul className="space-y-1.5 sm:space-y-2 text-neutral-300">
+              <li><a href="#hero" className="hover:text-[#00f5d4] transition">Hero</a></li>
+              <li><a href="#open-source" className="hover:text-[#00f5d4] transition">Open Source</a></li>
+              <li><a href="#architecture" className="hover:text-[#00f5d4] transition">Architecture</a></li>
               <li><a href="#projects" className="hover:text-[#00f5d4] transition">Featured Systems</a></li>
             </ul>
           </div>
 
           <div>
-            <span className="text-neutral-500 uppercase tracking-widest block mb-3">Systems & Projects</span>
-            <ul className="space-y-2 text-neutral-300">
+            <span className="text-neutral-500 uppercase tracking-widest block mb-2 sm:mb-3">
+              Systems
+            </span>
+            <ul className="space-y-1.5 sm:space-y-2 text-neutral-300">
               <li><a href="#projects" className="hover:text-[#00f5d4] transition">MoodBite.AI</a></li>
               <li><a href="#projects" className="hover:text-[#00f5d4] transition">SkillFoundry CLI</a></li>
               <li><a href="#projects" className="hover:text-[#00f5d4] transition">Printer Support Resolver</a></li>
-              <li><a href="#projects" className="hover:text-[#00f5d4] transition">Ezy Language Runtime</a></li>
+              <li><a href="#projects" className="hover:text-[#00f5d4] transition">Ezy Language</a></li>
             </ul>
           </div>
 
           <div>
-            <span className="text-neutral-500 uppercase tracking-widest block mb-3">Writing & Talks</span>
-            <ul className="space-y-2 text-neutral-300">
+            <span className="text-neutral-500 uppercase tracking-widest block mb-2 sm:mb-3">
+              Authored Work
+            </span>
+            <ul className="space-y-1.5 sm:space-y-2 text-neutral-300">
               <li><a href="#writing-books" className="hover:text-[#00f5d4] transition">The Last Human Update</a></li>
-              <li><a href="#speaking" className="hover:text-[#00f5d4] transition">OOSC 4.0 IIIT Allahabad</a></li>
-              <li><a href="#writing-books" className="hover:text-[#00f5d4] transition">Technical Writing</a></li>
-              <li><a href="#experience" className="hover:text-[#00f5d4] transition">SRM-CEM 2026</a></li>
+              <li><a href="#speaking" className="hover:text-[#00f5d4] transition">OOSC 4.0 Keynote</a></li>
+              <li><a href="#writing-books" className="hover:text-[#00f5d4] transition">Technical Essays</a></li>
+              <li><a href="#experience" className="hover:text-[#00f5d4] transition">Experience</a></li>
             </ul>
           </div>
 
           <div>
-            <span className="text-neutral-500 uppercase tracking-widest block mb-3">Direct Presence</span>
-            <ul className="space-y-2 text-neutral-300">
+            <span className="text-neutral-500 uppercase tracking-widest block mb-2 sm:mb-3">
+              Direct Channels
+            </span>
+            <ul className="space-y-1.5 sm:space-y-2 text-neutral-300">
               <li>
                 <a href={identity.github} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:text-[#00f5d4] transition">
                   <GithubIcon className="w-3.5 h-3.5" />
@@ -102,29 +93,29 @@ export function GiantFooter({ onReplayIntro }: GiantFooterProps) {
               <li>
                 <a href={`mailto:${identity.email}`} className="flex items-center gap-1.5 hover:text-white transition">
                   <Mail className="w-3.5 h-3.5" />
-                  <span>Email Inbound</span>
+                  <span className="truncate max-w-[150px] sm:max-w-none">{identity.email}</span>
                 </a>
               </li>
             </ul>
           </div>
         </div>
 
-        {/* GIANT MONUMENTAL AYUSH SINGH DISPLAY */}
-        <div className="relative pt-12 pb-6 border-t border-white/10 select-none overflow-hidden">
+        {/* GIANT MONUMENTAL AYUSH SINGH DISPLAY (100% Mobile Fluid & Responsive) */}
+        <div className="relative pt-8 sm:pt-12 pb-4 sm:pb-6 border-t border-white/10 select-none overflow-hidden w-full">
           <div
             aria-hidden="true"
             className="absolute -top-1/2 left-1/2 -translate-x-1/2 w-[120%] h-full bg-radial from-[#00f5d4]/10 via-transparent to-transparent pointer-events-none blur-3xl"
           />
 
-          <div className="flex flex-col items-center justify-center text-center">
+          <div className="flex flex-col items-center justify-center text-center w-full">
             <h2
-              className="font-black text-6xl sm:text-8xl md:text-[11rem] lg:text-[14rem] tracking-tighter leading-[0.8] text-white/90 hover:text-white transition-colors duration-500"
+              className="font-black text-[clamp(3.2rem,14.5vw,13.5rem)] tracking-tighter leading-[0.82] text-white/90 hover:text-white transition-colors duration-500 select-none break-normal"
               style={{ fontFamily: "var(--font-geist-sans), sans-serif" }}
             >
               AYUSH
             </h2>
             <h2
-              className="font-black text-5xl sm:text-7xl md:text-[10rem] lg:text-[13rem] tracking-tighter leading-[0.8] -mt-2 sm:-mt-6 md:-mt-10 bg-gradient-to-b from-neutral-200 via-neutral-400 to-neutral-700 bg-clip-text text-transparent"
+              className="font-black text-[clamp(2.8rem,13vw,12.5rem)] tracking-tighter leading-[0.82] -mt-1 sm:-mt-4 md:-mt-8 bg-gradient-to-b from-neutral-200 via-neutral-400 to-neutral-700 bg-clip-text text-transparent select-none break-normal"
               style={{ fontFamily: "var(--font-geist-sans), sans-serif" }}
             >
               SINGH
@@ -133,15 +124,15 @@ export function GiantFooter({ onReplayIntro }: GiantFooterProps) {
         </div>
 
         {/* Bottom Metadata & Copyright Bar */}
-        <div className="pt-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-neutral-400">
+        <div className="pt-6 sm:pt-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-mono text-neutral-400 w-full">
           <div>
-            <span>© 2026 Ayush Singh (SinghCod3r). All systems nominal.</span>
+            <span>© 2026 Ayush Singh (SinghCod3r).</span>
           </div>
 
-          <div className="flex items-center gap-3">
-            <span>SRM-CEM / AKTU 2026</span>
+          <div className="flex items-center gap-2 sm:gap-3 text-neutral-400">
+            <span>Linux OpenPrinting</span>
             <span className="text-neutral-700">·</span>
-            <span className="text-neutral-400">CGPA 8.6</span>
+            <span>Systems</span>
             <span className="text-neutral-700">·</span>
             <span className="text-[#00f5d4]">Open Source</span>
           </div>

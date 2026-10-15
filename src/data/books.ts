@@ -33,3 +33,4 @@ export const featuredBook: BookData = {
   excerptSnippet:
     "The telemetry stream didn't warn them. It arrived like an unscheduled routine patch in the dead hours of morning—quiet, mandatory, and irreversible. By the time the sensory latency cleared, the world outside was no longer running on biological consensus...",
 };
+

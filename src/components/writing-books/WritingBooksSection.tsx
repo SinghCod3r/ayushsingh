@@ -5,12 +5,8 @@ import {
   BookOpen,
   Feather,
   ExternalLink,
-  Sparkles,
-  ArrowRight,
   Quote,
   Clock,
-  Layers,
-  FileText,
 } from "lucide-react";
 import { featuredBook } from "@/data/books";
 import { articles } from "@/data/writing";
@@ -21,8 +17,8 @@ export function WritingBooksSection() {
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
-    const x = ((e.clientY - rect.top) / rect.height - 0.5) * -18;
-    const y = ((e.clientX - rect.left) / rect.width - 0.5) * 22;
+    const x = ((e.clientY - rect.top) / rect.height - 0.5) * -16;
+    const y = ((e.clientX - rect.left) / rect.width - 0.5) * 20;
     setBookTilt({ x, y });
   };
 
@@ -34,48 +30,48 @@ export function WritingBooksSection() {
     <section
       id="writing-books"
       aria-label="Books and Technical Writing"
-      className="relative py-24 sm:py-32 px-4 sm:px-6 lg:px-12 max-w-7xl mx-auto z-10"
+      className="relative py-16 sm:py-24 md:py-32 px-4 sm:px-6 lg:px-12 max-w-7xl mx-auto z-10 w-full overflow-hidden"
     >
       {/* Section Motif */}
       <div
         aria-hidden="true"
-        className="flex items-center gap-4 mb-8 text-xs font-mono text-neutral-400 tracking-wider"
+        className="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-8 text-xs font-mono text-neutral-400 tracking-wider"
       >
-        <span className="w-8 h-[1px] bg-[#00f5d4]" />
+        <span className="w-6 sm:w-8 h-[1px] bg-[#00f5d4]" />
         <span className="text-[#00f5d4]">SECTION 05</span>
         <span className="text-neutral-600">//</span>
-        <span>AUTHORED WORK & TECHNICAL ESSAYS</span>
+        <span>AUTHORED WORK & ESSAYS</span>
       </div>
 
       {/* Header */}
-      <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 pb-12 border-b border-white/10">
+      <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-5 pb-8 sm:pb-12 border-b border-white/10 w-full">
         <div>
-          <h2 className="text-4xl sm:text-6xl font-black tracking-tight text-white">
+          <h2 className="text-3xl sm:text-5xl md:text-6xl font-black tracking-tight text-white">
             Books & Writing
           </h2>
-          <p className="mt-4 text-base sm:text-lg text-neutral-300 max-w-2xl font-light">
-            Thinking in prose as well as code. From fiction exploring human autonomy in an algorithmic
-            world to technical writing breaking down Linux daemon internals.
+          <p className="mt-3 text-sm sm:text-base md:text-lg text-neutral-300 max-w-2xl font-light">
+            Fiction exploring human consciousness in an algorithmic world, alongside technical essays
+            on Linux event loops and interpreter internals.
           </p>
         </div>
 
         <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-mono text-neutral-300 self-start">
           <Feather className="w-3.5 h-3.5 text-[#00f5d4]" />
-          <span>Sci-Fi Novel + Systems Essays</span>
+          <span>Novel + Systems Essays</span>
         </div>
       </div>
 
       {/* FEATURED BOOK: The Last Human Update */}
-      <div className="mt-14 rounded-3xl glass-panel border border-white/10 p-6 sm:p-12 relative overflow-hidden bg-gradient-to-br from-[#121622]/80 via-[#0a0c12]/90 to-black">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+      <div className="mt-8 sm:mt-12 rounded-2xl sm:rounded-3xl glass-panel border border-white/10 p-5 sm:p-8 md:p-12 relative overflow-hidden bg-gradient-to-br from-[#121622]/80 via-[#0a0c12]/90 to-black w-full">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-10 items-center">
           {/* Interactive 3D Perspective Book Mockup */}
           <div
-            className="lg:col-span-5 flex justify-center perspective-[1000px] select-none"
+            className="lg:col-span-5 flex justify-center perspective-[1000px] select-none w-full"
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
           >
             <div
-              className="relative w-64 sm:w-72 h-96 rounded-xl border border-white/20 bg-gradient-to-b from-[#181d28] via-[#0f131a] to-[#080a0f] p-6 shadow-2xl flex flex-col justify-between transition-transform duration-200 ease-out cursor-pointer group"
+              className="relative w-48 sm:w-60 md:w-68 h-72 sm:h-88 rounded-xl border border-white/20 bg-gradient-to-b from-[#181d28] via-[#0f131a] to-[#080a0f] p-4 sm:p-5 shadow-2xl flex flex-col justify-between transition-transform duration-200 ease-out cursor-pointer group"
               style={{
                 transform: `rotateX(${bookTilt.x}deg) rotateY(${bookTilt.y}deg)`,
                 boxShadow: "0 25px 50px -12px rgba(0, 245, 212, 0.15)",
@@ -84,26 +80,26 @@ export function WritingBooksSection() {
               {/* Book Spine Texture Effect */}
               <div
                 aria-hidden="true"
-                className="absolute left-0 top-0 bottom-0 w-3 bg-gradient-to-r from-black/60 to-transparent rounded-l-xl pointer-events-none"
+                className="absolute left-0 top-0 bottom-0 w-2.5 bg-gradient-to-r from-black/60 to-transparent rounded-l-xl pointer-events-none"
               />
 
               {/* Cover Top Meta */}
-              <div className="flex items-center justify-between text-[10px] font-mono tracking-widest text-[#00f5d4] uppercase">
+              <div className="flex items-center justify-between text-[9px] font-mono tracking-widest text-[#00f5d4] uppercase">
                 <span>PSYCHOLOGICAL SCI-FI</span>
                 <span>Pothi.com</span>
               </div>
 
               {/* Cover Typography */}
-              <div className="my-auto text-center space-y-2">
-                <span className="text-[10px] font-mono uppercase tracking-[0.3em] text-neutral-400 block">
+              <div className="my-auto text-center space-y-1.5">
+                <span className="text-[9px] font-mono uppercase tracking-[0.25em] text-neutral-400 block">
                   A Novel By
                 </span>
-                <span className="text-xs font-mono tracking-widest text-white block">
+                <span className="text-[11px] font-mono tracking-widest text-white block">
                   {featuredBook.author}
                 </span>
 
-                <div className="py-4 border-y border-white/10 my-4">
-                  <h3 className="text-2xl sm:text-3xl font-black text-white tracking-tighter leading-tight font-serif uppercase">
+                <div className="py-2.5 border-y border-white/10 my-2.5">
+                  <h3 className="text-xl sm:text-2xl font-black text-white tracking-tighter leading-tight font-serif uppercase">
                     THE LAST
                     <br />
                     HUMAN
@@ -112,13 +108,13 @@ export function WritingBooksSection() {
                   </h3>
                 </div>
 
-                <p className="text-[11px] text-neutral-400 italic">
+                <p className="text-[10px] text-neutral-400 italic">
                   “When consciousness becomes deprecated code.”
                 </p>
               </div>
 
               {/* Cover Bottom Details */}
-              <div className="flex items-center justify-between text-[9px] font-mono text-neutral-400 border-t border-white/10 pt-3">
+              <div className="flex items-center justify-between text-[8px] sm:text-[9px] font-mono text-neutral-400 border-t border-white/10 pt-2.5">
                 <span>POTHI PUBLISHING</span>
                 <span>FIRST EDITION</span>
               </div>
@@ -126,43 +122,40 @@ export function WritingBooksSection() {
           </div>
 
           {/* Book Synopsis & Themes */}
-          <div className="lg:col-span-7 flex flex-col justify-between">
+          <div className="lg:col-span-7 flex flex-col justify-between w-full">
             <div>
-              <div className="flex flex-wrap items-center gap-2 mb-3">
-                <span className="px-3 py-1 rounded-full text-xs font-mono bg-[#00f5d4]/10 text-[#00f5d4] border border-[#00f5d4]/30">
+              <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mb-2.5">
+                <span className="px-2.5 py-0.5 rounded-full text-[11px] font-mono bg-[#00f5d4]/10 text-[#00f5d4] border border-[#00f5d4]/30">
                   {featuredBook.genre}
                 </span>
-                <span className="px-3 py-1 rounded-full text-xs font-mono bg-white/5 text-neutral-300 border border-white/10">
-                  {featuredBook.format}
-                </span>
-                <span className="px-3 py-1 rounded-full text-xs font-mono bg-white/5 text-neutral-300 border border-white/10">
+                <span className="px-2.5 py-0.5 rounded-full text-[11px] font-mono bg-white/5 text-neutral-300 border border-white/10">
                   {featuredBook.publisherPlatform}
                 </span>
               </div>
 
-              <h3 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
+              <h3 className="text-2xl sm:text-3xl md:text-4xl font-black text-white tracking-tight">
                 {featuredBook.title}
               </h3>
-              <p className="text-sm font-mono text-neutral-400 mt-1">{featuredBook.subtitle}</p>
+              <p className="text-xs sm:text-sm font-mono text-neutral-400 mt-0.5">{featuredBook.subtitle}</p>
 
               {/* Pull Quote */}
-              <div className="mt-6 p-4 rounded-xl bg-white/[0.03] border-l-2 border-[#00f5d4] italic text-neutral-200 text-sm sm:text-base leading-relaxed">
+              <div className="mt-4 p-3 sm:p-4 rounded-xl bg-white/[0.03] border-l-2 border-[#00f5d4] italic text-neutral-200 text-xs sm:text-sm md:text-base leading-relaxed">
                 {featuredBook.quote}
               </div>
 
-              <p className="mt-4 text-sm sm:text-base text-neutral-300 font-light leading-relaxed">
+              <p className="mt-3 text-xs sm:text-sm md:text-base text-neutral-300 font-light leading-relaxed">
                 {featuredBook.synopsis}
               </p>
 
               {/* Core Themes */}
-              <div className="mt-6">
-                <span className="text-xs font-mono text-neutral-400 uppercase tracking-wider block mb-2">
-                  Central Thematic Inquiries:
+              <div className="mt-4">
+                <span className="text-[11px] font-mono text-neutral-400 uppercase tracking-wider block mb-1.5">
+                  Core Inquiries:
                 </span>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-neutral-300">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-xs text-neutral-300">
                   {featuredBook.themes.map((theme, i) => (
-                    <div key={i} className="flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#00f5d4]" />
+                    <div key={i} className="flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#00f5d4] shrink-0" />
                       <span>{theme}</span>
                     </div>
                   ))}
@@ -171,11 +164,11 @@ export function WritingBooksSection() {
             </div>
 
             {/* Excerpt Toggle & Action */}
-            <div className="mt-8 pt-6 border-t border-white/10 flex flex-wrap items-center gap-4">
+            <div className="mt-6 pt-4 border-t border-white/10 flex flex-wrap items-center gap-3">
               <button
                 onClick={() => setShowExcerpt(!showExcerpt)}
                 type="button"
-                className="px-4 py-2 rounded-full border border-white/15 bg-white/5 hover:bg-white/10 text-white text-xs font-mono transition cursor-pointer"
+                className="px-3.5 py-2 rounded-full border border-white/15 bg-white/5 hover:bg-white/10 text-white text-xs font-mono transition cursor-pointer"
               >
                 {showExcerpt ? "Hide Excerpt" : "Read Opening Excerpt"}
               </button>
@@ -185,13 +178,13 @@ export function WritingBooksSection() {
                   href={featuredBook.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 px-5 py-2 rounded-full bg-[#00f5d4] text-[#08090c] font-bold text-xs font-mono hover:bg-[#38bdf8] transition cursor-pointer"
+                  className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#00f5d4] text-[#08090c] font-bold text-xs font-mono hover:bg-[#38bdf8] transition cursor-pointer"
                 >
-                  <BookOpen className="w-4 h-4" />
+                  <BookOpen className="w-3.5 h-3.5" />
                   <span>Order on Pothi.com</span>
                 </a>
               ) : (
-                <span className="text-xs font-mono text-neutral-400">
+                <span className="text-[11px] font-mono text-neutral-400">
                   Published via Pothi.com distribution channel
                 </span>
               )}
@@ -199,8 +192,8 @@ export function WritingBooksSection() {
 
             {/* Expandable Excerpt */}
             {showExcerpt && (
-              <div className="mt-4 p-5 rounded-2xl bg-black/60 border border-white/10 font-serif text-sm text-neutral-300 leading-relaxed italic animate-in fade-in duration-300">
-                <Quote className="w-4 h-4 text-[#00f5d4] mb-2 not-italic" />
+              <div className="mt-3.5 p-4 rounded-xl bg-black/60 border border-white/10 font-serif text-xs sm:text-sm text-neutral-300 leading-relaxed italic animate-in fade-in duration-300">
+                <Quote className="w-3.5 h-3.5 text-[#00f5d4] mb-1.5 not-italic" />
                 {featuredBook.excerptSnippet}
               </div>
             )}
@@ -208,29 +201,29 @@ export function WritingBooksSection() {
         </div>
       </div>
 
-      {/* TECHNICAL ARTICLES & WRITING CATALOG */}
-      <div className="mt-16">
-        <div className="flex items-center justify-between mb-8 pb-4 border-b border-white/10">
+      {/* TECHNICAL ARTICLES */}
+      <div className="mt-12 sm:mt-16 w-full">
+        <div className="flex items-center justify-between mb-6 pb-3 border-b border-white/10">
           <div>
-            <h3 className="text-2xl font-bold text-white tracking-tight">
-              Technical Writing & Engineering Essays
+            <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+              Technical Writing & Essays
             </h3>
-            <p className="text-xs font-mono text-neutral-400 mt-1">
-              Articles and architectural retrospectives
+            <p className="text-xs font-mono text-neutral-400 mt-0.5">
+              Architectural retrospectives
             </p>
           </div>
 
           <span className="text-xs font-mono text-[#00f5d4]">Medium Ready</span>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 w-full">
           {articles.map((article) => (
             <div
               key={article.id}
-              className="p-6 rounded-2xl glass-panel border border-white/10 hover:border-white/20 transition flex flex-col justify-between group"
+              className="p-4 sm:p-6 rounded-2xl glass-panel border border-white/10 hover:border-white/20 transition flex flex-col justify-between group w-full"
             >
               <div>
-                <div className="flex items-center justify-between text-xs font-mono text-neutral-400 mb-3">
+                <div className="flex items-center justify-between text-xs font-mono text-neutral-400 mb-2">
                   <span className="text-[#00f5d4]">{article.category}</span>
                   <div className="flex items-center gap-1">
                     <Clock className="w-3 h-3" />
@@ -238,17 +231,17 @@ export function WritingBooksSection() {
                   </div>
                 </div>
 
-                <h4 className="text-lg font-bold text-white group-hover:text-[#00f5d4] transition leading-snug">
+                <h4 className="text-base sm:text-lg font-bold text-white group-hover:text-[#00f5d4] transition leading-snug">
                   {article.title}
                 </h4>
 
-                <p className="mt-3 text-xs sm:text-sm text-neutral-300 font-light leading-relaxed">
+                <p className="mt-2 text-xs sm:text-sm text-neutral-300 font-light leading-relaxed">
                   {article.description}
                 </p>
               </div>
 
-              <div className="mt-6 pt-4 border-t border-white/5">
-                <div className="flex flex-wrap gap-1.5 mb-4">
+              <div className="mt-5 pt-3.5 border-t border-white/5">
+                <div className="flex flex-wrap gap-1 mb-3">
                   {article.tags.map((tag) => (
                     <span
                       key={tag}
