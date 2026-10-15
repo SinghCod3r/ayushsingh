@@ -26,7 +26,7 @@ export function OpenSourceSection() {
     <section
       id="open-source"
       aria-label="Open Source Contributions & Engineering Architecture"
-      className="relative py-16 sm:py-24 md:py-32 px-4 sm:px-6 lg:px-12 max-w-7xl mx-auto z-10 w-full overflow-hidden"
+      className="relative py-12 sm:py-16 md:py-20 px-4 sm:px-6 lg:px-12 max-w-7xl mx-auto z-10 w-full overflow-hidden scroll-mt-16"
     >
       {/* Section Connection Header */}
       <div

@@ -15,7 +15,7 @@ export function AboutPhilosophy() {
     <section
       id="about"
       aria-label="Engineering Philosophy & About Ayush Singh"
-      className="relative py-16 sm:py-24 md:py-32 px-4 sm:px-6 lg:px-12 max-w-7xl mx-auto z-10 w-full overflow-hidden"
+      className="relative py-12 sm:py-16 md:py-20 px-4 sm:px-6 lg:px-12 max-w-7xl mx-auto z-10 w-full overflow-hidden scroll-mt-16"
     >
       {/* Section Motif */}
       <div

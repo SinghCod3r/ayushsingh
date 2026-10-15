@@ -3,6 +3,7 @@
 import React from "react";
 import { CanvasBackground } from "@/components/three/CanvasBackground";
 import { CinematicIntro } from "@/components/intro/CinematicIntro";
+import { CustomCursor } from "@/components/ui/CustomCursor";
 import { FloatingNav } from "@/components/navigation/FloatingNav";
 import { HeroIdentity } from "@/components/hero/HeroIdentity";
 import { OpenSourceSection } from "@/components/open-source/OpenSourceSection";
@@ -23,6 +24,9 @@ export default function Home() {
 
       {/* Cinematic Opening & Identity Reveal Experience */}
       <CinematicIntro />
+
+      {/* Modern Colorful Interactive Cursor & Click Particle Ripple */}
+      <CustomCursor />
 
       {/* Floating Glassmorphism Navigation */}
       <FloatingNav />

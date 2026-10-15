@@ -23,10 +23,10 @@ export function HeroIdentity() {
     <section
       id="hero"
       aria-label="Ayush Singh Identity & Overview"
-      className="relative min-h-[85vh] sm:min-h-[88vh] flex flex-col justify-between pt-20 sm:pt-28 md:pt-32 pb-12 sm:pb-16 px-4 sm:px-6 lg:px-12 max-w-7xl mx-auto z-10 w-full overflow-hidden"
+      className="relative min-h-[78vh] sm:min-h-[82vh] flex flex-col justify-between pt-12 sm:pt-16 md:pt-18 pb-6 sm:pb-8 px-4 sm:px-6 lg:px-12 max-w-7xl mx-auto z-10 w-full overflow-hidden scroll-mt-16"
     >
       {/* Main Massive Editorial Typography Hero Composition */}
-      <div className="my-auto py-4 sm:py-8 w-full">
+      <div className="my-auto py-2 sm:py-4 w-full">
         <div className="relative w-full">
           {/* Subtle Ambient Backing Glow */}
           <div
