@@ -147,7 +147,7 @@ export function HeroIdentity() {
           </p>
 
           {/* Primary Interactive CTAs */}
-          <div className="mt-3 sm:mt-4 flex flex-wrap items-center gap-2 sm:gap-2 font-mono text-xs sm:text-sm">
+          <div className="mt-3 sm:mt-4 flex flex-wrap items-center gap-2 sm:gap-2 font-mono text-sm sm:text-sm">
             <a
               href="#open-source"
               className="flex items-center gap-2 px-4 sm:px-5 py-2.5 sm:py-3 rounded-full bg-[#00f5d4] text-[#08090c] font-bold hover:bg-[#38bdf8] transition-all cursor-pointer text-xs sm:text-sm shadow-[0_0_20px_rgba(0,245,212,0.3)] hover:shadow-[0_0_28px_rgba(56,189,248,0.5)]"
