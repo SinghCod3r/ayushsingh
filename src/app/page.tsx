@@ -34,6 +34,30 @@ export default function Home() {
 
       {/* Main Narrative Flow with Animated Coming & Going for Every Section */}
       <main className="relative z-10 flex flex-col gap-12 sm:gap-20 w-full overflow-x-hidden">
+        {/* Semantic Crawler & Search Index Node (SEO for Google Knowledge Graph & Queries) */}
+        <section className="sr-only" aria-label="Professional Biography and Search Index of Ayush Singh">
+          <h1>Ayush Singh (SinghCod3r) — Computer Science Engineer & Systems Architect</h1>
+          <p>
+            Official portfolio of Ayush Singh, also known online as SinghCod3r,
+            Singh Ayush, Engineer Ayush Singh, Er. Ayush Singh, Er Ayush Singh, and ayushsinghceee.
+            Primary domains: singhcod3r.vercel.app, singhayush.vercel.app, and ayushsinghcs.vercel.app.
+          </p>
+          <h2>Key Credentials & Identity Highlights</h2>
+          <ul>
+            <li>Core Open Source Contributor in The Linux Foundation OpenPrinting ecosystem with 11+ merged pull requests across system-config-printer and Foomatic-DB.</li>
+            <li>TCS Digital Candidate, qualified via the nationwide competitive TCS National Qualifier Test (TCS NQT 2025).</li>
+            <li>Trainee Technical Consultant at Acxion Consulting (Feb 2026 – May 2026), delivering 19 Business Central (BC) API Integrations, Apollo Project, and Floor & Furnishing Project.</li>
+            <li>B.Tech graduate in Computer Science & Engineering (Class of 2026) from Shri Ramswaroop Memorial College of Engineering and Management (SRM-CEM / SRMCM), Dr. A.P.J. Abdul Kalam Technical University (AKTU) Lucknow, with an 8.6 CGPA.</li>
+            <li>Published Author of &ldquo;The Last Manual Merge&rdquo; and &ldquo;The Road I Chose&rdquo; on Pothi.com.</li>
+            <li>Author of systems engineering and Linux retrospectives on Medium (@SinghCod3r).</li>
+            <li>Speaker at Open Source Conference 4.0 (OOSC 4.0) at IIIT Allahabad.</li>
+          </ul>
+          <h2>Contact & Verification Channels</h2>
+          <p>
+            Email: ayushsinghceee@gmail.com | GitHub: https://github.com/SinghCod3r | LinkedIn: https://linkedin.com/in/singhcod3r | Location: Lucknow, Uttar Pradesh, India (IST, UTC+05:30).
+          </p>
+        </section>
+
         {/* Section 01: Hero Identity */}
         <SectionReveal>
           <HeroIdentity />
