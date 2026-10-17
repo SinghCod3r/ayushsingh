@@ -16,22 +16,22 @@ export function SectionReveal({
 }: SectionRevealProps) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 42, scale: 0.985 }}
-      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      initial={{ opacity: 0, y: 28 }}
+      whileInView={{ opacity: 1, y: 0 }}
       viewport={{
         once: false,
-        amount: 0.08,
-        margin: "0px 0px -40px 0px",
+        amount: 0.04,
+        margin: "0px 0px -20px 0px",
       }}
       transition={{
-        duration: 0.65,
+        duration: 0.5,
         delay,
         ease: [0.16, 1, 0.3, 1],
       }}
-      className={`w-full will-change-transform ${className}`}
+      className={`w-full ${className}`}
+      style={{ transform: "translate3d(0, 0, 0)" }}
     >
       {children}
     </motion.div>
   );
 }
-

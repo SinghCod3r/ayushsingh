@@ -4,81 +4,126 @@ export interface ExperienceItem {
   company: string;
   location: string;
   period: string;
-  type: "Work Experience" | "Education" | "Milestone";
+  type: "Work Experience" | "Education" | "Milestone" | "Open Source";
   summary: string;
-  contributions: string[];
+  highlights: string[];
+  projects?: { name: string; description: string; tag: string }[];
   technologies: string[];
-  badge?: string;
+  badge: string;
+  accentColor: string;
 }
 
 export const experiences: ExperienceItem[] = [
   {
-    id: "acxiom-consulting",
+    id: "acxion-consulting",
     role: "Trainee Technical Consultant",
-    company: "Acxiom Consulting",
+    company: "Acxion Consulting",
     location: "Noida / Hybrid, India",
-    period: "4-Month Tenure",
+    period: "Feb 2026 — May 2026",
     type: "Work Experience",
     summary:
-      "Collaborated in technical consulting, working extensively with enterprise ERP platforms, backend service integrations, and production issue triage in an Agile delivery environment.",
-    contributions: [
-      "Worked with Microsoft Dynamics 365 Business Central customization, table schemas, and business logic extensions.",
-      "Diagnosed and resolved REST API integration bottlenecks connecting enterprise systems with external services.",
-      "Participated in production debugging, error logging analysis, and defect resolution.",
-      "Collaborated in sprint planning, code reviews, and Agile project delivery workflows.",
+      "Engineered enterprise ERP workflows and backend integrations in Microsoft Dynamics 365 Business Central (BC), delivering mission-critical integrations and resolving data pipeline latency.",
+    highlights: [
+      "Architected and implemented 19 Business Central (BC) API Integrations connecting enterprise systems with external services, accounting pipelines, and inventory platforms.",
+      "Spearheaded technical development for the Apollo Project: backend business logic customization, AL table schemas, and automated record sync.",
+      "Engineered the Floor and Furnishing Project: order processing automation, custom report generators, and production issue triage in Agile sprints.",
+      "Optimized payload parsing and error recovery protocols across RESTful microservice boundaries.",
     ],
-    technologies: ["Microsoft Dynamics 365 Business Central", "REST APIs", "ERP Systems", "Agile", "SQL"],
-    badge: "Enterprise Consulting",
-  },
-  {
-    id: "tech-superior",
-    role: "Business Analyst & SQA Engineer — Trainee",
-    company: "Tech Superior Consulting",
-    location: "India",
-    period: "Internship Tenure",
-    type: "Work Experience",
-    summary:
-      "Conducted software quality assurance testing, requirements mapping, and functional test lifecycle validations for client software implementations.",
-    contributions: [
-      "Drafted comprehensive test plans, edge-case scenarios, and defect verification workflows.",
-      "Validated software functionality against business requirement specifications to prevent regression defects.",
-      "Documented API behavior and reported systematic test metrics to development teams.",
+    projects: [
+      {
+        name: "Apollo Project",
+        description: "Enterprise system customization, AL table extensions, and business logic automation.",
+        tag: "Enterprise ERP",
+      },
+      {
+        name: "Floor and Furnishing Project",
+        description: "End-to-end data pipelines, custom ledger sync, and automated transaction routing.",
+        tag: "19 BC API Integrations",
+      },
     ],
-    technologies: ["Software Quality Assurance", "Functional Testing", "Requirement Analysis", "Defect Tracking"],
-    badge: "Quality Assurance",
+    technologies: [
+      "Microsoft Dynamics 365 BC",
+      "19 BC API Integrations",
+      "AL Language",
+      "REST APIs",
+      "ERP Data Architecture",
+      "SQL",
+    ],
+    badge: "19 BC API Integrations",
+    accentColor: "#00f5d4",
   },
   {
     id: "tcs-digital",
-    role: "TCS Digital Candidate (7 LPA)",
+    role: "TCS Digital Candidate (Cleared via NQT 2025)",
     company: "Tata Consultancy Services (TCS)",
     location: "India",
-    period: "Academic Milestone",
+    period: "Qualified NQT 2025",
     type: "Milestone",
     summary:
-      "Selected through TCS competitive technical evaluation for the premier Digital engineering cadre, participating in TCS Xplore/ILP foundation learning tracks.",
-    contributions: [
-      "Qualified the TCS Digital competitive recruitment stream (~7 LPA tier).",
-      "Engaged with enterprise learning modules covering systems engineering, software lifecycles, and modern development standards.",
+      "Cleared the premier TCS National Qualifier Test (NQT 2025) into the highest-tier TCS Digital engineering cadre (~7 LPA), ranking in the top competitive percentile nationwide.",
+    highlights: [
+      "Qualified the advanced algorithmic, data structure, and problem-solving evaluation of TCS NQT 2025.",
+      "Selected directly for the TCS Digital engineering cadre, the highest competitive recruitment tier for emerging software engineers.",
+      "Demonstrated core competencies in distributed systems, computational complexity, and modern full-stack systems engineering.",
     ],
-    technologies: ["Software Engineering", "Algorithms", "Core Computer Science"],
-    badge: "Recruitment Milestone",
+    technologies: [
+      "Advanced Algorithms",
+      "Data Structures",
+      "Competitive Problem Solving",
+      "Systems Architecture",
+      "TCS NQT 2025",
+    ],
+    badge: "TCS Digital · NQT 2025",
+    accentColor: "#38bdf8",
   },
   {
     id: "education-srmcem",
     role: "B.Tech — Computer Science & Engineering",
-    company: "Shri Ramswaroop Memorial College of Engineering & Management (SRM-CEM)",
-    location: "Lucknow, Uttar Pradesh, India",
-    period: "2022 — 2026 (Graduation 2026)",
+    company: "Shri Ramswaroop Memorial College of Engg. & Management (SRM-CEM / SRMCM)",
+    location: "Lucknow, Uttar Pradesh, India (AKTU)",
+    period: "2022 — 2026 (Class of 2026)",
     type: "Education",
     summary:
-      "Core curriculum in Computer Science & Engineering affiliated with Dr. A.P.J. Abdul Kalam Technical University (AKTU), Lucknow. Maintained strong academic rigor alongside open-source software engineering.",
-    contributions: [
-      "Academic Performance: CGPA 8.6 / 10.0.",
-      "Coursework: Operating Systems, Computer Networks, Compilers, Database Management Systems, Data Structures & Algorithms, Distributed Systems.",
-      "Leadership & Community: Active technical mentoring, open-source workshops, and university hackathon participation.",
+      "Undergraduate engineering curriculum in Computer Science & Engineering under Dr. A.P.J. Abdul Kalam Technical University (AKTU), Lucknow. Maintained high academic merit with an 8.6 CGPA.",
+    highlights: [
+      "Academic Distinction: Maintained a strong cumulative CGPA of 8.6 / 10.0 across all semesters.",
+      "Core Curricular Focus: Operating Systems, Computer Networks, Compiler Design, Database Management Systems, Data Structures & Algorithms, Distributed Computing.",
+      "Technical Leadership: Led student open-source study groups, mentored juniors in Linux fundamentals, and built experimental compilers & developer tools.",
     ],
-    technologies: ["Computer Science", "Algorithms", "Operating Systems", "Networking", "Database Systems"],
-    badge: "CGPA: 8.6",
+    technologies: [
+      "Operating Systems",
+      "Compilers",
+      "Computer Networks",
+      "Data Structures & Algorithms",
+      "DBMS",
+      "CGPA: 8.6",
+    ],
+    badge: "CGPA 8.6 · Class of 2026",
+    accentColor: "#a855f7",
+  },
+  {
+    id: "linux-openprinting",
+    role: "Core Open Source Contributor & Maintainer",
+    company: "The Linux Foundation / OpenPrinting",
+    location: "Global Open Source",
+    period: "2024 — Present",
+    type: "Open Source",
+    summary:
+      "Active contributor across core Linux desktop printing infrastructure, solving upstream asynchronous concurrency issues and driverless metadata regeneration.",
+    highlights: [
+      "Engineered asynchronous GLib/D-Bus daemon resolver in system-config-printer, eradicating the persistent GTK thread freeze.",
+      "Regenerated complete driverless printer metadata from XML repositories across Foomatic-DB.",
+      "Merged 11+ pull requests across upstream OpenPrinting and Linux driver repositories.",
+    ],
+    technologies: [
+      "Linux Kernel IPC",
+      "Python",
+      "GLib / GObject",
+      "D-Bus Concurrency",
+      "CUPS Architecture",
+      "Git / Upstream",
+    ],
+    badge: "11+ Merged Upstream PRs",
+    accentColor: "#10b981",
   },
 ];
-
