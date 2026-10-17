@@ -10,7 +10,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { identity } from "@/data/identity";
-import { DeveloperBoy3D } from "@/components/three/DeveloperBoy3D";
+import { AnimeDeveloperBoy } from "@/components/hero/AnimeDeveloperBoy";
 
 const nameFirst = ["A", "Y", "U", "S", "H"];
 const nameLast = ["S", "I", "N", "G", "H"];
@@ -200,24 +200,9 @@ export function HeroIdentity() {
           </div>
         </div>
 
-        {/* Right Column: Interactive 3D Developer Boy Model */}
-        <div className="lg:col-span-5 w-full flex flex-col items-center justify-center relative mt-4 lg:mt-0">
-          <div className="relative w-full rounded-3xl bg-gradient-to-b from-[#0e1422]/90 to-[#080b12]/90 border border-white/10 p-2 sm:p-3 overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.65)] group">
-            {/* Cyber Container Header */}
-            <div className="flex items-center justify-between px-3 py-1.5 border-b border-white/10 font-mono text-[10px] text-neutral-400 select-none">
-              <div className="flex items-center gap-1.5 text-[#00f5d4]">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#00f5d4] animate-ping" />
-                <span className="font-semibold tracking-wider">DEV.AVATAR // 3D MODEL</span>
-              </div>
-              <div className="flex items-center gap-1.5 text-neutral-400">
-                <Sparkles className="w-3 h-3 text-[#00f5d4]" />
-                <span className="hidden sm:inline">360° INTERACTIVE</span>
-              </div>
-            </div>
-
-            {/* 3D WebGL Canvas */}
-            <DeveloperBoy3D />
-          </div>
+        {/* Right Column: Interactive 3D Anime Developer Character (No box, no buttons, seamless hero integration) */}
+        <div className="lg:col-span-5 w-full flex items-center justify-center relative mt-2 lg:mt-0">
+          <AnimeDeveloperBoy />
         </div>
       </div>
 

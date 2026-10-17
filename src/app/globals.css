@@ -349,3 +349,60 @@ body {
   animation: bridge-beam 4s ease-in-out infinite;
 }
 
+/* Anime Character Gentle Float & Holographic Kinematics */
+@keyframes anime-float-keyframes {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-9px);
+  }
+}
+
+.animate-anime-float {
+  will-change: transform;
+  animation: anime-float-keyframes 5.5s ease-in-out infinite;
+}
+
+@keyframes float-slow-keyframes {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-6px) rotate(-1.5deg);
+  }
+}
+
+.animate-float-slow {
+  will-change: transform;
+  animation: float-slow-keyframes 6s ease-in-out infinite;
+}
+
+@keyframes float-medium-keyframes {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(2deg);
+  }
+}
+
+.animate-float-medium {
+  will-change: transform;
+  animation: float-medium-keyframes 4.8s ease-in-out infinite 0.5s;
+}
+
+@keyframes float-fast-keyframes {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.animate-float-fast {
+  will-change: transform;
+  animation: float-fast-keyframes 3.8s ease-in-out infinite 1s;
+}
+
