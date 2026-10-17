@@ -11,9 +11,9 @@ export function GiantFooter() {
   return (
     <footer
       aria-label="Portfolio Footer and Identity Monument"
-      className="relative bg-gradient-to-t from-black via-[#06070a] to-[#08090c] pt-12 sm:pt-20 pb-8 sm:pb-12 px-4 sm:px-6 lg:px-12 border-t border-white/10 overflow-hidden z-10 w-full"
+      className="relative bg-gradient-to-t from-black via-[#06070a] to-[#08090c] pt-12 sm:pt-20 pb-8 sm:pb-12 px-4 sm:px-8 lg:px-12 xl:px-16 border-t border-white/10 overflow-hidden z-10 w-full"
     >
-      <div className="max-w-7xl mx-auto flex flex-col justify-between min-h-[50vh] sm:min-h-[55vh] w-full">
+      <div className="max-w-[1560px] mx-auto flex flex-col justify-between min-h-[50vh] sm:min-h-[55vh] w-full">
         {/* Top Controls: Sleek Back to Top */}
         <div className="flex items-center justify-end pb-6 sm:pb-8 border-b border-white/10 w-full">
           <button

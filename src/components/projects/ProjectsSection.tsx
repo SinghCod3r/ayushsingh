@@ -112,7 +112,7 @@ export function ProjectsSection() {
     <section
       id="projects"
       aria-label="Engineered Systems & Interactive Projects"
-      className="relative py-12 sm:py-16 md:py-20 px-4 sm:px-6 lg:px-12 max-w-7xl mx-auto z-10 w-full overflow-hidden scroll-mt-16"
+      className="relative py-12 sm:py-16 md:py-20 px-4 sm:px-8 lg:px-12 xl:px-16 max-w-[1560px] mx-auto z-10 w-full overflow-hidden scroll-mt-16"
     >
       {/* Section Header Motif */}
       <div
