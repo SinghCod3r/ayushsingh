@@ -81,9 +81,7 @@ export default function Home() {
       </main>
 
       {/* Section 10: Monumental Giant AYUSH SINGH Footer */}
-      <SectionReveal>
-        <GiantFooter />
-      </SectionReveal>
+      <GiantFooter />
     </div>
   );
 }
