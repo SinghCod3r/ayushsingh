@@ -10,7 +10,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { identity } from "@/data/identity";
-import { AnimeDeveloperBoy } from "@/components/hero/AnimeDeveloperBoy";
+import { DeveloperAvatar3D } from "@/components/hero/DeveloperAvatar3D";
 
 const nameFirst = ["A", "Y", "U", "S", "H"];
 const nameLast = ["S", "I", "N", "G", "H"];
@@ -65,12 +65,7 @@ export function HeroIdentity() {
         {/* Left Column: 3D Typography, Identity & CTAs */}
         <div className="lg:col-span-7 flex flex-col items-start w-full z-10">
           {/* System Sector Marker */}
-          <div className="flex items-center gap-2 mb-3 sm:mb-4 px-2.5 py-1 rounded-full bg-white/5 border border-white/10 font-mono text-[10px] sm:text-xs text-neutral-400">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#00f5d4] animate-pulse" />
-            <span className="text-[#00f5d4] font-semibold">SECTOR 01</span>
-            <span className="text-neutral-600">//</span>
-            <span className="text-neutral-300">CORE ARCHITECTURE & SYSTEMS</span>
-          </div>
+          
 
           {/* 3D Animated Typography with Mouse Parallax & Dynamic Perspective */}
           <div
@@ -152,7 +147,7 @@ export function HeroIdentity() {
           </p>
 
           {/* Primary Interactive CTAs */}
-          <div className="mt-6 sm:mt-8 flex flex-wrap items-center gap-2.5 sm:gap-3 font-mono text-xs sm:text-sm">
+          <div className="mt-3 sm:mt-4 flex flex-wrap items-center gap-2 sm:gap-2 font-mono text-xs sm:text-sm">
             <a
               href="#open-source"
               className="flex items-center gap-2 px-4 sm:px-5 py-2.5 sm:py-3 rounded-full bg-[#00f5d4] text-[#08090c] font-bold hover:bg-[#38bdf8] transition-all cursor-pointer text-xs sm:text-sm shadow-[0_0_20px_rgba(0,245,212,0.3)] hover:shadow-[0_0_28px_rgba(56,189,248,0.5)]"
@@ -200,9 +195,9 @@ export function HeroIdentity() {
           </div>
         </div>
 
-        {/* Right Column: Interactive 3D Anime Developer Character (No box, no buttons, seamless hero integration) */}
+        {/* Right Column: Interactive 3D Character Model (Zero background, 360° drag rotation) */}
         <div className="lg:col-span-5 w-full flex items-center justify-center relative mt-2 lg:mt-0">
-          <AnimeDeveloperBoy />
+          <DeveloperAvatar3D />
         </div>
       </div>
 
