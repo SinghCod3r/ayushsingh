@@ -236,7 +236,7 @@ export function ExperienceSection() {
             {/* Key Contributions / Highlights Grid */}
             <div className="space-y-2.5 pt-2">
               <span className="text-xs font-mono font-semibold text-neutral-400 uppercase tracking-wider block">
-                Key Architecture & Technical Contributions:
+                Key Highlights:
               </span>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5 sm:gap-3">
                 {activeItem.highlights.map((h, i) => (

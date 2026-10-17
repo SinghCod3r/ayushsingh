@@ -46,8 +46,7 @@ export function OpenSourceSection() {
             Core Open Source Work
           </h2>
           <p className="mt-3 text-sm sm:text-base md:text-lg text-neutral-300 max-w-2xl font-light">
-            Core contributor in Linux OpenPrinting. Architecting asynchronous thread safety,
-            hardware daemon discovery, and responsive desktop workflows preinstalled across distributions.
+            Core contributor in Linux OpenPrinting, architecting asynchronous thread safety, hardware daemon discovery, and desktop printer workflows.
           </p>
         </div>
 
@@ -90,7 +89,7 @@ export function OpenSourceSection() {
               {primaryProject.name}
             </h3>
             <p className="mt-2.5 text-neutral-300 max-w-3xl leading-relaxed text-xs sm:text-sm md:text-base font-light">
-              Core Linux printing management GUI. Architected asynchronous driverless PPD validation to eliminate UI lockups, stabilized printer discovery over IPP/DNS-SD, and refactored PackageKit/D-Bus lifecycle handling.
+              Core Linux printing GUI. Architected async driverless PPD validation to eliminate UI freezes and stabilized IPP/DNS-SD discovery.
             </p>
           </div>
 

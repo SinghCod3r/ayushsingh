@@ -35,12 +35,12 @@ export function AboutPhilosophy() {
             Curious about what lives beneath the abstraction layer.
           </h2>
 
-          <div className="space-y-3 text-neutral-300 font-light text-sm sm:text-base md:text-lg leading-relaxed">
+          <div className="space-y-2.5 text-neutral-300 font-light text-sm sm:text-base md:text-lg leading-relaxed">
             <p>
-              I build software from the core upward. When a desktop GUI freezes, I inspect the main thread event loop; when local LLMs drift, I construct deterministic validation harnesses; when an execution environment behaves unexpectedly, I build an interpreter from scratch.
+              I build software from the core upward. When a desktop GUI freezes, I inspect the event loop; when local LLMs drift, I build deterministic validation harnesses.
             </p>
-            <p>
-              My work spans open-source Linux daemons, developer CLI tools, AI decision engines, and web applications. Rather than confining myself to a single layer, I work across the full engineering stack.
+            <p className="text-neutral-400 text-xs sm:text-sm md:text-base">
+              Spanning open-source Linux daemons, developer CLIs, AI systems, and full-stack web architectures.
             </p>
           </div>
 

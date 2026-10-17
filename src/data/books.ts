@@ -28,17 +28,16 @@ export const books: BookData[] = [
     url: "https://store.pothi.com/book/er-ayush-singh-last-manual-merge/",
     tagline: "When consciousness becomes deprecated code.",
     synopsis:
-      "A high-concept speculative fiction exploring the blurred frontier between software architectures, artificial consciousness, and societal synchronization. When human perception itself is treated as a routine build pipeline, maintaining an unmerged identity becomes an act of existential defiance.",
+      "A speculative systems thriller exploring software architectures, artificial consciousness, and human identity.",
     themes: [
-      "Algorithmic Determinism vs. Human Free Will",
-      "Version Control as Existential Philosophy",
-      "The Fragility of Biological Identity",
-      "Systemic Optimization at the Cost of Consciousness",
+      "Algorithmic Determinism",
+      "Version Control as Philosophy",
+      "Human Identity in Code",
     ],
     quote:
       "“In a world running on zero-conflict automated builds, the last manual merge was an act of human rebellion.”",
     excerptSnippet:
-      "The telemetry stream didn't warn them. It arrived like an unscheduled routine patch in the dead hours of morning—quiet, mandatory, and irreversible. By the time the sensory latency cleared, the world outside was no longer running on biological consensus...",
+      "The telemetry stream didn't warn them. It arrived like an unscheduled routine patch in the dead hours of morning—quiet, mandatory, and irreversible...",
     accentColor: "#00f5d4",
     glowColor: "rgba(0, 245, 212, 0.25)",
   },
@@ -53,12 +52,11 @@ export const books: BookData[] = [
     url: "https://store.pothi.com/book/er-ayush-singh-road-i-chose/",
     tagline: "The courage to steer when the map is unwritten.",
     synopsis:
-      "A candid, introspective retrospective on choosing unconventional challenges over standard academic expectations. Chronicling the journey through open-source persistence, systems engineering, and the mental grit required to carve out an authentic identity against the current.",
+      "An introspective memoir on choosing unconventional challenges, open-source persistence, and technical resilience.",
     themes: [
-      "Navigating Uncertainty with Engineering Discipline",
-      "Choosing Unconventional Paths in Technology",
-      "Open Source Grit & Self-Taught Persistence",
-      "Self-Determination Beyond Prescribed Standards",
+      "Engineering Discipline",
+      "Unconventional Paths",
+      "Open Source Grit",
     ],
     quote:
       "“The path was never paved, and the signposts were missing. But choosing your own road is the only way to arrive at who you were meant to be.”",
