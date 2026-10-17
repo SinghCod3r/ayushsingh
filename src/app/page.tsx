@@ -5,8 +5,7 @@ import { CanvasBackground } from "@/components/three/CanvasBackground";
 import { CinematicIntro } from "@/components/intro/CinematicIntro";
 import { CustomCursor } from "@/components/ui/CustomCursor";
 import { FloatingNav } from "@/components/navigation/FloatingNav";
-import { SectionTransitionIndicator } from "@/components/navigation/SectionTransitionIndicator";
-import { SectionBridge } from "@/components/ui/SectionBridge";
+import { SectionReveal } from "@/components/ui/SectionReveal";
 import { HeroIdentity } from "@/components/hero/HeroIdentity";
 import { OpenSourceSection } from "@/components/open-source/OpenSourceSection";
 import { ProjectsSection } from "@/components/projects/ProjectsSection";
@@ -33,105 +32,58 @@ export default function Home() {
       {/* Floating Glassmorphism Navigation */}
       <FloatingNav />
 
-      {/* Section Transition Indicator & Holographic Scan Beam */}
-      <SectionTransitionIndicator />
-
-      {/* Main Narrative Flow */}
-      <main className="relative z-10 flex flex-col gap-6 sm:gap-10 w-full overflow-x-hidden">
+      {/* Main Narrative Flow with Animated Coming & Going for Every Section */}
+      <main className="relative z-10 flex flex-col gap-12 sm:gap-20 w-full overflow-x-hidden">
         {/* Section 01: Hero Identity */}
-        <HeroIdentity />
-
-        <SectionBridge
-          fromSector="01"
-          fromName="IDENTITY"
-          toSector="02"
-          toName="OPEN SOURCE"
-          nextHref="#open-source"
-        />
+        <SectionReveal>
+          <HeroIdentity />
+        </SectionReveal>
 
         {/* Section 02: Open Source Contributions & UI Freeze Architecture */}
-        <OpenSourceSection />
-
-        <SectionBridge
-          fromSector="02"
-          fromName="OPEN SOURCE"
-          toSector="03"
-          toName="SYSTEMS"
-          nextHref="#projects"
-        />
+        <SectionReveal>
+          <OpenSourceSection />
+        </SectionReveal>
 
         {/* Section 03: Featured Systems & Interactive Projects */}
-        <ProjectsSection />
-
-        <SectionBridge
-          fromSector="03"
-          fromName="SYSTEMS"
-          toSector="04"
-          toName="TECH STACK"
-          nextHref="#tech-stack"
-        />
+        <SectionReveal>
+          <ProjectsSection />
+        </SectionReveal>
 
         {/* Section 04: Practical Tech Stack & Systems Toolchain */}
-        <TechStackSection />
-
-        <SectionBridge
-          fromSector="04"
-          fromName="TECH STACK"
-          toSector="05"
-          toName="PUBLICATIONS"
-          nextHref="#writing-books"
-        />
+        <SectionReveal>
+          <TechStackSection />
+        </SectionReveal>
 
         {/* Section 05: Books & Technical Writing */}
-        <WritingBooksSection />
-
-        <SectionBridge
-          fromSector="05"
-          fromName="PUBLICATIONS"
-          toSector="06"
-          toName="SPEAKING"
-          nextHref="#speaking"
-        />
+        <SectionReveal>
+          <WritingBooksSection />
+        </SectionReveal>
 
         {/* Section 06: Conference Speaking & Community Dialogue */}
-        <SpeakingSection />
-
-        <SectionBridge
-          fromSector="06"
-          fromName="SPEAKING"
-          toSector="07"
-          toName="EXPERIENCE"
-          nextHref="#experience"
-        />
+        <SectionReveal>
+          <SpeakingSection />
+        </SectionReveal>
 
         {/* Section 07: Trajectory & Professional Experience */}
-        <ExperienceSection />
-
-        <SectionBridge
-          fromSector="07"
-          fromName="EXPERIENCE"
-          toSector="08"
-          toName="PHILOSOPHY"
-          nextHref="#about"
-        />
+        <SectionReveal>
+          <ExperienceSection />
+        </SectionReveal>
 
         {/* Section 08: Engineering Philosophy & The Continuum */}
-        <AboutPhilosophy />
-
-        <SectionBridge
-          fromSector="08"
-          fromName="PHILOSOPHY"
-          toSector="09"
-          toName="CONTACT"
-          nextHref="#contact"
-        />
+        <SectionReveal>
+          <AboutPhilosophy />
+        </SectionReveal>
 
         {/* Section 09: Direct Contact & Communication Console */}
-        <ContactSection />
+        <SectionReveal>
+          <ContactSection />
+        </SectionReveal>
       </main>
 
       {/* Section 10: Monumental Giant AYUSH SINGH Footer */}
-      <GiantFooter />
+      <SectionReveal>
+        <GiantFooter />
+      </SectionReveal>
     </div>
   );
 }
