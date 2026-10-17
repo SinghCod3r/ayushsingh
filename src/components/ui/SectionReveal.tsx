@@ -15,23 +15,38 @@ export function SectionReveal({
   delay = 0,
 }: SectionRevealProps) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 28 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{
-        once: false,
-        amount: 0.04,
-        margin: "0px 0px -20px 0px",
-      }}
-      transition={{
-        duration: 0.5,
-        delay,
-        ease: [0.16, 1, 0.3, 1],
-      }}
-      className={`w-full ${className}`}
-      style={{ transform: "translate3d(0, 0, 0)" }}
-    >
-      {children}
-    </motion.div>
+    <div className="w-full [perspective:1400px]">
+      <motion.div
+        initial={{
+          opacity: 0,
+          y: 85,
+          scale: 0.91,
+          rotateX: 4,
+        }}
+        whileInView={{
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          rotateX: 0,
+        }}
+        viewport={{
+          once: false,
+          amount: 0.08,
+          margin: "0px 0px -40px 0px",
+        }}
+        transition={{
+          duration: 0.72,
+          delay,
+          ease: [0.22, 1.22, 0.36, 1], // dynamic pop-up curve with smooth settling
+        }}
+        className={`w-full will-change-transform ${className}`}
+        style={{
+          transformStyle: "preserve-3d",
+          transformOrigin: "center bottom",
+        }}
+      >
+        {children}
+      </motion.div>
+    </div>
   );
 }
