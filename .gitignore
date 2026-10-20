@@ -19,6 +19,12 @@
 
 # production
 /build
+/dist
+
+# processing artifacts
+full/
+process_all_frames.py
+take_screenshots.py
 
 # misc
 .DS_Store
