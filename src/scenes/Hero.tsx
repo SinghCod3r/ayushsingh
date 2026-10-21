@@ -1,173 +1,123 @@
 import React, { useEffect, useRef } from 'react';
-import { director } from '../engine/director';
 import { PORTFOLIO_DATA } from '../data';
+import { initHeroAnimation } from '../animations/hero';
 
 export const Hero: React.FC = () => {
-  const sectionRef = useRef<HTMLDivElement | null>(null);
-  const contentRef = useRef<HTMLDivElement | null>(null);
-  const underlineRef = useRef<HTMLDivElement | null>(null);
+  const heroRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    if (sectionRef.current) {
-      director.registerSection('hero', sectionRef.current);
-    }
-
-    const unsubscribe = director.subscribe((state) => {
-      const prog = state.scenesProgress['hero'];
-      if (!prog) return;
-
-      // Mutate DOM through refs only - NO React re-renders while scrolling
-      if (contentRef.current) {
-        const exitFade = Math.max(0, 1 - prog.exit);
-        const yOffset = -prog.p * 40;
-        contentRef.current.style.opacity = String(exitFade);
-        contentRef.current.style.transform = `translate3d(0, ${yOffset}px, 0)`;
-      }
-
-      if (underlineRef.current) {
-        // Red highlighter underline grows with scroll progress as though reading
-        const widthPercent = Math.min(100, Math.max(0, prog.p * 180));
-        underlineRef.current.style.width = `${widthPercent}%`;
-      }
-    });
-
-    return () => {
-      director.unregisterSection('hero');
-      unsubscribe();
-    };
+    if (!heroRef.current) return;
+    const cleanup = initHeroAnimation(heroRef.current);
+    return cleanup;
   }, []);
 
-  const { identity } = PORTFOLIO_DATA;
-
-  const handleScrollToWork = (e: React.MouseEvent) => {
-    e.preventDefault();
-    director.scrollToSection(2); // Work scene index
-  };
-
   return (
-    <section
-      ref={sectionRef}
-      id="hero"
-      className="scene-section"
-      style={{
-        height: '230vh',
-        position: 'relative',
-        width: '100%',
-      }}
-    >
-      <div className="section-outer">
-        <div className="section-inner">
-          {/* FRONT LEFT Content: 5vw, top: 26vh, width: min(47vw,780px) */}
-          <div
-            ref={contentRef}
-            className="hero-front-content"
-            style={{
-              position: 'absolute',
-              left: '5vw',
-              top: '26vh',
-              width: 'min(47vw, 780px)',
-              display: 'flex',
-              flexDirection: 'column',
-              zIndex: 10,
-              willChange: 'transform, opacity',
-            }}
-          >
-            {/* Greeting */}
-            <div
-              style={{
-                fontSize: 'clamp(14px, 1.2vw, 18px)',
-                letterSpacing: '-0.01em',
-                marginBottom: '1.2vh',
-                color: 'var(--mute)',
-                fontWeight: 500,
-              }}
-            >
-              Hi, I'm <strong style={{ color: 'var(--ink)', fontWeight: 600 }}>{identity.fullName}</strong> —
+    <section id="hero" ref={heroRef} className="hero-section">
+      <div className="hero-container">
+        {/* Top Editorial Meta Bar */}
+        <div className="hero-badge hero-anim-in">
+          <span className="hero-badge-tag">
+            <svg className="reticle-glyph-svg" viewBox="0 0 14 14" aria-hidden="true">
+              <path id="hero-reticle-path" d="M7 1v12M1 7h12" />
+            </svg>
+            PORTFOLIO // VOL. 2026
+          </span>
+          <span className="hero-badge-loc">26.8467° N, 80.9462° E • LUCKNOW, IN</span>
+        </div>
+
+        {/* Main Composition Grid */}
+        <div className="hero-grid">
+          {/* Left / Typography Column */}
+          <div className="hero-text-col hero-title-wrap">
+            <div className="hero-subheading hero-title-line">
+              <span className="accent-bar" />
+              SOFTWARE ENGINEER • UPSTREAM MAINTAINER
             </div>
 
-            {/* Title: SOFTWARE ENGINEER. Second line red */}
-            <h1
-              className="font-anton"
-              style={{
-                fontSize: 'clamp(54px, 7.4vw, 148px)',
-                lineHeight: 0.88,
-                letterSpacing: '-0.01em',
-                marginBottom: '2.5vh',
-                display: 'flex',
-                flexDirection: 'column',
-              }}
-            >
-              <span style={{ color: 'var(--ink)' }}>SOFTWARE</span>
-              <span style={{ color: 'var(--red)' }}>ENGINEER.</span>
+            <h1 className="hero-monument-title">
+              <span className="hero-title-line display-block">AYUSH</span>
+              <span className="hero-title-line display-block hero-title-stroke">SINGH</span>
             </h1>
 
-            {/* Description: Three lines with red highlighter underline */}
-            <div
-              style={{
-                position: 'relative',
-                maxWidth: '31em',
-                fontSize: 'clamp(16px, 1.35vw, 22px)',
-                lineHeight: 1.45,
-                color: 'var(--ink)',
-                fontWeight: 400,
-                letterSpacing: '-0.02em',
-                marginBottom: '4vh',
-              }}
-            >
-              <p>{identity.heroDescription}</p>
-              {/* Red highlighter underline that grows with scroll */}
-              <div
-                ref={underlineRef}
-                style={{
-                  position: 'absolute',
-                  bottom: '-4px',
-                  left: 0,
-                  height: '3px',
-                  background: 'var(--red)',
-                  width: '0%',
-                  transition: 'width 0.1s ease-out',
-                }}
-              />
+            <p className="hero-description hero-meta-item">
+              {PORTFOLIO_DATA.identity.heroDescription}
+            </p>
+
+            <div className="hero-actions-row hero-meta-item">
+              <a href="#projects" className="btn-primary">
+                <span>VIEW SELECTED WORK</span>
+                <span className="btn-arrow">→</span>
+              </a>
+              <a href="#opensource" className="btn-secondary">
+                <span>OPEN SOURCE</span>
+                <span className="btn-dot" />
+              </a>
             </div>
 
-            {/* Action Buttons: See my work / Download resume */}
-            <div
-              className="hero-cta-group"
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '16px',
-                flexWrap: 'wrap',
-              }}
-            >
-              <a
-                href="#work"
-                onClick={handleScrollToWork}
-                className="pill-btn primary magnetic-btn"
-                data-cursor="Go"
-              >
-                <div className="btn-text-roll">
-                  <span>See my work ↘</span>
-                  <span aria-hidden="true">See my work ↘</span>
-                </div>
-              </a>
-
-              <a
-                href={identity.links.resume}
-                download="Ayush_Singh_Resume.pdf"
-                className="pill-btn outline magnetic-btn"
-                data-cursor="PDF"
-              >
-                <div className="btn-text-roll">
-                  <span>Download résumé</span>
-                  <span aria-hidden="true">Download résumé</span>
-                </div>
-              </a>
+            {/* Quick Metrics Bar */}
+            <div className="hero-stats-strip hero-meta-item">
+              <div className="hero-stat-cell">
+                <span className="hero-stat-num">11+</span>
+                <span className="hero-stat-label">Upstream PRs</span>
+              </div>
+              <div className="hero-stat-cell">
+                <span className="hero-stat-num">19</span>
+                <span className="hero-stat-label">REST APIs</span>
+              </div>
+              <div className="hero-stat-cell">
+                <span className="hero-stat-num">8.62</span>
+                <span className="hero-stat-label">B.Tech CGPA</span>
+              </div>
             </div>
           </div>
+
+          {/* Right / Ayush's Real Hero Portrait Column */}
+          <div className="hero-visual-col">
+            <div className="hero-portrait-wrap">
+              <div className="hero-portrait-backdrop" aria-hidden="true" />
+              <div className="hero-portrait-frame">
+                <img
+                  src="./assets/ayush-hero.webp"
+                  alt="Ayush Singh - Software Engineer and Open Source Maintainer"
+                  className="hero-portrait-img"
+                  loading="eager"
+                  fetchPriority="high"
+                />
+              </div>
+
+              {/* Floating Architectural Technical HUD Card */}
+              <div className="hero-hud-card">
+                <div className="hud-card-header">
+                  <span className="hud-pulse-dot" />
+                  <span className="hud-card-title">LINUX FOUNDATION // OPENPRINTING</span>
+                </div>
+                <div className="hud-card-body">
+                  <code>system-config-printer • maintainer</code>
+                  <span className="hud-card-status">ACTIVE TRIAGE</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom Scroll Cue */}
+        <div className="hero-scroll-cue">
+          <a href="#about" className="scroll-cue-link">
+            <span className="scroll-cue-mouse">
+              <span className="scroll-cue-wheel" />
+            </span>
+            <span className="scroll-cue-label">SCROLL TO DISCOVER</span>
+          </a>
+        </div>
+
+        {/* Architectural Connector (Hero → About Transformation) */}
+        <div className="section-connector-bridge hero-to-about-bridge" aria-hidden="true">
+          <svg className="connector-path-svg" viewBox="0 0 2 80" preserveAspectRatio="none">
+            <path id="hero-about-line" d="M1 0 L1 80" className="connector-line" />
+          </svg>
+          <div className="connector-tracer-dot hero-about-tracer" />
         </div>
       </div>
     </section>
   );
 };
-

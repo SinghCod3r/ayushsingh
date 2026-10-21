@@ -1,217 +1,109 @@
-import React, { useEffect, useRef } from 'react';
-import { director } from '../engine/director';
+import React, { useEffect, useRef, useState } from 'react';
 import { PORTFOLIO_DATA } from '../data';
+import { initContactAnimation } from '../animations/contact';
 
 export const Contact: React.FC = () => {
-  const sectionRef = useRef<HTMLDivElement | null>(null);
-  const frontContentRef = useRef<HTMLDivElement | null>(null);
-  const underlineRef = useRef<HTMLDivElement | null>(null);
-
-  const { contact } = PORTFOLIO_DATA;
+  const contactRef = useRef<HTMLElement>(null);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
-    if (sectionRef.current) {
-      director.registerSection('contact', sectionRef.current);
-    }
-
-    const unsubscribe = director.subscribe((state) => {
-      const prog = state.scenesProgress['contact'];
-      if (!prog) return;
-
-      if (frontContentRef.current) {
-        // Enters with fade and rise
-        const enterProg = Math.max(0, Math.min(1, prog.enter * 1.4));
-        frontContentRef.current.style.opacity = String(enterProg);
-      }
-    });
-
-    return () => {
-      director.unregisterSection('contact');
-      unsubscribe();
-    };
+    if (!contactRef.current) return;
+    const cleanup = initContactAnimation(contactRef.current);
+    return cleanup;
   }, []);
 
-  const handleBackToTop = (e: React.MouseEvent) => {
-    e.preventDefault();
-    director.scrollToSection(0);
+  const handleCopyEmail = () => {
+    navigator.clipboard.writeText(PORTFOLIO_DATA.contact.fullEmail);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2400);
   };
 
   return (
-    <section
-      ref={sectionRef}
-      id="contact"
-      className="scene-section"
-      style={{
-        height: '240vh',
-        position: 'relative',
-        width: '100%',
-      }}
-    >
-      <div className="section-outer">
-        <div className="section-inner">
-          {/* FRONT Content: Email on bottom-left, stacked links on bottom-right, footer */}
-          <div
-            ref={frontContentRef}
-            className="contact-front-content"
-            style={{
-              position: 'absolute',
-              left: '5vw',
-              right: '5vw',
-              bottom: '5vh',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'flex-end',
-              zIndex: 10,
-              willChange: 'opacity',
-            }}
-          >
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'flex-end',
-                flexWrap: 'wrap',
-                gap: '32px',
-                marginBottom: '4vh',
-              }}
-            >
-              {/* Bottom-left: Email in Anton split over two lines */}
-              <div>
-                <div
-                  className="section-label"
-                  style={{
-                    marginBottom: '1vh',
-                    color: '#ffffff',
-                  }}
-                >
-                  <span className="num" style={{ color: '#ffffff' }}>({contact.sectionNum})</span>
-                  <span className="title" style={{ color: 'rgba(255, 255, 255, 0.8)' }}>— Get in touch</span>
-                </div>
+    <footer id="contact" ref={contactRef} className="contact-section">
+      <div className="section-container">
+        {/* Section Header */}
+        <div className="section-header-block">
+          <div className="section-num-tag">{PORTFOLIO_DATA.contact.sectionNum} // OUTRO</div>
+          <span className="contact-status-badge">
+            <span className="contact-status-dot" />
+            OPEN FOR FULL-TIME ROLES &amp; SELECT COLLABORATIONS
+          </span>
+        </div>
 
-                <a
-                  href={`mailto:${contact.fullEmail}`}
-                  className="contact-email-link"
-                  data-cursor="Write"
-                  style={{
-                    textDecoration: 'none',
-                    display: 'inline-block',
-                    position: 'relative',
-                  }}
-                  onMouseEnter={() => {
-                    if (underlineRef.current) underlineRef.current.style.width = '100%';
-                  }}
-                  onMouseLeave={() => {
-                    if (underlineRef.current) underlineRef.current.style.width = '0%';
-                  }}
-                >
-                  <div
-                    className="font-anton"
-                    style={{
-                      fontSize: 'clamp(34px, 4.2vw, 76px)',
-                      lineHeight: 0.9,
-                      letterSpacing: '-0.01em',
-                    }}
-                  >
-                    <div style={{ color: '#ffffff' }}>{contact.emailUser}</div>
-                    <div style={{ color: 'var(--ink)' }}>{contact.emailDomain}</div>
-                  </div>
+        {/* Monumental Cinematic Headline */}
+        <div className="contact-headline-wrap">
+          <h2 className="contact-headline">
+            <span className="contact-headline-line display-block">LET&apos;S BUILD</span>
+            <span className="contact-headline-line display-block text-stroke">SOMETHING</span>
+            <span className="contact-headline-line display-block accent-red">GREAT.</span>
+          </h2>
+        </div>
 
-                  {/* White underline wipes on hover */}
-                  <div
-                    ref={underlineRef}
-                    style={{
-                      position: 'absolute',
-                      bottom: '-4px',
-                      left: 0,
-                      height: '3px',
-                      background: '#ffffff',
-                      width: '0%',
-                      transition: 'width 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
-                    }}
-                  />
-                </a>
-              </div>
-
-              {/* Bottom-right: Stacked links with hairline separators */}
-              <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  minWidth: '220px',
-                }}
-              >
-                {contact.links.map((link, idx) => (
-                  <a
-                    key={idx}
-                    href={link.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    data-cursor="Open"
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      padding: '16px 0',
-                      borderBottom: '1px solid rgba(255, 255, 255, 0.25)',
-                      textDecoration: 'none',
-                      color: '#ffffff',
-                      fontFamily: "'JetBrains Mono', monospace",
-                      fontSize: '13px',
-                      fontWeight: 600,
-                      letterSpacing: '0.04em',
-                      textTransform: 'uppercase',
-                    }}
-                    className="contact-link-row"
-                  >
-                    <span>{link.label}</span>
-                    <span
-                      className="arrow"
-                      style={{
-                        transition: 'transform 0.25s ease',
-                        display: 'inline-block',
-                      }}
-                    >
-                      ↗
-                    </span>
-                  </a>
-                ))}
-              </div>
+        {/* Direct Action Hub */}
+        <div className="contact-actions-grid">
+          {/* Email Direct Card */}
+          <div className="contact-action-item email-box">
+            <span className="action-tag">DIRECT DISPATCH</span>
+            <div className="email-display-row">
+              <span className="email-address-text">{PORTFOLIO_DATA.contact.fullEmail}</span>
             </div>
-
-            {/* Footer: (c) 2026 Ayush Singh, Back to top */}
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                paddingTop: '20px',
-                borderTop: '1px solid rgba(255, 255, 255, 0.2)',
-                fontFamily: "'JetBrains Mono', monospace",
-                fontSize: '11px',
-                color: 'rgba(255, 255, 255, 0.75)',
-                letterSpacing: '0.04em',
-              }}
-            >
-              <div>© {contact.footer.copyrightYear} {contact.footer.name}. All rights reserved.</div>
-
+            <div className="email-buttons-row">
               <a
-                href="#top"
-                onClick={handleBackToTop}
-                data-cursor="Go"
-                style={{
-                  color: '#ffffff',
-                  textDecoration: 'none',
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                }}
+                href={`mailto:${PORTFOLIO_DATA.contact.fullEmail}`}
+                className="btn-primary email-btn"
               >
-                Back to top ↑
+                <span>OPEN MAIL CLIENT</span>
+                <span className="btn-arrow">→</span>
               </a>
+              <button
+                type="button"
+                onClick={handleCopyEmail}
+                className="btn-secondary copy-btn"
+                aria-label="Copy email address"
+              >
+                <span>{copied ? '✓ COPIED TO CLIPBOARD' : 'COPY EMAIL'}</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Connect & Socials Card */}
+          <div className="contact-action-item links-box">
+            <span className="action-tag">VERIFIED CHANNELS</span>
+            <div className="social-links-list">
+              {PORTFOLIO_DATA.contact.links.map((link) => (
+                <a
+                  key={link.label}
+                  href={link.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="social-link-row"
+                >
+                  <span className="link-label">{link.label}</span>
+                  <span className="link-arrow">↗</span>
+                </a>
+              ))}
             </div>
           </div>
         </div>
+
+        {/* Editorial Sub-Footer */}
+        <div className="contact-subfooter">
+          <div className="subfooter-left">
+            <span className="footer-copyright">
+              &copy; {PORTFOLIO_DATA.contact.footer.copyrightYear} {PORTFOLIO_DATA.contact.footer.name}
+            </span>
+            <span className="footer-bullet">•</span>
+            <span className="footer-note">{PORTFOLIO_DATA.contact.footer.note}</span>
+          </div>
+
+          <div className="subfooter-right">
+            <a href="#hero" className="btn-back-to-top">
+              <span>BACK TO TOP</span>
+              <span className="arrow-up">↑</span>
+            </a>
+          </div>
+        </div>
       </div>
-    </section>
+    </footer>
   );
 };
-

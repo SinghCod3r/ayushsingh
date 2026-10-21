@@ -1,60 +1,78 @@
 import React, { useEffect, useState } from 'react';
-import { director } from './engine/director';
-import { frameStore } from './engine/frames';
-import { Stage } from './components/Stage';
-import { Layers } from './components/Layers';
-import { Preloader, HUD, Cursor } from './components/Chrome';
+import Lenis from 'lenis';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+import { IntroLoader } from './components/IntroLoader';
+import { Navbar } from './components/Navbar';
+import { CinemaAmbient } from './components/CinemaAmbient';
 
 import { Hero } from './scenes/Hero';
 import { About } from './scenes/About';
-import { Work } from './scenes/Work';
-import { Journey } from './scenes/Journey';
 import { Skills } from './scenes/Skills';
-import { Awards } from './scenes/Awards';
+import { Projects } from './scenes/Projects';
+import { OpenSource } from './scenes/OpenSource';
+import { Journey } from './scenes/Journey';
+import { Achievements } from './scenes/Achievements';
 import { Contact } from './scenes/Contact';
 
+gsap.registerPlugin(ScrollTrigger);
+
 export const App: React.FC = () => {
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
-    // Initialize frame store and director
-    frameStore.init();
-    director.init();
+    // Initialize Lenis smooth virtual scroll
+    const lenis = new Lenis({
+      lerp: 0.085,
+      smoothWheel: true,
+      wheelMultiplier: 0.9,
+      touchMultiplier: 1.2,
+    });
+
+    lenis.on('scroll', ScrollTrigger.update);
+
+    const tickerCallback = (time: number) => {
+      lenis.raf(time * 1000);
+    };
+
+    gsap.ticker.add(tickerCallback);
+    gsap.ticker.lagSmoothing(0);
 
     return () => {
-      director.destroy();
+      gsap.ticker.remove(tickerCallback);
+      lenis.destroy();
+      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
     };
   }, []);
 
   return (
-    <div className="portfolio-app">
-      {/* 1. Global Preloader (Split red halves with counter) */}
-      <Preloader onComplete={() => setIsLoaded(true)} />
+    <div className="portfolio-app-root">
+      {/* 1. Cinematic Intro Preloader */}
+      <IntroLoader onComplete={() => setIsReady(true)} />
 
-      {/* 2. HUD & Custom Cursor */}
-      <HUD />
-      <Cursor />
+      {/* 2. Top Navigation Bar */}
+      <Navbar />
 
-      {/* 3. Layer Architecture: */}
-      {/* z0: Fixed .layer-back (behind person) */}
-      {/* z2: Fixed .layer-front (front half of orbit) */}
-      <Layers />
+      {/* 3. 10% Cinematic Ambient Video Layer */}
+      <CinemaAmbient />
 
-      {/* z1: Fixed Canvas Stage */}
-      <Stage />
+      {/* 4. Film Grain Texture Overlay */}
+      <div className="film-grain-overlay" aria-hidden="true" />
 
-      {/* z3: Main Scroll Container */}
-      <main id="main-content">
+      {/* 5. Main Scroll Journey Container */}
+      <main id="main-content" className={`main-scroll-flow ${isReady ? 'content-ready' : ''}`}>
         <Hero />
         <About />
-        <Work />
-        <Journey />
         <Skills />
-        <Awards />
+        <Projects />
+        <OpenSource />
+        <Journey />
+        <Achievements />
         <Contact />
       </main>
     </div>
   );
 };
-export default App;
 
+export default App;

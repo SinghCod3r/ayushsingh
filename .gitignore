@@ -48,3 +48,10 @@ next-env.d.ts
 
 # raw uploads
 files/
+
+# agent & editor configs
+.gemini/
+.cursor/
+.codex/
+.grok/
+

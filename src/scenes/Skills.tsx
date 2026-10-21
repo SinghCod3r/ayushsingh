@@ -1,220 +1,186 @@
-import React, { useEffect, useRef } from 'react';
-import { director } from '../engine/director';
+import React, { useEffect, useRef, useState } from 'react';
 import { PORTFOLIO_DATA } from '../data';
-import { skillOrbitEngine } from '../components/SkillOrbit';
+import { initSkillsAnimation } from '../animations/skills';
 
 export const Skills: React.FC = () => {
-  const sectionRef = useRef<HTMLDivElement | null>(null);
-  const frontContentRef = useRef<HTMLDivElement | null>(null);
-  const marqueeTrackRef = useRef<HTMLDivElement | null>(null);
-  const categoryContainerRef = useRef<HTMLDivElement | null>(null);
-  const categoryNumRef = useRef<HTMLSpanElement | null>(null);
-  const categoryLabelRef = useRef<HTMLSpanElement | null>(null);
-  const categoryTaglineRef = useRef<HTMLSpanElement | null>(null);
-  const activeSkillTagRef = useRef<HTMLSpanElement | null>(null);
-
-  const { toolkit } = PORTFOLIO_DATA;
+  const skillsRef = useRef<HTMLElement>(null);
+  const [activeCategory, setActiveCategory] = useState<number | null>(null);
 
   useEffect(() => {
-    if (sectionRef.current) {
-      director.registerSection('skills', sectionRef.current);
-    }
-
-    // Subscribe to category transitions from the orbit engine
-    skillOrbitEngine.registerCategoryCallback((stage) => {
-      if (categoryNumRef.current) categoryNumRef.current.textContent = stage.num;
-      if (categoryLabelRef.current) categoryLabelRef.current.textContent = stage.label;
-      if (categoryTaglineRef.current) categoryTaglineRef.current.textContent = `— ${stage.tagline}`;
-      if (activeSkillTagRef.current) {
-        activeSkillTagRef.current.textContent = `NODE / ${stage.activeSkill.toUpperCase()}`;
-      }
-    });
-
-    const unsubscribe = director.subscribe((state) => {
-      const prog = state.scenesProgress['skills'];
-      if (!prog) return;
-
-      if (frontContentRef.current) {
-        // Heading reveals smoothly with enter, fades on exit
-        const enterFade = Math.min(1, Math.max(0, prog.enter * 2.2));
-        const exitFade = Math.max(0, 1 - prog.exit);
-        frontContentRef.current.style.opacity = String(enterFade * exitFade);
-        const yOffset = (1 - enterFade) * 24;
-        frontContentRef.current.style.transform = `translate3d(0, ${yOffset}px, 0)`;
-      }
-
-      // Marquee tape moves horizontally with scroll
-      if (marqueeTrackRef.current) {
-        const xOffset = -prog.p * 600;
-        marqueeTrackRef.current.style.transform = `translate3d(${xOffset}px, 0, 0)`;
-      }
-    });
-
-    return () => {
-      director.unregisterSection('skills');
-      skillOrbitEngine.unregisterCategoryCallback();
-      unsubscribe();
-    };
+    if (!skillsRef.current) return;
+    const cleanup = initSkillsAnimation(skillsRef.current);
+    return cleanup;
   }, []);
 
-  const marqueeText = toolkit.marquee.join(' ✦ ');
+  const coreNodes = [
+    {
+      id: 'systems',
+      title: 'SYSTEMS & LINUX',
+      sub: 'GTK, GLib, CUPS, D-Bus, IPP',
+      skills: ['Python', 'GTK / GLib', 'CUPS / PPD', 'D-Bus', 'DNS-SD', 'IPP-over-USB'],
+      coords: { x: 50, y: 15 },
+      lineCoords: { x1: 50, y1: 50, x2: 50, y2: 24 },
+    },
+    {
+      id: 'fullstack',
+      title: 'FULL STACK & APIS',
+      sub: 'React, Next.js, TypeScript, REST APIs',
+      skills: ['React', 'Next.js', 'TypeScript', 'Node.js', 'Express', 'FastAPI', 'REST APIs'],
+      coords: { x: 85, y: 50 },
+      lineCoords: { x1: 50, y1: 50, x2: 74, y2: 50 },
+    },
+    {
+      id: 'upstream',
+      title: 'UPSTREAM & OPEN SOURCE',
+      sub: 'OpenPrinting, Regression Testing, Code Review',
+      skills: ['OpenPrinting', 'Git Upstream', 'Alexander Pevzner Collab', 'Bug Triage', 'Foomatic DB'],
+      coords: { x: 50, y: 85 },
+      lineCoords: { x1: 50, y1: 50, x2: 50, y2: 76 },
+    },
+    {
+      id: 'toolchain',
+      title: 'RUNTIME & TOOLCHAINS',
+      sub: 'Interpreters, AST, SQLite, Linux',
+      skills: ['Linux Kernel', 'AST / Interpreters', 'SQLite', 'Docker', 'PyTest', 'CLI Tooling'],
+      coords: { x: 15, y: 50 },
+      lineCoords: { x1: 50, y1: 50, x2: 26, y2: 50 },
+    },
+  ];
 
   return (
-    <section
-      ref={sectionRef}
-      id="skills"
-      className="scene-section"
-      style={{
-        height: '280vh',
-        position: 'relative',
-        width: '100%',
-      }}
-    >
-      <div className="section-outer">
-        <div className="section-inner">
-          {/* Top-left Title & Editorial Category Tracker */}
-          <div
-            ref={frontContentRef}
-            className="skills-front-content"
-            style={{
-              position: 'absolute',
-              left: '5vw',
-              top: '11vh',
-              zIndex: 10,
-              willChange: 'opacity, transform',
-              maxWidth: 'min(90vw, 680px)',
-            }}
-          >
-            <div className="section-label">
-              <span className="num">({toolkit.sectionNum})</span>
-              <span className="title">— {toolkit.sectionTitle}</span>
-            </div>
+    <section id="skills" ref={skillsRef} className="skills-section">
+      <div className="section-container">
+        {/* Section Header */}
+        <div className="section-header-block">
+          <div className="section-num-tag">
+            <svg className="reticle-glyph-svg" viewBox="0 0 14 14" aria-hidden="true">
+              <path id="skills-reticle-path" d="M7 2a5 5 0 1 0 0.01 0" />
+            </svg>
+            {PORTFOLIO_DATA.skills.sectionNum} // ARCHITECTURE
+          </div>
+          <h2 className="section-title-large">TOOLKIT &amp; SYSTEMS</h2>
+          <p className="section-lead-text">{PORTFOLIO_DATA.skills.tagline}</p>
+        </div>
 
-            <h2
-              className="font-anton"
-              style={{
-                fontSize: 'clamp(44px, 5.8vw, 96px)',
-                lineHeight: 0.88,
-                color: 'var(--ink)',
-                letterSpacing: '-0.02em',
-              }}
+        {/* Visual Technology System Grid */}
+        <div className="skills-system-wrapper">
+          {/* Desktop SVG Circuit System */}
+          <div className="skills-circuit-canvas">
+            <svg
+              className="skills-circuit-svg"
+              viewBox="0 0 100 100"
+              preserveAspectRatio="none"
+              aria-hidden="true"
             >
-              <div>EVERYTHING</div>
-              <div style={{ color: 'var(--red)' }}>IN ORBIT.</div>
-            </h2>
+              {/* Incoming feeder bus line from About datum root */}
+              <line
+                x1="50%"
+                y1="0%"
+                x2="50%"
+                y2="50%"
+                pathLength="100"
+                className="skills-feeder-line"
+              />
 
-            {/* Editorial Category Transition Indicator: 01 / CORE */}
-            <div
-              ref={categoryContainerRef}
-              className="toolkit-category-indicator font-mono"
-              style={{
-                marginTop: '16px',
-                display: 'inline-flex',
-                alignItems: 'center',
-                flexWrap: 'wrap',
-                gap: '8px',
-                padding: '7px 16px',
-                borderRadius: '999px',
-                background: 'rgba(255, 255, 255, 0.88)',
-                backdropFilter: 'blur(16px)',
-                WebkitBackdropFilter: 'blur(16px)',
-                border: '1px solid rgba(255, 31, 31, 0.32)',
-                boxShadow: '0 4px 18px rgba(13, 13, 13, 0.06)',
-                willChange: 'opacity',
-              }}
-            >
-              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-                <span
-                  ref={categoryNumRef}
-                  style={{
-                    color: 'var(--red)',
-                    fontWeight: 700,
-                    fontSize: '11px',
-                  }}
-                >
-                  01
-                </span>
-                <span style={{ color: 'rgba(13, 13, 13, 0.35)' }}>/</span>
-                <span
-                  ref={categoryLabelRef}
-                  style={{
-                    color: 'var(--ink)',
-                    fontWeight: 700,
-                    fontSize: '11px',
-                    letterSpacing: '0.08em',
-                  }}
-                >
-                  CORE
-                </span>
+              {/* 4 Architectural Branch Buses */}
+              {coreNodes.map((node, i) => (
+                <line
+                  key={node.id}
+                  x1={`${node.lineCoords.x1}%`}
+                  y1={`${node.lineCoords.y1}%`}
+                  x2={`${node.lineCoords.x2}%`}
+                  y2={`${node.lineCoords.y2}%`}
+                  pathLength="100"
+                  className={`skills-bus-path skills-bus-${node.id} ${
+                    activeCategory === i ? 'path-active' : ''
+                  }`}
+                />
+              ))}
+
+              {/* Outgoing resolution conduit line toward Selected Work */}
+              <line
+                x1="50%"
+                y1="86%"
+                x2="50%"
+                y2="100%"
+                pathLength="100"
+                className="skills-resolution-line"
+              />
+            </svg>
+
+            {/* Central Node: AYUSH */}
+            <div className="skills-hub-center">
+              <div className="hub-core-avatar">
+                <img
+                  src="./assets/ayush-hero.webp"
+                  alt="Ayush Singh Core"
+                  className="hub-avatar-img"
+                />
               </div>
-
-              <span
-                ref={categoryTaglineRef}
-                className="toolkit-cat-tagline"
-                style={{
-                  color: 'var(--ink-secondary)',
-                  fontSize: '10px',
-                  letterSpacing: '0.04em',
-                }}
-              >
-                — FOUNDATIONAL RUNTIMES & TYPE SYSTEMS
-              </span>
-
-              <span
-                ref={activeSkillTagRef}
-                className="toolkit-active-node-tag"
-                style={{
-                  display: 'inline-block',
-                  marginLeft: '4px',
-                  padding: '2px 8px',
-                  borderRadius: '999px',
-                  background: 'rgba(255, 31, 31, 0.10)',
-                  color: 'var(--red)',
-                  fontSize: '9px',
-                  fontWeight: 700,
-                  letterSpacing: '0.08em',
-                }}
-              >
-                NODE / PYTHON
-              </span>
+              <div className="hub-core-label">
+                <span className="hub-name">AYUSH</span>
+                <span className="hub-sub">SYSTEM HUB</span>
+              </div>
             </div>
+
+            {/* Orbiting / Peripheral Technology Clusters */}
+            {coreNodes.map((node, i) => (
+              <div
+                key={node.id}
+                className={`skills-node node-pos-${node.id} ${
+                  activeCategory === i ? 'node-active' : ''
+                }`}
+                onMouseEnter={() => setActiveCategory(i)}
+                onMouseLeave={() => setActiveCategory(null)}
+              >
+                <div className="skills-node-box">
+                  <div className="skills-node-header">
+                    <span className="node-indicator" />
+                    <span className="node-title">{node.title}</span>
+                  </div>
+                  <div className="skills-node-sub">{node.sub}</div>
+                  <div className="skills-pills-list">
+                    {node.skills.map((skill) => (
+                      <span key={skill} className="skill-pill">
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
 
-          {/* Bottom: Signature Red Marquee Tape */}
-          <div
-            className="skills-marquee-tape"
-            style={{
-              position: 'absolute',
-              bottom: '4vh',
-              left: '-5vw',
-              right: '-5vw',
-              height: '10vh',
-              background: 'var(--red)',
-              transform: 'rotate(-2deg)',
-              display: 'flex',
-              alignItems: 'center',
-              overflow: 'hidden',
-              boxShadow: '0 10px 30px rgba(255, 31, 31, 0.25)',
-              zIndex: 15,
-            }}
-          >
-            <div
-              ref={marqueeTrackRef}
-              style={{
-                display: 'flex',
-                whiteSpace: 'nowrap',
-                color: '#ffffff',
-                fontFamily: "'Anton', sans-serif",
-                fontSize: 'clamp(28px, 3.8vh, 48px)',
-                letterSpacing: '0.04em',
-                textTransform: 'uppercase',
-                willChange: 'transform',
-              }}
-            >
-              <span style={{ paddingRight: '40px' }}>
-                {marqueeText} ✦ {marqueeText} ✦ {marqueeText}
-              </span>
-            </div>
+          {/* Mobile / Responsive Linear Skill Cards */}
+          <div className="skills-mobile-cards">
+            {coreNodes.map((node) => (
+              <div key={node.id} className="skills-mobile-card">
+                <div className="skills-node-header">
+                  <span className="node-indicator" />
+                  <span className="node-title">{node.title}</span>
+                </div>
+                <div className="skills-node-sub">{node.sub}</div>
+                <div className="skills-pills-list">
+                  {node.skills.map((skill) => (
+                    <span key={skill} className="skill-pill">
+                      {skill}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Resolution Bridge (Toolkit & Systems → Selected Work Transformation) */}
+        <div className="skills-resolution-bridge" aria-hidden="true">
+          <svg className="resolution-stem-svg" viewBox="0 0 2 64" preserveAspectRatio="none">
+            <path id="skills-projects-line" d="M1 0 L1 64" className="resolution-stem-line" />
+          </svg>
+          <div className="resolution-node-anchor">
+            <span className="resolution-arrow">↓</span>
+            <span className="resolution-label">EXEC // RUNTIME_PIPELINE</span>
+            <span className="resolution-dot" />
           </div>
         </div>
       </div>
