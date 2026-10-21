@@ -256,6 +256,7 @@ export const Work: React.FC = () => {
         <div className="section-inner">
           {/* FRONT Header: Section label, Anton counter (01 / 03), progress bar (140px) */}
           <div
+            className="work-front-header"
             style={{
               position: 'absolute',
               left: '5vw',

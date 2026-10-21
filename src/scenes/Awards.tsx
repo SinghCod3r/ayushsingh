@@ -51,15 +51,16 @@ export const Awards: React.FC = () => {
         cylinderRef.current.style.transform = `scale(${mobileScale}) translateZ(-400px) rotateX(${tiltX}deg) rotateY(${angleY}deg)`;
 
         if (isMobile) {
-          // Keep active front card and immediate neighbors visible, hide back cards to eliminate clutter
+          // Keep active front card cleanly centered; smoothly fade as user scrolls so no cut-off side cards peek
           const activeFloat = p * (numCerts - 1);
           const cards = cylinderRef.current.children;
           for (let cIdx = 0; cIdx < cards.length; cIdx++) {
             const cardEl = cards[cIdx] as HTMLElement;
-            const diff = Math.abs(cIdx - activeFloat);
-            const isNear = diff < 1.35 || (numCerts - diff) < 1.35;
-            cardEl.style.opacity = isNear ? '1' : '0';
-            cardEl.style.visibility = isNear ? 'visible' : 'hidden';
+            let diff = Math.abs(cIdx - activeFloat);
+            if (numCerts - diff < diff) diff = numCerts - diff;
+            const cardOp = Math.max(0, Math.min(1, 1 - diff * 1.6));
+            cardEl.style.opacity = String(cardOp);
+            cardEl.style.visibility = cardOp > 0.05 ? 'visible' : 'hidden';
           }
         }
       }

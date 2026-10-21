@@ -42,53 +42,77 @@ export const Layers: React.FC = () => {
     const unsubscribe = director.subscribe((state) => {
       const { vh, vw, scenesProgress, transition, y } = state;
 
+      const isMobile = vw < 820;
+
       // 1. Hero Giant AYUSH
       const heroProg = scenesProgress['hero'];
-      if (heroNameRef.current && heroProg) {
-        const exitFade = Math.max(0, 1 - heroProg.exit * 2.4);
-        heroNameRef.current.style.opacity = String(exitFade);
+      if (heroNameRef.current) {
+        if (!heroProg || heroProg.vis <= 0.01) {
+          heroNameRef.current.style.display = 'none';
+        } else {
+          heroNameRef.current.style.display = 'flex';
+          const exitFade = Math.max(0, 1 - heroProg.exit * 2.4);
+          const maxOp = isMobile ? 0.08 : 1.0;
+          heroNameRef.current.style.opacity = String(exitFade * maxOp);
 
-        // Tiny alternating vertical parallax on letters
-        heroLettersRef.current.forEach((letter, i) => {
-          if (letter) {
-            const dir = i % 2 === 0 ? 1 : -1;
-            letter.style.transform = `translate3d(0, ${heroProg.p * 24 * dir}px, 0)`;
-          }
-        });
+          // Tiny alternating vertical parallax on letters
+          heroLettersRef.current.forEach((letter, i) => {
+            if (letter) {
+              const dir = i % 2 === 0 ? 1 : -1;
+              letter.style.transform = `translate3d(0, ${heroProg.p * 24 * dir}px, 0)`;
+            }
+          });
+        }
       }
 
       // 2. About soft red wash
       const aboutProg = scenesProgress['about'];
-      if (aboutWashRef.current && aboutProg) {
-        const enterFade = Math.min(1, aboutProg.enter * 1.5);
-        const exitFade = Math.max(0, 1 - aboutProg.exit * 2.4);
-        const op = enterFade * exitFade;
-        aboutWashRef.current.style.opacity = String(op);
-        aboutWashRef.current.style.transform = `translate3d(${-(1 - enterFade) * 40}px, 0, 0)`;
+      if (aboutWashRef.current) {
+        if (!aboutProg || aboutProg.vis <= 0.01) {
+          aboutWashRef.current.style.display = 'none';
+        } else {
+          aboutWashRef.current.style.display = 'block';
+          const enterFade = Math.min(1, aboutProg.enter * 1.5);
+          const exitFade = Math.max(0, 1 - aboutProg.exit * 2.4);
+          const op = enterFade * exitFade;
+          aboutWashRef.current.style.opacity = String(op);
+          aboutWashRef.current.style.transform = `translate3d(${-(1 - enterFade) * 40}px, 0, 0)`;
+        }
       }
 
       // 3. Work red perspective grid floor
       const workProg = scenesProgress['work'];
-      if (workGridRef.current && workProg) {
-        const enterFade = Math.min(1, workProg.enter * 1.8);
-        const exitFade = Math.max(0, 1 - workProg.exit * 2.4);
-        workGridRef.current.style.opacity = String(enterFade * exitFade);
-        const gridOffset = (workProg.p * 450) % 90;
-        workGridRef.current.style.backgroundPosition = `0 ${gridOffset}px`;
+      if (workGridRef.current) {
+        if (!workProg || workProg.vis <= 0.01) {
+          workGridRef.current.style.display = 'none';
+        } else {
+          workGridRef.current.style.display = 'block';
+          const enterFade = Math.min(1, workProg.enter * 1.8);
+          const exitFade = Math.max(0, 1 - workProg.exit * 2.4);
+          workGridRef.current.style.opacity = String(enterFade * exitFade);
+          const gridOffset = (workProg.p * 450) % 90;
+          workGridRef.current.style.backgroundPosition = `0 ${gridOffset}px`;
+        }
       }
 
       // 4. Journey colossal outlined year roll
       const journeyProg = scenesProgress['journey'];
-      if (journeyYearRef.current && journeyProg) {
-        const enterFade = Math.min(1, journeyProg.enter * 1.8);
-        const exitFade = Math.max(0, 1 - journeyProg.exit * 2.4);
-        journeyYearRef.current.style.opacity = String(enterFade * exitFade);
+      if (journeyYearRef.current) {
+        if (!journeyProg || journeyProg.vis <= 0.01) {
+          journeyYearRef.current.style.display = 'none';
+        } else {
+          journeyYearRef.current.style.display = 'block';
+          const enterFade = Math.min(1, journeyProg.enter * 1.8);
+          const exitFade = Math.max(0, 1 - journeyProg.exit * 2.4);
+          const maxOp = isMobile ? 0.06 : 1.0;
+          journeyYearRef.current.style.opacity = String(enterFade * exitFade * maxOp);
 
-        // Roll from 2022 to 2026
-        const targetYear = Math.round(2022 + journeyProg.p * 4);
-        if (targetYear !== lastYearRef.current) {
-          lastYearRef.current = targetYear;
-          setJourneyYear(targetYear);
+          // Roll from 2022 to 2026
+          const targetYear = Math.round(2022 + journeyProg.p * 4);
+          if (targetYear !== lastYearRef.current) {
+            lastYearRef.current = targetYear;
+            setJourneyYear(targetYear);
+          }
         }
       }
 

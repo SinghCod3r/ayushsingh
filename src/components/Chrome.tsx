@@ -380,7 +380,7 @@ export const HUD: React.FC = () => {
             letterSpacing: '0.04em',
           }}
         >
-          {String(overallProg).padStart(3, '0')}%
+          {overallProg}%
         </span>
         <div
           style={{

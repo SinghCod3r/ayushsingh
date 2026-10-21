@@ -132,8 +132,9 @@ export const Stage: React.FC = () => {
           // Toolkit: person central
           targetX = 0.5;
         } else if (targetScene.id === 'awards') {
-          // Awards: person background
-          alphaMult *= 0.35;
+          // Awards: person background with lower opacity and scaled to clear cylinder
+          alphaMult *= 0.18;
+          scale = Math.min((vh * 0.52) / 900, (vw * 0.78) / Math.max(1, boxWidth));
         } else if (targetScene.id === 'contact') {
           // Contact: person central/lower
           targetX = 0.5;
@@ -156,6 +157,9 @@ export const Stage: React.FC = () => {
       if (isMobile && targetScene.id === 'hero') {
         // Lower anchor in hero so it leaves upper half completely clear for title and buttons
         baseDestY = vh - destH * 0.84;
+      } else if (isMobile && targetScene.id === 'awards') {
+        // Anchor person lower in awards so cylinder card doesn't cover neck
+        baseDestY = vh - destH * 0.76;
       } else if (isMobile && targetScene.id === 'contact') {
         baseDestY = vh - destH * 0.88;
       }

@@ -263,7 +263,6 @@ main {
     right: 0 !important;
     width: 100% !important;
     font-size: clamp(64px, 20vw, 110px) !important;
-    opacity: 0.08 !important;
     text-align: center !important;
     justify-content: center !important;
     pointer-events: none !important;
@@ -358,14 +357,25 @@ main {
   }
 
   /* Work Mobile */
+  .work-front-header {
+    top: 7.5svh !important;
+    left: 16px !important;
+    right: 16px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 12px !important;
+    z-index: 15 !important;
+  }
+
   .work-deck-container {
     left: 16px !important;
     right: 16px !important;
     width: auto !important;
     max-width: min(calc(100vw - 32px), 640px) !important;
     margin-inline: auto !important;
-    top: 10svh !important;
-    height: 80svh !important;
+    top: 13.5svh !important;
+    height: 75svh !important;
     perspective: none !important;
     transform-style: flat !important;
   }
@@ -437,7 +447,6 @@ main {
 
   .journey-colossal-year {
     font-size: min(20vh, 26vw) !important;
-    opacity: 0.06 !important;
     top: 14svh !important;
     left: 0 !important;
     right: 0 !important;
@@ -539,7 +548,7 @@ main {
     margin-top: 2vh !important;
     perspective: 1000px !important;
     height: 220px !important;
-    overflow: hidden !important;
+    overflow: visible !important;
   }
 
   /* Contact Mobile */
