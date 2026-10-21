@@ -22,6 +22,8 @@ export function initSkillsAnimation(container: HTMLElement) {
           '.skills-bus-path',
           '.skills-resolution-line',
           '.resolution-stem-line',
+          '#skills-projects-line',
+          '.skills-projects-tracer',
           '.skills-hub-center',
           '.skills-node',
           '.skills-node-box',
@@ -364,6 +366,32 @@ export function initSkillsAnimation(container: HTMLElement) {
         '.resolution-stem-line',
         {
           drawSVG: '100%',
+          duration: 0.4,
+          ease: 'none',
+        },
+        0.45
+      );
+
+      // Tracer dot awakens and travels down stem line into the resolution anchor
+      resolveTl.to(
+        '.skills-projects-tracer',
+        {
+          opacity: 1,
+          scale: 1.2,
+          duration: 0.15,
+          ease: 'power2.out',
+        },
+        0.35
+      );
+
+      resolveTl.to(
+        '.skills-projects-tracer',
+        {
+          motionPath: {
+            path: '#skills-projects-line',
+            align: '#skills-projects-line',
+            alignOrigin: [0.5, 0.5],
+          },
           duration: 0.4,
           ease: 'none',
         },

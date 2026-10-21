@@ -27,7 +27,8 @@ export const App: React.FC = () => {
       lerp: 0.085,
       smoothWheel: true,
       wheelMultiplier: 0.9,
-      touchMultiplier: 1.2,
+      syncTouch: false,
+      touchMultiplier: 1.0,
     });
 
     lenis.on('scroll', ScrollTrigger.update);

@@ -16,7 +16,12 @@ export const Projects: React.FC = () => {
       <div className="section-container">
         {/* Section Header */}
         <div className="section-header-block">
-          <div className="section-num-tag">{PORTFOLIO_DATA.projects.sectionNum} // PRODUCTION</div>
+          <div className="section-num-tag">
+            <svg className="reticle-glyph-svg" viewBox="0 0 14 14" aria-hidden="true">
+              <path id="projects-reticle-path" d="M7 2a5 5 0 1 0 0.01 0" />
+            </svg>
+            {PORTFOLIO_DATA.projects.sectionNum} // PRODUCTION
+          </div>
           <h2 className="section-title-large">SELECTED WORK</h2>
           <p className="section-lead-text">
             SYSTEM-LEVEL TOOLS, INTERPRETERS, AND SCALABLE WEB PLATFORMS.
@@ -26,7 +31,7 @@ export const Projects: React.FC = () => {
         {/* Production Conduit Receiver (Handoff from Skills Topology) */}
         <div className="projects-conduit-receiver" aria-hidden="true">
           <svg className="conduit-receiver-svg" viewBox="0 0 2 48" preserveAspectRatio="none">
-            <line x1="1" y1="0" x2="1" y2="48" pathLength="100" className="conduit-receiver-line" />
+            <path id="projects-conduit-line" d="M1 0 L1 48" className="conduit-receiver-line" />
           </svg>
           <div className="conduit-target-cross">+</div>
         </div>

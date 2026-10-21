@@ -252,18 +252,6 @@ button {
   height: 6px;
   border-radius: 50%;
   background: var(--red);
-  animation: pulse-dot 1.8s infinite ease-in-out;
-}
-
-@keyframes pulse-dot {
-  0%, 100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  50% {
-    transform: scale(1.4);
-    opacity: 0.4;
-  }
 }
 
 .nav-links-desktop {
@@ -674,16 +662,15 @@ button {
 
 .hero-hud-card {
   position: absolute;
-  bottom: -10px;
-  left: -14px;
+  bottom: -8px;
+  left: -12px;
   z-index: 2;
-  background: rgba(255, 255, 255, 0.94);
-  backdrop-filter: blur(14px);
+  background: #ffffff;
   border: 1px solid var(--line-strong);
-  border-left: 3px solid var(--red);
+  border-left: 2px solid var(--red);
   border-radius: var(--radius-sm);
-  padding: 10px 14px;
-  box-shadow: 0 12px 28px -6px rgba(13, 13, 13, 0.1);
+  padding: 8px 12px;
+  box-shadow: 0 4px 14px rgba(13, 13, 13, 0.05);
   font-family: var(--font-mono);
   will-change: transform;
 }
@@ -800,11 +787,10 @@ button {
   position: absolute;
   top: 0;
   left: 50%;
-  width: 7px;
-  height: 7px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   background: var(--red);
-  box-shadow: 0 0 10px rgba(255, 31, 31, 0.7);
   transform: translate(-50%, -50%);
   pointer-events: none;
 }
@@ -1233,7 +1219,7 @@ button {
 .skills-node.node-active .skills-node-box,
 .skills-node-box:hover {
   border-color: var(--red);
-  box-shadow: 0 12px 32px rgba(255, 31, 31, 0.12);
+  box-shadow: 0 12px 32px rgba(13, 13, 13, 0.08);
 }
 
 .skills-node-header {
@@ -2357,6 +2343,21 @@ button {
 }
 
 @media (max-width: 860px) {
+  /* Disable ambient video playback on mobile/touch to eliminate GPU memory pressure */
+  .cinema-ambient-wrap {
+    display: none !important;
+  }
+
+  .section-connector-bridge {
+    margin-top: 20px;
+    height: 44px;
+  }
+
+  .hero-to-about-bridge {
+    margin-top: 20px;
+    height: 44px;
+  }
+
   .hero-container {
     padding: 16px 20px 40px;
   }
@@ -2440,38 +2441,177 @@ button {
   }
 }
 
-@media (max-width: 640px) {
-  .section-container {
-    padding: 84px 16px 60px;
-  }
-
+/* ==========================================================================
+   MOBILE-FIRST 1-SCREEN HERO (<= 767px: 390x844, 375x812, 360x800)
+   Editorial hierarchy: Header -> Status marker -> AYUSH SINGH -> Portrait -> Role Datum
+   ========================================================================== */
+@media (max-width: 767px) {
   .hero-section {
-    padding-top: 70px;
+    min-height: 100svh;
+    height: 100svh;
+    padding-top: 54px;
+    padding-bottom: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    box-sizing: border-box;
+    overflow: hidden;
   }
 
-  .hero-monument-title {
-    font-size: clamp(48px, 14vw, 72px);
-  }
-
-  .hero-portrait-wrap {
-    max-width: 260px;
-  }
-
-  .hero-hud-card {
-    position: static;
-    margin-top: 12px;
-    width: 100%;
+  .hero-container {
+    height: 100%;
+    max-height: 100%;
+    padding: 8px 16px 4px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
     box-sizing: border-box;
   }
 
-  .hero-actions-row {
-    flex-direction: column;
-    align-items: stretch;
+  .hero-badge {
+    width: 100%;
+    margin-bottom: 4px;
+    padding-bottom: 6px;
+    font-size: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
   }
 
-  .hero-stats-strip {
-    grid-template-columns: 1fr;
-    gap: 12px;
+  .hero-grid {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    width: 100%;
+    flex: 1;
+    min-height: 0;
+  }
+
+  .hero-text-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+
+  .hero-subheading {
+    font-size: 10.5px;
+    letter-spacing: 0.08em;
+    margin-bottom: 3px;
+    justify-content: center;
+  }
+
+  .accent-bar {
+    width: 14px;
+    height: 1.5px;
+  }
+
+  .hero-monument-title {
+    font-size: clamp(36px, 11vw, 52px);
+    line-height: 0.86;
+    margin-bottom: 6px;
+    letter-spacing: 0.01em;
+  }
+
+  /* Secondary metadata deferred to About to guarantee immediate 1-screen Hero clarity */
+  .hero-description,
+  .hero-actions-row,
+  .hero-stats-strip,
+  .hero-scroll-cue {
+    display: none !important;
+  }
+
+  .hero-visual-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    flex: 1;
+    min-height: 0;
+    justify-content: center;
+  }
+
+  .hero-portrait-wrap {
+    width: 100%;
+    max-width: min(230px, 60vw);
+    max-height: 38svh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .hero-portrait-frame {
+    max-height: 32svh;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+  }
+
+  .hero-portrait-img {
+    max-height: clamp(180px, 31svh, 270px);
+    width: auto;
+    object-fit: contain;
+    filter: contrast(102%) drop-shadow(0 10px 24px rgba(13, 13, 13, 0.07));
+  }
+
+  .hero-portrait-backdrop {
+    inset: 4% 4% 0% 4%;
+  }
+
+  /* Architectural Role Datum Tag directly anchored under portrait */
+  .hero-hud-card {
+    position: static;
+    margin-top: 6px;
+    width: 100%;
+    max-width: 270px;
+    padding: 6px 10px;
+    background: #ffffff;
+    border: 1px solid var(--line-strong);
+    border-left: 2px solid var(--red);
+    border-radius: var(--radius-sm);
+    box-shadow: 0 2px 8px rgba(13, 13, 13, 0.04);
+    text-align: left;
+    box-sizing: border-box;
+  }
+
+  .hud-card-header {
+    margin-bottom: 2px;
+    gap: 6px;
+  }
+
+  .hud-card-title {
+    font-size: 9.5px;
+    letter-spacing: 0.05em;
+  }
+
+  .hud-card-body {
+    font-size: 9.5px;
+    gap: 8px;
+  }
+
+  .hud-card-status {
+    font-size: 9px;
+  }
+
+  .hero-to-about-bridge {
+    margin-top: 6px;
+    height: 24px;
+    width: 2px;
+  }
+}
+
+@media (max-width: 640px) {
+  .section-container {
+    padding: 84px 16px 60px;
   }
 
   .about-stats-grid {

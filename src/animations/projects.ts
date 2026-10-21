@@ -1,7 +1,10 @@
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { SplitText } from 'gsap/SplitText';
+import { MorphSVGPlugin } from 'gsap/MorphSVGPlugin';
+import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin';
 
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger, SplitText, MorphSVGPlugin, DrawSVGPlugin);
 
 export function initProjectsAnimation(container: HTMLElement) {
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -11,7 +14,7 @@ export function initProjectsAnimation(container: HTMLElement) {
       gsap.set(
         [
           '.projects-section .section-header-block',
-          '.conduit-receiver-line',
+          '#projects-conduit-line',
           '.conduit-target-cross',
           '.project-showcase-card',
           '.project-title',
@@ -26,71 +29,177 @@ export function initProjectsAnimation(container: HTMLElement) {
           opacity: 1,
           y: 0,
           scale: 1,
-          strokeDashoffset: 0,
+          drawSVG: '100%',
+          clearProps: 'transform',
         }
       );
       return;
     }
 
-    // 0. Conduit Receiver Entrance (Resolution line from Skills Topology touches Selected Work)
+    // -------------------------------------------------------------------------
+    // 0. CONDUIT RECEIVER ENTRANCE (Handoff from Skills Topology)
+    // -------------------------------------------------------------------------
+    gsap.set('#projects-conduit-line', { drawSVG: '0%' });
+    gsap.set('.conduit-target-cross', { scale: 0.5, opacity: 0 });
+
     const receiverTl = gsap.timeline({
       scrollTrigger: {
         trigger: container,
-        start: 'top 85%',
+        start: 'top 88%',
         end: 'top 45%',
         scrub: 0.6,
       },
     });
 
-    receiverTl.fromTo(
-      '.conduit-receiver-line',
-      { strokeDasharray: 100, strokeDashoffset: 100 },
-      { strokeDashoffset: 0, duration: 0.5, ease: 'none' }
+    receiverTl.to(
+      '#projects-conduit-line',
+      { drawSVG: '100%', duration: 0.5, ease: 'none' },
+      0
     );
 
-    receiverTl.fromTo(
+    receiverTl.to(
       '.conduit-target-cross',
-      { scale: 0.5, opacity: 0 },
       { scale: 1, opacity: 1, duration: 0.25, ease: 'back.out(2)' },
-      '-=0.1'
+      0.35
     );
 
-    // 1. Projects Section Header enters with commanding typography
-    gsap.from('.projects-section .section-header-block', {
+    // -------------------------------------------------------------------------
+    // 1. SECTION HEADER: SplitText Typographic Reveal & Reticle Morph
+    // -------------------------------------------------------------------------
+    const projectsTitleSplit = SplitText.create('#projects .section-title-large', {
+      type: 'words, chars',
+      autoSplit: true,
+      charsClass: 'projects-title-char',
+    });
+
+    gsap.from(projectsTitleSplit.chars, {
       scrollTrigger: {
-        trigger: container,
+        trigger: '#projects .section-header-block',
         start: 'top 82%',
         toggleActions: 'play none none none',
         once: true,
       },
-      y: 35,
+      y: 32,
       opacity: 0,
-      duration: 0.7,
+      stagger: 0.02,
+      duration: 0.65,
       ease: 'power3.out',
     });
 
-    // 2. Each Project Showcase Card progressive entrance
-    // Sequence: CONDUIT RESOLUTION → CARD EMERGENCE → TITLE → VISUAL → DESCRIPTION → TECH → CTA
+    // Morph section reticle from circle (Skills) into production square (Projects)
+    gsap.to('#projects-reticle-path', {
+      morphSVG: 'M2 2h10v10H2Z',
+      scrollTrigger: {
+        trigger: container,
+        start: 'top 75%',
+        toggleActions: 'play reverse play reverse',
+      },
+      duration: 0.5,
+      ease: 'power2.inOut',
+    });
+
+    // -------------------------------------------------------------------------
+    // 2. PROJECT SHOWCASE CARDS: Transformation & Emergence
+    // -------------------------------------------------------------------------
     const cards = gsap.utils.toArray<HTMLElement>('.project-showcase-card');
 
     cards.forEach((card, index) => {
-      // First card emerges with stronger focal link to the incoming conduit
       if (index === 0) {
-        gsap.from(card, {
+        // FIRST PROJECT: Emerges directly from the incoming conduit focal point via Scrub
+        // Controlled by scroll progress so it reverses seamlessly when scrolling up
+        const firstCardTl = gsap.timeline({
           scrollTrigger: {
             trigger: card,
-            start: 'top 85%',
-            toggleActions: 'play none none none',
-            once: true,
+            start: 'top 88%',
+            end: 'top 35%',
+            scrub: 0.8,
           },
-          y: 40,
-          scale: 0.95,
-          opacity: 0.2,
-          duration: 0.7,
-          ease: 'power3.out',
         });
+
+        // Frame expands outward from the focal contact point
+        firstCardTl.fromTo(
+          card,
+          {
+            scale: 0.94,
+            y: 45,
+            opacity: 0.15,
+          },
+          {
+            scale: 1,
+            y: 0,
+            opacity: 1,
+            duration: 0.5,
+            ease: 'power2.out',
+          },
+          0
+        );
+
+        // Visual preview expands outward
+        firstCardTl.fromTo(
+          card.querySelector('.project-preview-wrap'),
+          {
+            scale: 0.94,
+            opacity: 0.3,
+          },
+          {
+            scale: 1,
+            opacity: 1,
+            duration: 0.45,
+            ease: 'power2.out',
+          },
+          0.1
+        );
+
+        // Metadata marker emerges from datum
+        firstCardTl.fromTo(
+          card.querySelectorAll('.project-num-row, .project-title'),
+          {
+            y: 18,
+            opacity: 0,
+          },
+          {
+            y: 0,
+            opacity: 1,
+            stagger: 0.05,
+            duration: 0.35,
+            ease: 'power2.out',
+          },
+          0.15
+        );
+
+        // Description and tech chips illuminate
+        firstCardTl.fromTo(
+          card.querySelectorAll('.project-oneliner, .project-description, .tech-chip'),
+          {
+            y: 12,
+            opacity: 0,
+          },
+          {
+            y: 0,
+            opacity: 1,
+            stagger: 0.02,
+            duration: 0.3,
+            ease: 'power2.out',
+          },
+          0.25
+        );
+
+        firstCardTl.fromTo(
+          card.querySelector('.project-actions-row'),
+          {
+            y: 10,
+            opacity: 0,
+          },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.25,
+            ease: 'power2.out',
+          },
+          0.35
+        );
       } else {
-        // Subsequent cards rise into position with subtle depth
+        // Subsequent projects: Clean progressive architectural elevation
         gsap.from(card, {
           scrollTrigger: {
             trigger: card,
@@ -104,72 +213,66 @@ export function initProjectsAnimation(container: HTMLElement) {
           duration: 0.65,
           ease: 'power3.out',
         });
+
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: card,
+            start: 'top 80%',
+            toggleActions: 'play none none none',
+            once: true,
+          },
+        });
+
+        tl.from(card.querySelectorAll('.project-num-row, .project-title'), {
+          y: 18,
+          opacity: 0,
+          stagger: 0.06,
+          duration: 0.38,
+          ease: 'power2.out',
+        })
+          .from(
+            card.querySelector('.project-preview-wrap'),
+            {
+              scale: 0.96,
+              opacity: 0,
+              duration: 0.42,
+              ease: 'power2.out',
+            },
+            '-=0.2'
+          )
+          .from(
+            card.querySelectorAll('.project-oneliner, .project-description'),
+            {
+              y: 14,
+              opacity: 0,
+              stagger: 0.06,
+              duration: 0.38,
+              ease: 'power2.out',
+            },
+            '-=0.25'
+          )
+          .from(
+            card.querySelectorAll('.project-tech-chips .tech-chip'),
+            {
+              y: 10,
+              opacity: 0,
+              stagger: 0.03,
+              duration: 0.3,
+              ease: 'power2.out',
+            },
+            '-=0.2'
+          )
+          .from(
+            card.querySelector('.project-actions-row'),
+            {
+              y: 12,
+              opacity: 0,
+              duration: 0.32,
+              ease: 'power2.out',
+            },
+            '-=0.15'
+          );
       }
-
-      // Internal progressive reveal (fast & crisp: user never waits)
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: card,
-          start: 'top 80%',
-          toggleActions: 'play none none none',
-          once: true,
-        },
-      });
-
-      // Step 1: Project Title & Number
-      tl.from(card.querySelectorAll('.project-num-row, .project-title'), {
-        y: 18,
-        opacity: 0,
-        stagger: 0.06,
-        duration: 0.38,
-        ease: 'power2.out',
-      })
-        // Step 2: Visual Preview
-        .from(
-          card.querySelector('.project-preview-wrap'),
-          {
-            scale: 0.96,
-            opacity: 0,
-            duration: 0.42,
-            ease: 'power2.out',
-          },
-          '-=0.2'
-        )
-        // Step 3: Description & One-Liner
-        .from(
-          card.querySelectorAll('.project-oneliner, .project-description'),
-          {
-            y: 14,
-            opacity: 0,
-            stagger: 0.06,
-            duration: 0.38,
-            ease: 'power2.out',
-          },
-          '-=0.25'
-        )
-        // Step 4: Tech Chips
-        .from(
-          card.querySelectorAll('.project-tech-chips .tech-chip'),
-          {
-            y: 10,
-            opacity: 0,
-            stagger: 0.03,
-            duration: 0.3,
-            ease: 'power2.out',
-          },
-          '-=0.2'
-        )
-        // Step 5: Action Link / CTA
-        .from(
-          card.querySelector('.project-actions-row'),
-          {
-            y: 12,
-            opacity: 0,
-            duration: 0.32,
-            ease: 'power2.out',
-          },
-          '-=0.15'
-        );
 
       // Subtle parallax on project preview visual
       const visual = card.querySelector('.project-preview-visual');

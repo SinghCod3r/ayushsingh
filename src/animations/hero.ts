@@ -268,53 +268,40 @@ export function initHeroAnimation(container: HTMLElement) {
       });
     });
 
-    // MOBILE (Viewport <= 767px)
+    // MOBILE (Viewport <= 767px): Lightweight profile, zero redundant scrub triggers
     mm.add('(max-width: 767px)', () => {
       gsap.to('.hero-monument-title', {
-        yPercent: -10,
-        opacity: 0.3,
+        yPercent: -8,
+        opacity: 0.35,
         ease: 'none',
         scrollTrigger: {
           trigger: container,
           start: 'top top',
           end: 'bottom top',
-          scrub: 0.8,
-        },
-      });
-
-      gsap.to('.hero-meta-item', {
-        yPercent: -14,
-        opacity: 0,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: container,
-          start: 'top top',
-          end: '60% top',
-          scrub: 0.8,
+          scrub: 0.5,
         },
       });
 
       gsap.to('.hero-portrait-img', {
-        yPercent: -6,
-        scale: 1.02,
+        yPercent: -4,
         ease: 'none',
         scrollTrigger: {
           trigger: container,
           start: 'top top',
           end: 'bottom top',
-          scrub: 0.8,
+          scrub: 0.5,
         },
       });
 
       gsap.to('.hero-hud-card', {
-        yPercent: -8,
-        opacity: 0,
+        yPercent: -4,
+        opacity: 0.2,
         ease: 'none',
         scrollTrigger: {
           trigger: container,
           start: 'top top',
           end: '65% top',
-          scrub: 0.8,
+          scrub: 0.5,
         },
       });
     });

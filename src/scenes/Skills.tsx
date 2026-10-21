@@ -98,12 +98,9 @@ export const Skills: React.FC = () => {
               ))}
 
               {/* Outgoing resolution conduit line toward Selected Work */}
-              <line
-                x1="50%"
-                y1="86%"
-                x2="50%"
-                y2="100%"
-                pathLength="100"
+              <path
+                id="skills-resolution-line"
+                d="M50 86 L50 100"
                 className="skills-resolution-line"
               />
             </svg>
@@ -182,6 +179,7 @@ export const Skills: React.FC = () => {
             <span className="resolution-label">EXEC // RUNTIME_PIPELINE</span>
             <span className="resolution-dot" />
           </div>
+          <div className="connector-tracer-dot skills-projects-tracer" />
         </div>
       </div>
     </section>
