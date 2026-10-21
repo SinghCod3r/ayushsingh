@@ -132,6 +132,7 @@ export const Hero: React.FC = () => {
 
             {/* Action Buttons: See my work / Download resume */}
             <div
+              className="hero-cta-group"
               style={{
                 display: 'flex',
                 alignItems: 'center',

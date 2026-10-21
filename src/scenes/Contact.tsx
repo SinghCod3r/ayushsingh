@@ -90,6 +90,7 @@ export const Contact: React.FC = () => {
 
                 <a
                   href={`mailto:${contact.fullEmail}`}
+                  className="contact-email-link"
                   data-cursor="Write"
                   style={{
                     textDecoration: 'none',

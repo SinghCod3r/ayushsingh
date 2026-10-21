@@ -41,10 +41,27 @@ export const Awards: React.FC = () => {
       });
 
       // Certifications cylinder container:
-      // translateZ(-400px) rotateX(-14deg) rotateY(-p * (360 - 360/N))
+      // Desktop: translateZ(-400px) rotateX(-14deg) rotateY(-p * (360 - 360/N))
+      // Mobile: scaled down (0.64) so it fits inside 390px viewport without clipping side cards
       if (cylinderRef.current) {
+        const isMobile = window.innerWidth < 820;
         const angleY = -p * (360 - 360 / numCerts);
-        cylinderRef.current.style.transform = `translateZ(-400px) rotateX(-14deg) rotateY(${angleY}deg)`;
+        const mobileScale = isMobile ? 0.64 : 1;
+        const tiltX = isMobile ? -8 : -14;
+        cylinderRef.current.style.transform = `scale(${mobileScale}) translateZ(-400px) rotateX(${tiltX}deg) rotateY(${angleY}deg)`;
+
+        if (isMobile) {
+          // Keep active front card and immediate neighbors visible, hide back cards to eliminate clutter
+          const activeFloat = p * (numCerts - 1);
+          const cards = cylinderRef.current.children;
+          for (let cIdx = 0; cIdx < cards.length; cIdx++) {
+            const cardEl = cards[cIdx] as HTMLElement;
+            const diff = Math.abs(cIdx - activeFloat);
+            const isNear = diff < 1.35 || (numCerts - diff) < 1.35;
+            cardEl.style.opacity = isNear ? '1' : '0';
+            cardEl.style.visibility = isNear ? 'visible' : 'hidden';
+          }
+        }
       }
     });
 

@@ -165,22 +165,27 @@ export const Layers: React.FC = () => {
   const updateSphereKinematics = (p: number, scrollY: number) => {
     const vw = window.innerWidth;
     const vh = window.innerHeight;
+    const isMobile = vw < 820;
 
-    // Radius: R = min(27vw, 46vh)
-    const R = Math.min(vw * 0.27, vh * 0.46);
-    const ySquash = 0.78;
+    // Radius: Desktop R = min(27vw, 46vh); Mobile: max width min(88vw, 340px) -> R <= 140
+    const R = isMobile ? Math.min(vw * 0.38, 140) : Math.min(vw * 0.27, vh * 0.46);
+    const ySquash = isMobile ? 0.65 : 0.78;
     const baseTilt = -0.28; // radians
 
-    // Auto-spin + Scroll spin (scroll * 5) + Mouse follow
+    // Auto-spin + Scroll spin + Mouse follow
     const time = performance.now() * 0.0006;
-    const rotY = time + (scrollY * 0.005) + mouseOffset.current.x * 0.4;
-    const rotX = baseTilt + mouseOffset.current.y * 0.3;
+    const rotY = time + (scrollY * 0.005) + (isMobile ? 0 : mouseOffset.current.x * 0.4);
+    const rotX = baseTilt + (isMobile ? 0 : mouseOffset.current.y * 0.3);
 
     const N = SKILLS_LIST.length;
     const phiAngle = Math.PI * (3 - Math.sqrt(5)); // Golden angle
 
     const centerX = vw * 0.5;
-    const centerY = vh * 0.52;
+    // On mobile, position around upper torso / shoulders to prevent covering face
+    const centerY = isMobile ? vh * 0.46 : vh * 0.52;
+
+    // Calculate all candidate points
+    const points: Array<{ idx: number; screenX: number; screenY: number; zTilted: number; scale: number }> = [];
 
     for (let i = 0; i < N; i++) {
       const yNorm = 1 - (i / (N - 1)) * 2; // -1 to 1
@@ -196,18 +201,42 @@ export const Layers: React.FC = () => {
       const yTilted = y0 * Math.cos(rotX) - z0 * Math.sin(rotX);
       const zTilted = y0 * Math.sin(rotX) + z0 * Math.cos(rotX);
 
-      const screenX = centerX + x0;
+      // Clamp screenX inside safe mobile bounds [5vw, 95vw]
+      let screenX = centerX + x0;
+      if (isMobile) {
+        screenX = Math.max(vw * 0.08, Math.min(vw * 0.92, screenX));
+      }
       const screenY = centerY + yTilted;
-      const scale = 0.8 + 0.3 * ((zTilted + R) / (2 * R));
+      const scale = isMobile
+        ? 0.75 + 0.2 * ((zTilted + R) / (2 * R))
+        : 0.8 + 0.3 * ((zTilted + R) / (2 * R));
 
+      points.push({ idx: i, screenX, screenY, zTilted, scale });
+    }
+
+    // On mobile, only show the 7 closest/clearest skills to prevent face crowding
+    const allowedIndices = new Set<number>();
+    if (isMobile) {
+      const sortedByFront = [...points].sort((a, b) => b.zTilted - a.zTilted);
+      sortedByFront.slice(0, 7).forEach((p) => allowedIndices.add(p.idx));
+    }
+
+    for (let i = 0; i < N; i++) {
+      const pt = points[i];
       const backEl = backChipRefs.current[i];
       const frontEl = frontChipRefs.current[i];
 
-      if (zTilted < 0) {
+      if (isMobile && !allowedIndices.has(i)) {
+        if (backEl) backEl.style.display = 'none';
+        if (frontEl) frontEl.style.display = 'none';
+        continue;
+      }
+
+      if (pt.zTilted < 0) {
         if (backEl) {
           backEl.style.display = 'block';
-          backEl.style.transform = `translate3d(${screenX}px, ${screenY}px, 0) translate(-50%, -50%) scale(${scale})`;
-          backEl.style.opacity = String(0.45 + (scale - 0.8) * 0.8);
+          backEl.style.transform = `translate3d(${pt.screenX}px, ${pt.screenY}px, 0) translate(-50%, -50%) scale(${pt.scale})`;
+          backEl.style.opacity = isMobile ? '0.6' : String(0.45 + (pt.scale - 0.8) * 0.8);
         }
         if (frontEl) {
           frontEl.style.display = 'none';
@@ -215,7 +244,8 @@ export const Layers: React.FC = () => {
       } else {
         if (frontEl) {
           frontEl.style.display = 'block';
-          frontEl.style.transform = `translate3d(${screenX}px, ${screenY}px, 0) translate(-50%, -50%) scale(${scale})`;
+          frontEl.style.transform = `translate3d(${pt.screenX}px, ${pt.screenY}px, 0) translate(-50%, -50%) scale(${pt.scale})`;
+          frontEl.style.opacity = '1';
         }
         if (backEl) {
           backEl.style.display = 'none';
@@ -286,8 +316,9 @@ export const Layers: React.FC = () => {
           style={{
             position: 'absolute',
             bottom: '-10vh',
-            left: '-20vw',
-            right: '-20vw',
+            left: 0,
+            right: 0,
+            width: '100%',
             height: '60vh',
             backgroundImage:
               'linear-gradient(to right, rgba(255,31,31,.25) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,31,31,.25) 1px, transparent 1px)',

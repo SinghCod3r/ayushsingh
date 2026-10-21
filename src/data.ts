@@ -121,27 +121,14 @@ export const PORTFOLIO_DATA = {
       },
       {
         number: '03',
-        category: 'AI AGENT PLATFORM',
-        title: 'Aura.AI',
-        oneLiner: 'Intelligent AI workspace & contextual task automation interface.',
+        category: 'DEVELOPER TOOLING & LOCAL AI',
+        title: 'SkillFoundry',
+        oneLiner: 'Autonomous local CLI developer tool for AI workflow automation.',
         description:
-          'Multi-modal workspace connecting autonomous agents with real-time reasoning workflows, document context, and dynamic conversational interfaces.',
-        techChips: ['TypeScript', 'Next.js', 'TailwindCSS', 'LLM Agents'],
+          'Connects local LLMs (Ollama) with project scaffolders, automated test harnesses, and deterministic build pipelines without cloud API lock-in.',
+        techChips: ['CLI Tooling', 'Local AI / Ollama', 'TypeScript', 'Node.js'],
         githubUrl: 'https://github.com/SinghCod3r',
         images: ['./projects/Aurai_landing.png', './projects/auraai_second_page.png'],
-        visualType: 'cli-tool',
-      },
-      {
-        number: '04',
-        category: 'SYSTEMS & COMPILERS',
-        title: 'Ezy — Scripting Language',
-        oneLiner: 'Deterministic scripting language, lexer, AST parser & tree-walking runtime.',
-        description:
-          'Indentation-aware lexer, recursive-descent parser, and tree-walking interpreter. Built-in CLI with run, check, and REPL modes with first-class HTTP, JSON, and files standard library.',
-        techChips: ['Python', 'Compilers / AST', 'Interpreters', 'pytest'],
-        githubUrl: 'https://github.com/SinghCod3r',
-        liveUrl: 'https://singhcod3r.github.io/ezy',
-        images: ['./projects/ezy_page_image.png'],
         visualType: 'cli-tool',
       },
     ] as Project[],
@@ -327,7 +314,6 @@ export const PORTFOLIO_DATA = {
     links: [
       { label: 'GitHub', url: 'https://github.com/SinghCod3r' },
       { label: 'LinkedIn', url: 'https://linkedin.com/in/singhcod3r' },
-      { label: 'Portfolio', url: 'https://singhcod3r.github.io' },
       { label: 'Résumé PDF', url: './resume.pdf' },
     ],
     footer: {

@@ -110,7 +110,35 @@ export const Stage: React.FC = () => {
 
       if (isMobile) {
         targetX = 0.5;
-        scale = Math.min((vh * 0.74) / 900, (vw * 1.05) / Math.max(1, boxWidth));
+        // Base mobile scale
+        scale = Math.min((vh * 0.65) / 900, (vw * 0.90) / Math.max(1, boxWidth));
+
+        // Section-specific adjustments on mobile:
+        if (targetScene.id === 'hero') {
+          // Hero: anchor person lower so head sits safely below the CTA buttons
+          scale = Math.min((vh * 0.58) / 900, (vw * 0.82) / Math.max(1, boxWidth));
+        } else if (targetScene.id === 'about') {
+          // About: person slightly right, subtle opacity
+          targetX = 0.53;
+          alphaMult *= 0.65;
+        } else if (targetScene.id === 'work') {
+          // Work: person mostly background
+          scale = Math.min((vh * 0.52) / 900, (vw * 0.78) / Math.max(1, boxWidth));
+          alphaMult *= 0.30;
+        } else if (targetScene.id === 'journey') {
+          // Journey: person behind frosted panel
+          alphaMult *= 0.45;
+        } else if (targetScene.id === 'skills') {
+          // Toolkit: person central
+          targetX = 0.5;
+        } else if (targetScene.id === 'awards') {
+          // Awards: person background
+          alphaMult *= 0.35;
+        } else if (targetScene.id === 'contact') {
+          // Contact: person central/lower
+          targetX = 0.5;
+          scale = Math.min((vh * 0.60) / 900, (vw * 0.84) / Math.max(1, boxWidth));
+        }
       }
 
       const offY = vh - 900 * scale;
@@ -120,12 +148,18 @@ export const Stage: React.FC = () => {
       const f1 = f0 + 1;
       const frac = frameVal - f0;
 
-      const destX = offX + box[0] * scale + shiftX + mousePos.current.x;
+      const destX = offX + box[0] * scale + shiftX + (isMobile ? 0 : mousePos.current.x);
       // Ensure the bottom of the person's torso stays firmly anchored to the bottom of the viewport
       const destW = boxWidth * scale;
       const destH = boxHeight * scale;
-      const baseDestY = vh - destH;
-      const destY = baseDestY + Math.max(0, mousePos.current.y * 0.5);
+      let baseDestY = vh - destH;
+      if (isMobile && targetScene.id === 'hero') {
+        // Lower anchor in hero so it leaves upper half completely clear for title and buttons
+        baseDestY = vh - destH * 0.84;
+      } else if (isMobile && targetScene.id === 'contact') {
+        baseDestY = vh - destH * 0.88;
+      }
+      const destY = baseDestY + (isMobile ? 0 : Math.max(0, mousePos.current.y * 0.5));
 
       // Draw f0
       const frame0Data = frameStore.getFrame(f0);
@@ -216,14 +250,14 @@ export const Stage: React.FC = () => {
       ctx.closePath();
       ctx.fill();
 
-      // Blade line with 24px glow
+      // Blade line with clean mobile-safe glow
       ctx.beginPath();
       ctx.moveTo(e + skew, 0);
       ctx.lineTo(e - skew, vh);
-      ctx.lineWidth = 3;
+      ctx.lineWidth = isMobile ? 2 : 3;
       ctx.strokeStyle = bladeColor;
       ctx.shadowColor = bladeColor;
-      ctx.shadowBlur = 24;
+      ctx.shadowBlur = isMobile ? 12 : 24;
       ctx.stroke();
       ctx.restore();
     } else {
@@ -245,8 +279,9 @@ export const Stage: React.FC = () => {
         position: 'fixed',
         top: 0,
         left: 0,
-        width: '100vw',
-        height: '100vh',
+        width: '100%',
+        maxWidth: '100%',
+        height: '100%',
         zIndex: 1, // z1 as per Layer Architecture
         pointerEvents: 'none',
       }}

@@ -34,16 +34,17 @@ export const Journey: React.FC = () => {
         timelineSvgPathRef.current.style.strokeDashoffset = String(offset);
       }
 
-      // Timeline items reveal: bottom -> top, rotateY(-25deg) -> 0 with legible baseline
+      // Timeline items reveal: clean vertical reveal with high readability
+      const isMobile = window.innerWidth < 820;
       itemRefs.current.forEach((el, idx) => {
         if (!el) return;
         // 3 items: bottom to top order
         const itemThreshold = (2 - idx) * 0.22;
         const itemProg = Math.max(0, Math.min(1, (p - itemThreshold) / 0.25));
 
-        const rotY = (1 - itemProg) * -25;
-        const transY = (1 - itemProg) * 24;
-        const op = 0.38 + 0.62 * itemProg;
+        const rotY = isMobile ? 0 : (1 - itemProg) * -25;
+        const transY = (1 - itemProg) * (isMobile ? 12 : 24);
+        const op = isMobile ? 0.70 + 0.30 * itemProg : 0.38 + 0.62 * itemProg;
 
         el.style.transform = `translate3d(0, ${transY}px, 0) rotateY(${rotY}deg)`;
         el.style.opacity = String(op);
@@ -143,6 +144,7 @@ export const Journey: React.FC = () => {
 
             {/* Timeline with SVG track and drawing line */}
             <div
+              className="journey-timeline-card"
               style={{
                 position: 'relative',
                 paddingLeft: '36px',

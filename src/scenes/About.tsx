@@ -30,19 +30,31 @@ export const About: React.FC = () => {
       }
 
       // Word-by-word reveal: clean editorial focus with legible baseline
+      const isMobile = window.innerWidth < 820;
       const totalWords = wordSpansRef.current.length;
       wordSpansRef.current.forEach((span, idx) => {
         if (!span) return;
-        const wordThreshold = (idx / totalWords) * 0.7;
-        const wordProg = Math.max(0, Math.min(1, (prog.p - wordThreshold) / 0.18));
 
-        const opacity = 0.28 + 0.72 * wordProg;
-        const translateY = (1 - wordProg) * 0.15;
-        const blur = (1 - wordProg) * 1.2;
+        if (isMobile) {
+          // On mobile, text reveals quickly and stays completely clear and sharp (no prolonged blur)
+          const wordThreshold = (idx / totalWords) * 0.25;
+          const wordProg = Math.max(0, Math.min(1, (prog.p - wordThreshold) / 0.10));
+          const opacity = 0.75 + 0.25 * wordProg;
+          span.style.opacity = String(opacity);
+          span.style.transform = 'none';
+          span.style.filter = 'none';
+        } else {
+          const wordThreshold = (idx / totalWords) * 0.7;
+          const wordProg = Math.max(0, Math.min(1, (prog.p - wordThreshold) / 0.18));
 
-        span.style.opacity = String(opacity);
-        span.style.transform = `translate3d(0, ${translateY}em, 0)`;
-        span.style.filter = blur > 0.05 ? `blur(${blur}px)` : 'none';
+          const opacity = 0.28 + 0.72 * wordProg;
+          const translateY = (1 - wordProg) * 0.15;
+          const blur = (1 - wordProg) * 1.2;
+
+          span.style.opacity = String(opacity);
+          span.style.transform = `translate3d(0, ${translateY}em, 0)`;
+          span.style.filter = blur > 0.05 ? `blur(${blur}px)` : 'none';
+        }
       });
     });
 

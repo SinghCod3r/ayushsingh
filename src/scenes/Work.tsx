@@ -33,46 +33,60 @@ export const Work: React.FC = () => {
         progressBarFillRef.current.style.width = `${Math.min(100, Math.max(0, p * 100))}%`;
       }
 
-      // Scroll mapping for 3D deck:
-      // Upcoming: z = d * 300, y = d * 3.2vh
-      // Leaving: z = d * 900, y = -12d vh, rotateX = 28d, opacity = 1 - 1.8d
+      // Scroll mapping for project cards:
+      // Desktop: 3D deck with depth, tilt, and perspective
+      // Mobile: In-place vertical fade and soft translation to avoid horizontal clipping
+      const isMobile = window.innerWidth < 820;
+      const exitFade = Math.max(0, 1 - prog.exit * 2.4);
+
       cardRefs.current.forEach((card, i) => {
         if (!card) return;
 
         const d = activeFloat - i; // relative distance
 
-        let z = 0;
-        let y = 0;
-        let rotX = 0;
-        let rotY = 0;
-        let opacity = 1;
+        if (isMobile) {
+          // On mobile: single card at a time, smooth vertical fade & soft shift
+          const isNear = Math.abs(d) < 0.95;
+          const cardOp = isNear ? Math.max(0, 1 - Math.abs(d) * 1.6) * exitFade : 0;
+          const shiftY = d * -20; // gentle vertical motion
 
-        if (d >= 0) {
-          // Leaving (active or moving away)
-          z = d * 450;
-          y = -d * 12; // in vh
-          rotX = d * 24;
-          opacity = Math.max(0, 1 - d * 1.5);
-          rotY = 0;
+          card.style.transform = `translate3d(0, ${shiftY}px, 0)`;
+          card.style.opacity = String(cardOp);
+          card.style.visibility = cardOp <= 0.01 ? 'hidden' : 'visible';
+          card.style.pointerEvents = Math.abs(d) < 0.4 ? 'auto' : 'none';
+          card.style.zIndex = String(10 - Math.round(Math.abs(d) * 5));
         } else {
-          // Upcoming
-          const upcomingDist = -d;
-          z = -upcomingDist * 200;
-          y = upcomingDist * 4; // in vh
-          rotX = 0;
-          rotY = Math.min(25, upcomingDist * 15);
-          opacity = Math.max(0, 1 - upcomingDist * 0.8);
+          // Desktop 3D deck
+          let z = 0;
+          let y = 0;
+          let rotX = 0;
+          let rotY = 0;
+          let opacity = 1;
+
+          if (d >= 0) {
+            // Leaving (active or moving away)
+            z = d * 450;
+            y = -d * 12; // in vh
+            rotX = d * 24;
+            opacity = Math.max(0, 1 - d * 1.5);
+            rotY = 0;
+          } else {
+            // Upcoming
+            const upcomingDist = -d;
+            z = -upcomingDist * 200;
+            y = upcomingDist * 4; // in vh
+            rotX = 0;
+            rotY = Math.min(25, upcomingDist * 15);
+            opacity = Math.max(0, 1 - upcomingDist * 0.8);
+          }
+
+          opacity *= exitFade;
+          card.style.transform = `translate3d(0, ${y}vh, ${z}px) rotateX(${rotX}deg) rotateY(${rotY}deg)`;
+          card.style.opacity = String(opacity);
+          card.style.visibility = opacity <= 0.02 ? 'hidden' : 'visible';
+          card.style.pointerEvents = Math.abs(d) < 0.4 ? 'auto' : 'none';
+          card.style.zIndex = String(100 - Math.round(Math.abs(d) * 10));
         }
-
-        // Apply exit fade if scene is exiting
-        const exitFade = Math.max(0, 1 - prog.exit * 2.4);
-        opacity *= exitFade;
-
-        card.style.transform = `translate3d(0, ${y}vh, ${z}px) rotateX(${rotX}deg) rotateY(${rotY}deg)`;
-        card.style.opacity = String(opacity);
-        card.style.visibility = opacity <= 0.02 ? 'hidden' : 'visible';
-        card.style.pointerEvents = Math.abs(d) < 0.4 ? 'auto' : 'none';
-        card.style.zIndex = String(100 - Math.round(Math.abs(d) * 10));
       });
     });
 
