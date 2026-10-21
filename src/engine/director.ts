@@ -131,6 +131,7 @@ class Director {
   private isStarted = false;
   private currentY = 0;
   private targetY = 0;
+  private lastState: DirectorState | null = null;
 
   constructor() {
     if (typeof window !== 'undefined') {
@@ -185,6 +186,7 @@ class Director {
     this.sectionElements.set(id, el);
     this.resizeObserver?.observe(el);
     this.updateMetrics();
+    this.evaluate();
   }
 
   public unregisterSection(id: string) {
@@ -217,8 +219,15 @@ class Director {
     this.updateMetrics();
   }
 
+  public getState(): DirectorState | null {
+    return this.lastState;
+  }
+
   public subscribe(listener: DirectorListener): () => void {
     this.listeners.add(listener);
+    if (this.lastState) {
+      listener(this.lastState);
+    }
     return () => {
       this.listeners.delete(listener);
     };
@@ -318,6 +327,8 @@ class Director {
       transition,
       overallProgress,
     };
+
+    this.lastState = state;
 
     // Notify listeners
     this.listeners.forEach((fn) => fn(state));

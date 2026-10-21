@@ -324,28 +324,33 @@ export const Work: React.FC = () => {
               transformStyle: 'preserve-3d',
             }}
           >
-            {work.projects.map((proj, idx) => (
-              <div
-                key={proj.number}
-                ref={(el) => {
-                  cardRefs.current[idx] = el;
-                }}
-                className="work-project-card"
-                style={{
-                  position: 'absolute',
-                  inset: 0,
-                  borderRadius: '30px',
-                  background: '#ffffff',
-                  boxShadow: '0 25px 60px -15px rgba(13, 13, 13, 0.14), 0 0 1px 1px rgba(13, 13, 13, 0.05)',
-                  display: 'grid',
-                  gridTemplateColumns: '1.15fr 0.85fr',
-                  padding: '36px',
-                  gap: '32px',
-                  transformOrigin: '50% 100%',
-                  willChange: 'transform, opacity',
-                  transition: 'transform 0.08s linear, opacity 0.08s linear',
-                }}
-              >
+            {work.projects.map((proj, idx) => {
+              const isFirst = idx === 0;
+              return (
+                <div
+                  key={proj.number}
+                  ref={(el) => {
+                    cardRefs.current[idx] = el;
+                  }}
+                  className="work-project-card"
+                  style={{
+                    position: 'absolute',
+                    inset: 0,
+                    borderRadius: '30px',
+                    background: '#ffffff',
+                    boxShadow: '0 25px 60px -15px rgba(13, 13, 13, 0.14), 0 0 1px 1px rgba(13, 13, 13, 0.05)',
+                    display: 'grid',
+                    gridTemplateColumns: '1.15fr 0.85fr',
+                    padding: '36px',
+                    gap: '32px',
+                    transformOrigin: '50% 100%',
+                    willChange: 'transform, opacity',
+                    transition: 'transform 0.08s linear, opacity 0.08s linear',
+                    opacity: isFirst ? 1 : 0,
+                    visibility: isFirst ? 'visible' : 'hidden',
+                    zIndex: isFirst ? 10 : 1,
+                  }}
+                >
                 {/* LEFT Side: Number, category, title, description, 4 tech chips, GitHub link */}
                 <div
                   className="work-card-info"
@@ -459,7 +464,8 @@ export const Work: React.FC = () => {
                   {renderCardVisual(proj)}
                 </div>
               </div>
-            ))}
+            );
+          })}
           </div>
         </div>
       </div>
