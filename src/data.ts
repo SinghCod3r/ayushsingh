@@ -42,6 +42,24 @@ export interface CounterItem {
   color: 'red' | 'black';
 }
 
+export interface ToolkitSkillItem {
+  id: string;
+  name: string;
+  group: 'core' | 'build' | 'engineer' | 'contribute';
+  track: 0 | 1 | 2; // 0 = inner, 1 = middle, 2 = outer
+  angleOffset: number;
+  entranceP: number;
+  activeRange?: [number, number];
+}
+
+export interface ToolkitGroupItem {
+  id: 'core' | 'build' | 'engineer' | 'contribute';
+  num: string;
+  label: string;
+  tagline: string;
+  skills: string[];
+}
+
 export const PORTFOLIO_DATA = {
   identity: {
     firstName: 'AYUSH',
@@ -182,6 +200,36 @@ export const PORTFOLIO_DATA = {
     sectionNum: '04',
     sectionTitle: 'Toolkit',
     headline: 'EVERYTHING\nIN ORBIT.',
+    groups: [
+      {
+        id: 'core' as const,
+        num: '01',
+        label: 'CORE',
+        tagline: 'FOUNDATIONAL RUNTIMES & TYPE SYSTEMS',
+        skills: ['Python', 'JavaScript', 'TypeScript', 'SQL'],
+      },
+      {
+        id: 'build' as const,
+        num: '02',
+        label: 'BUILD',
+        tagline: 'FULL-STACK FRAMEWORKS & SERVERS',
+        skills: ['React', 'Next.js', 'Node.js', 'Express', 'REST APIs'],
+      },
+      {
+        id: 'engineer' as const,
+        num: '03',
+        label: 'ENGINEER',
+        tagline: 'SYSTEMS, RUNTIME TESTING & TOOLCHAINS',
+        skills: ['Git', 'GitHub', 'Linux', 'Debugging', 'Testing'],
+      },
+      {
+        id: 'contribute' as const,
+        num: '04',
+        label: 'CONTRIBUTE',
+        tagline: 'OPEN SOURCE ECOSYSTEM & AI WORKFLOWS',
+        skills: ['Open Source', 'AI'],
+      },
+    ],
     skills: [
       'Python',
       'JavaScript',
@@ -200,19 +248,38 @@ export const PORTFOLIO_DATA = {
       'Testing',
       'AI',
     ],
+    skillItems: [
+      // Track 0: Inner - Core
+      { id: 'python', name: 'Python', group: 'core' as const, track: 0 as const, angleOffset: 0, entranceP: 0.35, activeRange: [0.18, 0.34] as [number, number] },
+      { id: 'javascript', name: 'JavaScript', group: 'core' as const, track: 0 as const, angleOffset: Math.PI * 0.5, entranceP: 0.40 },
+      { id: 'typescript', name: 'TypeScript', group: 'core' as const, track: 0 as const, angleOffset: Math.PI, entranceP: 0.45 },
+      { id: 'sql', name: 'SQL', group: 'core' as const, track: 0 as const, angleOffset: Math.PI * 1.5, entranceP: 0.47 },
+
+      // Track 1: Middle - Build
+      { id: 'react', name: 'React', group: 'build' as const, track: 1 as const, angleOffset: 0.25, entranceP: 0.50, activeRange: [0.34, 0.48] as [number, number] },
+      { id: 'nextjs', name: 'Next.js', group: 'build' as const, track: 1 as const, angleOffset: 0.25 + (Math.PI * 2 / 5) * 1, entranceP: 0.50, activeRange: [0.48, 0.60] as [number, number] },
+      { id: 'nodejs', name: 'Node.js', group: 'build' as const, track: 1 as const, angleOffset: 0.25 + (Math.PI * 2 / 5) * 2, entranceP: 0.55, activeRange: [0.60, 0.72] as [number, number] },
+      { id: 'express', name: 'Express', group: 'build' as const, track: 1 as const, angleOffset: 0.25 + (Math.PI * 2 / 5) * 3, entranceP: 0.55 },
+      { id: 'restapis', name: 'REST APIs', group: 'build' as const, track: 1 as const, angleOffset: 0.25 + (Math.PI * 2 / 5) * 4, entranceP: 0.58 },
+
+      // Track 2: Outer - Engineer & Contribute
+      { id: 'git', name: 'Git', group: 'engineer' as const, track: 2 as const, angleOffset: 0.45, entranceP: 0.65 },
+      { id: 'github', name: 'GitHub', group: 'engineer' as const, track: 2 as const, angleOffset: 0.45 + (Math.PI * 2 / 7) * 1, entranceP: 0.65 },
+      { id: 'linux', name: 'Linux', group: 'engineer' as const, track: 2 as const, angleOffset: 0.45 + (Math.PI * 2 / 7) * 2, entranceP: 0.65, activeRange: [0.72, 0.85] as [number, number] },
+      { id: 'debugging', name: 'Debugging', group: 'engineer' as const, track: 2 as const, angleOffset: 0.45 + (Math.PI * 2 / 7) * 3, entranceP: 0.75 },
+      { id: 'testing', name: 'Testing', group: 'engineer' as const, track: 2 as const, angleOffset: 0.45 + (Math.PI * 2 / 7) * 4, entranceP: 0.75 },
+      { id: 'opensource', name: 'Open Source', group: 'contribute' as const, track: 2 as const, angleOffset: 0.45 + (Math.PI * 2 / 7) * 5, entranceP: 0.85, activeRange: [0.85, 1.00] as [number, number] },
+      { id: 'ai', name: 'AI', group: 'contribute' as const, track: 2 as const, angleOffset: 0.45 + (Math.PI * 2 / 7) * 6, entranceP: 0.85 },
+    ],
     marquee: [
+      'BUILD',
+      'DEBUG',
+      'LINUX',
+      'OPEN SOURCE',
+      'CONTRIBUTE',
       'PYTHON',
-      'LINUX SYSTEMS',
-      'OPENPRINTING',
-      'TYPESCRIPT',
       'REACT',
-      'GTK / GLIB',
-      'D-BUS',
-      'CUPS',
-      'REST APIS',
-      'DOCKER',
-      'SYSTEMS DEBUGGING',
-      'ROOT CAUSE ANALYSIS',
+      'TYPESCRIPT',
     ],
   },
 

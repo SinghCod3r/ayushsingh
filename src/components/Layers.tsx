@@ -1,21 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { director } from '../engine/director';
-import { PORTFOLIO_DATA } from '../data';
 import { Odometer } from './Odometer';
-
-// 16 skills for Fibonacci sphere
-const SKILLS_LIST = PORTFOLIO_DATA.toolkit.skills;
-
-interface SpherePoint {
-  skill: string;
-  x: number;
-  y: number;
-  z: number;
-  screenX: number;
-  screenY: number;
-  scale: number;
-}
+import { SkillOrbitBack, SkillOrbitFront } from './SkillOrbit';
 
 export const Layers: React.FC = () => {
   // Back layer elements refs
@@ -27,11 +14,6 @@ export const Layers: React.FC = () => {
   const [journeyYear, setJourneyYear] = useState(2022);
   const contactRedBgRef = useRef<HTMLDivElement | null>(null);
   const contactTalkRef = useRef<HTMLDivElement | null>(null);
-
-  // Fibonacci sphere refs for 0 re-render direct DOM updates
-  const backChipRefs = useRef<Array<HTMLDivElement | null>>([]);
-  const frontChipRefs = useRef<Array<HTMLDivElement | null>>([]);
-  const mouseOffset = useRef({ x: 0, y: 0 });
   const lastYearRef = useRef<number>(2022);
 
   useEffect(() => {
@@ -55,14 +37,6 @@ export const Layers: React.FC = () => {
         }
       );
     }
-
-    const handleMouseMove = (e: MouseEvent) => {
-      const cx = window.innerWidth / 2;
-      const cy = window.innerHeight / 2;
-      mouseOffset.current.x = (e.clientX - cx) / cx;
-      mouseOffset.current.y = (e.clientY - cy) / cy;
-    };
-    window.addEventListener('mousemove', handleMouseMove, { passive: true });
 
     // Director subscription for high-performance direct DOM manipulation
     const unsubscribe = director.subscribe((state) => {
@@ -143,116 +117,13 @@ export const Layers: React.FC = () => {
         contactTalkRef.current.style.transform = `translate3d(0, ${(1 - enterProg) * 30}px, 0)`;
       }
 
-      // 6. Skills Fibonacci Sphere Kinematics (Direct DOM updates)
-      const skillsProg = scenesProgress['skills'];
-      if (!skillsProg || skillsProg.vis <= 0.02) {
-        for (let i = 0; i < SKILLS_LIST.length; i++) {
-          if (backChipRefs.current[i]) backChipRefs.current[i]!.style.display = 'none';
-          if (frontChipRefs.current[i]) frontChipRefs.current[i]!.style.display = 'none';
-        }
-      } else {
-        updateSphereKinematics(skillsProg.p, y);
-      }
+      // (Skills orbit kinematics are managed by SkillOrbitEngine)
     });
 
     return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
       unsubscribe();
     };
   }, []);
-
-  // Fibonacci Sphere math (Direct DOM transform mutations)
-  const updateSphereKinematics = (p: number, scrollY: number) => {
-    const vw = window.innerWidth;
-    const vh = window.innerHeight;
-    const isMobile = vw < 820;
-
-    // Radius: Desktop R = min(27vw, 46vh); Mobile: max width min(88vw, 340px) -> R <= 140
-    const R = isMobile ? Math.min(vw * 0.38, 140) : Math.min(vw * 0.27, vh * 0.46);
-    const ySquash = isMobile ? 0.65 : 0.78;
-    const baseTilt = -0.28; // radians
-
-    // Auto-spin + Scroll spin + Mouse follow
-    const time = performance.now() * 0.0006;
-    const rotY = time + (scrollY * 0.005) + (isMobile ? 0 : mouseOffset.current.x * 0.4);
-    const rotX = baseTilt + (isMobile ? 0 : mouseOffset.current.y * 0.3);
-
-    const N = SKILLS_LIST.length;
-    const phiAngle = Math.PI * (3 - Math.sqrt(5)); // Golden angle
-
-    const centerX = vw * 0.5;
-    // On mobile, position around upper torso / shoulders to prevent covering face
-    const centerY = isMobile ? vh * 0.46 : vh * 0.52;
-
-    // Calculate all candidate points
-    const points: Array<{ idx: number; screenX: number; screenY: number; zTilted: number; scale: number }> = [];
-
-    for (let i = 0; i < N; i++) {
-      const yNorm = 1 - (i / (N - 1)) * 2; // -1 to 1
-      const radiusAtY = Math.sqrt(1 - yNorm * yNorm);
-      const theta = phiAngle * i + rotY;
-
-      // 3D coordinates on unit sphere
-      const x0 = Math.cos(theta) * radiusAtY * R;
-      const y0 = yNorm * R * ySquash;
-      const z0 = Math.sin(theta) * radiusAtY * R;
-
-      // Apply tilt around X axis
-      const yTilted = y0 * Math.cos(rotX) - z0 * Math.sin(rotX);
-      const zTilted = y0 * Math.sin(rotX) + z0 * Math.cos(rotX);
-
-      // Clamp screenX inside safe mobile bounds [5vw, 95vw]
-      let screenX = centerX + x0;
-      if (isMobile) {
-        screenX = Math.max(vw * 0.08, Math.min(vw * 0.92, screenX));
-      }
-      const screenY = centerY + yTilted;
-      const scale = isMobile
-        ? 0.75 + 0.2 * ((zTilted + R) / (2 * R))
-        : 0.8 + 0.3 * ((zTilted + R) / (2 * R));
-
-      points.push({ idx: i, screenX, screenY, zTilted, scale });
-    }
-
-    // On mobile, only show the 7 closest/clearest skills to prevent face crowding
-    const allowedIndices = new Set<number>();
-    if (isMobile) {
-      const sortedByFront = [...points].sort((a, b) => b.zTilted - a.zTilted);
-      sortedByFront.slice(0, 7).forEach((p) => allowedIndices.add(p.idx));
-    }
-
-    for (let i = 0; i < N; i++) {
-      const pt = points[i];
-      const backEl = backChipRefs.current[i];
-      const frontEl = frontChipRefs.current[i];
-
-      if (isMobile && !allowedIndices.has(i)) {
-        if (backEl) backEl.style.display = 'none';
-        if (frontEl) frontEl.style.display = 'none';
-        continue;
-      }
-
-      if (pt.zTilted < 0) {
-        if (backEl) {
-          backEl.style.display = 'block';
-          backEl.style.transform = `translate3d(${pt.screenX}px, ${pt.screenY}px, 0) translate(-50%, -50%) scale(${pt.scale})`;
-          backEl.style.opacity = isMobile ? '0.6' : String(0.45 + (pt.scale - 0.8) * 0.8);
-        }
-        if (frontEl) {
-          frontEl.style.display = 'none';
-        }
-      } else {
-        if (frontEl) {
-          frontEl.style.display = 'block';
-          frontEl.style.transform = `translate3d(${pt.screenX}px, ${pt.screenY}px, 0) translate(-50%, -50%) scale(${pt.scale})`;
-          frontEl.style.opacity = '1';
-        }
-        if (backEl) {
-          backEl.style.display = 'none';
-        }
-      }
-    }
-  };
 
   return (
     <>
@@ -353,36 +224,8 @@ export const Layers: React.FC = () => {
           />
         </div>
 
-        {/* SKILLS: Back half of Fibonacci sphere chips (z < 0) */}
-        {SKILLS_LIST.map((skill, idx) => (
-          <div
-            key={idx}
-            ref={(el) => {
-              backChipRefs.current[idx] = el;
-            }}
-            className="sphere-chip-back"
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              display: 'none',
-              padding: '6px 14px',
-              borderRadius: '999px',
-              background: 'rgba(255, 255, 255, 0.75)',
-              border: '1px solid rgba(255, 31, 31, 0.35)',
-              color: 'var(--red)',
-              fontFamily: "'JetBrains Mono', monospace",
-              fontSize: '11px',
-              fontWeight: 600,
-              boxShadow: '0 4px 12px rgba(255, 31, 31, 0.08)',
-              whiteSpace: 'nowrap',
-              pointerEvents: 'none',
-              willChange: 'transform, opacity',
-            }}
-          >
-            {skill}
-          </div>
-        ))}
+        {/* SKILLS: Back half of technology orbit (z < 0, behind person) */}
+        <SkillOrbitBack />
 
         {/* CONTACT: Full red background and giant white LET'S TALK */}
         <div
@@ -424,35 +267,8 @@ export const Layers: React.FC = () => {
       {/* 2. FIXED LAYER-FRONT (z2: Front of canvas)                */}
       {/* ========================================================= */}
       <div className="layer-front">
-        {/* SKILLS: Front half of Fibonacci sphere chips (z >= 0) */}
-        {SKILLS_LIST.map((skill, idx) => (
-          <div
-            key={idx}
-            ref={(el) => {
-              frontChipRefs.current[idx] = el;
-            }}
-            className="sphere-chip-front"
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              display: 'none',
-              padding: '8px 18px',
-              borderRadius: '999px',
-              background: 'var(--red)',
-              color: '#ffffff',
-              fontFamily: "'JetBrains Mono', monospace",
-              fontSize: '12px',
-              fontWeight: 700,
-              boxShadow: '0 8px 24px rgba(255, 31, 31, 0.4), 0 0 12px rgba(255, 31, 31, 0.6)',
-              whiteSpace: 'nowrap',
-              pointerEvents: 'none',
-              willChange: 'transform',
-            }}
-          >
-            {skill}
-          </div>
-        ))}
+        {/* SKILLS: Front half of technology orbit (z >= 0, in front of person) */}
+        <SkillOrbitFront />
       </div>
     </>
   );
