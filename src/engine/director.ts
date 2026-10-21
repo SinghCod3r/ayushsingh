@@ -35,8 +35,8 @@ export const SCENES: SceneConfig[] = [
     label: 'Work',
     from: 76,
     to: 162,
-    x: 0.77,
-    k: 0.86,
+    x: 0.73,
+    k: 0.88,
     vhHeight: 4.6,
   },
   {

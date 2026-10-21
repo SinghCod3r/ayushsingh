@@ -142,14 +142,34 @@ export const Stage: React.FC = () => {
         }
       }
 
-      const offY = vh - 900 * scale;
-      const offX = targetX * vw - shot.cx * 1600 * scale;
+      if (!isMobile && shot.from === 76) {
+        // Shot 2 (sitting + laptop shot) desktop composition:
+        // Inside the cropped 904x830 frame, Ayush's head center is at focusX = 508.
+        // We anchor the head in the right third (targetHeadX = 0.73 * vw).
+        // Scale k = 0.88 keeps proportions natural.
+        // minRightMargin ensures Ayush's right elbow/chair is never clipped on narrower viewports.
+        scale = (vh * 0.88) / 900;
+      }
 
       const f0 = Math.floor(frameVal);
       const f1 = f0 + 1;
       const frac = frameVal - f0;
 
-      const destX = offX + box[0] * scale + shiftX + (isMobile ? 0 : mousePos.current.x);
+      let destX: number;
+      if (!isMobile && shot.from === 76) {
+        const focusX = 508.0;
+        const targetHeadX = 0.73 * vw;
+        let calculatedX = targetHeadX - focusX * scale + shiftX + mousePos.current.x;
+        const minRightMargin = 56;
+        const shotDestW = boxWidth * scale;
+        if (calculatedX + shotDestW > vw - minRightMargin) {
+          calculatedX = vw - minRightMargin - shotDestW;
+        }
+        destX = calculatedX;
+      } else {
+        const offX = targetX * vw - shot.cx * 1600 * scale;
+        destX = offX + box[0] * scale + shiftX + (isMobile ? 0 : mousePos.current.x);
+      }
       // Ensure the bottom of the person's torso stays firmly anchored to the bottom of the viewport
       const destW = boxWidth * scale;
       const destH = boxHeight * scale;

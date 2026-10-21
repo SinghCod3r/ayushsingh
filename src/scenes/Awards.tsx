@@ -227,7 +227,7 @@ export const Awards: React.FC = () => {
                 perspective: '1600px',
                 overflow: 'visible',
                 alignSelf: 'flex-start',
-                marginTop: '6vh',
+                marginTop: '17vh',
               }}
             >
               <div

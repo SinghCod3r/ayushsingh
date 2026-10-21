@@ -311,7 +311,7 @@ export const Work: React.FC = () => {
             </div>
           </div>
 
-          {/* 3D Card Deck: left: 5vw, top: 23vh, width: min(56vw,940px), height: 55vh, perspective: 1500px */}
+          {/* 3D Card Deck: left: 5vw, top: 23vh, width: min(50vw, 840px), height: 55vh, perspective: 1500px */}
           <div
             ref={cardsContainerRef}
             className="work-deck-container"
@@ -319,7 +319,7 @@ export const Work: React.FC = () => {
               position: 'absolute',
               left: '5vw',
               top: '23vh',
-              width: 'min(56vw, 940px)',
+              width: 'min(50vw, 840px)',
               height: '55vh',
               perspective: '1500px',
               transformStyle: 'preserve-3d',
