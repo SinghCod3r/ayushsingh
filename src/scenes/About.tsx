@@ -25,8 +25,9 @@ export const About: React.FC = () => {
       if (!prog) return;
 
       if (frontColRef.current) {
-        const exitFade = Math.max(0, 1 - prog.exit * 2.4);
-        frontColRef.current.style.opacity = String(exitFade);
+        const enterFade = Math.min(1, prog.enter * 1.5);
+        const exitFade = Math.max(0, 1 - prog.exit);
+        frontColRef.current.style.opacity = String(enterFade * exitFade);
       }
 
       // Word-by-word reveal: clean editorial focus with legible baseline

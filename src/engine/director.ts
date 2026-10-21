@@ -269,7 +269,7 @@ class Director {
       const enter = clamp((y - (top - vh)) / vh);
       const p = clamp((y - top) / Math.max(1, h - vh));
       const exit = clamp((y - (top + h - vh)) / vh);
-      const vis = clamp(Math.min(enter * 1.6, 1 - exit * 2.2));
+      const vis = clamp(Math.min(enter * 1.25, 1 - exit));
 
       scenesProgress[scene.id] = { id: scene.id, p, enter, exit, vis };
     });

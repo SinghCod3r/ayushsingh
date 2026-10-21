@@ -23,8 +23,9 @@ export const Awards: React.FC = () => {
       const p = prog.p;
 
       if (frontContentRef.current) {
-        const exitFade = Math.max(0, 1 - prog.exit * 2.4);
-        frontContentRef.current.style.opacity = String(exitFade);
+        const enterFade = Math.min(1, prog.enter * 1.5);
+        const exitFade = Math.max(0, 1 - prog.exit);
+        frontContentRef.current.style.opacity = String(enterFade * exitFade);
       }
 
       // Flip-in counter cards: rotateX -100deg -> 0 staggered on entry

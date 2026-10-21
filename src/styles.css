@@ -216,26 +216,44 @@ main {
 
   /* Safe Header HUD */
   .hud-container {
-    height: 60px !important;
-    padding: 0 20px !important;
+    height: 56px !important;
+    padding: 0 16px !important;
   }
 
   .hud-logo {
-    font-size: 24px !important;
+    font-size: 22px !important;
   }
 
+  /* Active Section Pill on Mobile Header (eliminates empty space) */
+  .hud-mobile-status {
+    display: inline-flex !important;
+  }
+
+  /* Enhanced High-Contrast Mobile Progress Rail */
   .hud-progress-rail {
-    right: 14px !important;
-    bottom: max(14px, env(safe-area-inset-bottom)) !important;
-    gap: 4px !important;
+    right: 12px !important;
+    bottom: max(16px, env(safe-area-inset-bottom)) !important;
+    gap: 5px !important;
+    background: rgba(255, 255, 255, 0.85) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border: 1px solid rgba(13, 13, 13, 0.09) !important;
+    border-radius: 999px !important;
+    padding: 8px 6px !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08) !important;
   }
 
   .hud-progress-rail span {
-    font-size: 9px !important;
+    font-size: 10px !important;
+    font-weight: 700 !important;
+    color: var(--ink) !important;
   }
 
   .hud-progress-rail > div {
-    height: 40px !important;
+    height: 48px !important;
+    width: 3px !important;
+    background: rgba(13, 13, 13, 0.12) !important;
+    border-radius: 999px !important;
   }
 
   /* Reusable Mobile Container Class */
@@ -300,60 +318,67 @@ main {
     text-align: center !important;
   }
 
-  /* About Mobile */
+  /* About Mobile: Dedicated hierarchy (ABOUT -> Intro -> 3 Stat Cards -> Character in lower half) */
   .about-front-column {
     left: 16px !important;
     right: 16px !important;
     width: auto !important;
     max-width: min(calc(100vw - 32px), 640px) !important;
     margin-inline: auto !important;
-    top: 9svh !important;
-    bottom: max(16px, env(safe-area-inset-bottom)) !important;
+    top: 8svh !important;
+    bottom: auto !important;
     justify-content: flex-start !important;
-    gap: 16px !important;
+    gap: 8px !important;
+    z-index: 10 !important;
   }
 
   .about-manifesto {
-    font-size: clamp(18px, 4.4vw, 28px) !important;
-    line-height: 1.3 !important;
-    margin-top: 1vh !important;
-    margin-bottom: 1.5vh !important;
+    font-size: clamp(15px, 3.8vw, 20px) !important;
+    line-height: 1.35 !important;
+    margin-top: 4px !important;
+    margin-bottom: 8px !important;
+    max-width: 100% !important;
   }
 
+  /* 3 Compact Stat Cards stacked cleanly above character */
   .about-stats-grid {
     display: flex !important;
     flex-direction: column !important;
-    gap: 10px !important;
+    gap: 6px !important;
     width: 100% !important;
-    background: rgba(255, 255, 255, 0.88) !important;
-    backdrop-filter: blur(18px) !important;
-    -webkit-backdrop-filter: blur(18px) !important;
-    border: 1px solid rgba(13, 13, 13, 0.08) !important;
-    border-radius: 20px !important;
-    padding: 12px !important;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05) !important;
+    background: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
   }
 
   .about-stats-grid .tilt-card {
     height: auto !important;
-    min-height: 64px !important;
-    border: none !important;
-    background: rgba(13, 13, 13, 0.03) !important;
+    min-height: 42px !important;
+    border: 1px solid rgba(13, 13, 13, 0.08) !important;
+    background: rgba(255, 255, 255, 0.90) !important;
+    backdrop-filter: blur(14px) !important;
+    -webkit-backdrop-filter: blur(14px) !important;
     border-radius: 12px !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04) !important;
   }
 
   .about-stats-grid .tilt-card > div {
-    padding: 10px 14px !important;
+    padding: 8px 14px !important;
     display: flex !important;
     flex-direction: row !important;
     align-items: center !important;
     justify-content: space-between !important;
     height: auto !important;
-    gap: 12px !important;
+    gap: 10px !important;
   }
 
   .about-stats-grid .tilt-card .odometer-wrap {
-    font-size: 26px !important;
+    font-size: 20px !important;
+    color: var(--red) !important;
   }
 
   /* Work Mobile */
@@ -446,12 +471,17 @@ main {
   }
 
   .journey-colossal-year {
-    font-size: min(20vh, 26vw) !important;
+    font-size: clamp(48px, 16vw, 76px) !important;
     top: 14svh !important;
     left: 0 !important;
     right: 0 !important;
     text-align: center !important;
     pointer-events: none !important;
+    opacity: 0.08 !important;
+  }
+
+  .journey-colossal-year .odometer-wrap {
+    font-size: clamp(48px, 16vw, 76px) !important;
   }
 
   .journey-timeline-card {
@@ -543,12 +573,28 @@ main {
 
   .awards-cylinder-wrapper {
     width: 100% !important;
-    max-width: min(calc(100vw - 32px), 360px) !important;
+    max-width: min(calc(100vw - 32px), 340px) !important;
     margin-inline: auto !important;
     margin-top: 2vh !important;
-    perspective: 1000px !important;
-    height: 220px !important;
+    perspective: 900px !important;
+    height: 190px !important;
     overflow: visible !important;
+  }
+
+  .awards-cylinder {
+    width: 270px !important;
+    height: 170px !important;
+    transform: translateZ(-280px) rotateX(-12deg) rotateY(0deg) !important;
+  }
+
+  .awards-3d-card {
+    width: 270px !important;
+    height: 170px !important;
+  }
+
+  .awards-3d-card > div {
+    padding: 14px !important;
+    border-radius: 18px !important;
   }
 
   /* Contact Mobile */
@@ -592,7 +638,7 @@ main {
   }
 
   .about-stats-grid .tilt-card {
-    min-height: 56px !important;
+    min-height: 40px !important;
   }
 
   .work-card-visual {

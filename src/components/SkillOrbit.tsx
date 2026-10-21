@@ -135,7 +135,7 @@ class SkillOrbitEngine {
     // 5. Entrance and Exit Progression
     // Rings draw in between p = 0.20 and 0.32
     const ringEnter = Math.max(0, Math.min(1, (p - 0.20) / 0.12));
-    const exitFade = Math.max(0, 1 - exit * 2.6);
+    const exitFade = Math.max(0, 1 - exit * 1.1);
     const ringOpacity = ringEnter * exitFade;
 
     // Update Rings
@@ -233,7 +233,7 @@ class SkillOrbitEngine {
       }
 
       // Exit expansion
-      const exitSpan = Math.max(0, exit * 2.4);
+      const exitSpan = Math.max(0, exit * 1.1);
       const expandR = baseR * (0.45 + 0.55 * enterEased + exitSpan * 0.35);
 
       // Angle

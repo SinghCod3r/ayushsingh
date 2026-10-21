@@ -37,7 +37,7 @@ export const Skills: React.FC = () => {
       if (frontContentRef.current) {
         // Heading reveals smoothly with enter, fades on exit
         const enterFade = Math.min(1, Math.max(0, prog.enter * 2.2));
-        const exitFade = Math.max(0, 1 - prog.exit * 2.4);
+        const exitFade = Math.max(0, 1 - prog.exit);
         frontContentRef.current.style.opacity = String(enterFade * exitFade);
         const yOffset = (1 - enterFade) * 24;
         frontContentRef.current.style.transform = `translate3d(0, ${yOffset}px, 0)`;

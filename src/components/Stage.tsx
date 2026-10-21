@@ -111,34 +111,42 @@ export const Stage: React.FC = () => {
       if (isMobile) {
         targetX = 0.5;
         // Base mobile scale
-        scale = Math.min((vh * 0.65) / 900, (vw * 0.90) / Math.max(1, boxWidth));
+        scale = Math.min((vh * 0.58) / 900, (vw * 0.85) / Math.max(1, boxWidth));
 
         // Section-specific adjustments on mobile:
         if (targetScene.id === 'hero') {
           // Hero: anchor person lower so head sits safely below the CTA buttons
-          scale = Math.min((vh * 0.58) / 900, (vw * 0.82) / Math.max(1, boxWidth));
+          scale = Math.min((vh * 0.54) / 840, (vw * 0.84) / Math.max(1, boxWidth));
+          alphaMult *= 0.90;
         } else if (targetScene.id === 'about') {
-          // About: person slightly right, subtle opacity
-          targetX = 0.53;
-          alphaMult *= 0.65;
+          // About: centered, crisp opacity, bottom-anchored
+          targetX = 0.50;
+          scale = Math.min((vh * 0.50) / 825, (vw * 0.84) / Math.max(1, boxWidth));
+          alphaMult *= 0.85;
         } else if (targetScene.id === 'work') {
-          // Work: person mostly background
-          scale = Math.min((vh * 0.52) / 900, (vw * 0.78) / Math.max(1, boxWidth));
-          alphaMult *= 0.30;
+          // Work: person clearly framed behind single card
+          scale = Math.min((vh * 0.48) / 681, (vw * 0.90) / Math.max(1, boxWidth));
+          alphaMult *= 0.75;
         } else if (targetScene.id === 'journey') {
-          // Journey: person behind frosted panel
-          alphaMult *= 0.45;
+          // Journey: person centered, clean opacity
+          targetX = 0.50;
+          scale = Math.min((vh * 0.52) / 845, (vw * 0.84) / Math.max(1, boxWidth));
+          alphaMult *= 0.75;
         } else if (targetScene.id === 'skills') {
-          // Toolkit: person central
-          targetX = 0.5;
+          // Toolkit: person central inside orbit
+          targetX = 0.50;
+          scale = Math.min((vh * 0.52) / 845, (vw * 0.84) / Math.max(1, boxWidth));
+          alphaMult *= 0.90;
         } else if (targetScene.id === 'awards') {
-          // Awards: person background with lower opacity and scaled to clear cylinder
-          alphaMult *= 0.18;
-          scale = Math.min((vh * 0.52) / 900, (vw * 0.78) / Math.max(1, boxWidth));
+          // Awards: person centered with clear presence
+          targetX = 0.50;
+          scale = Math.min((vh * 0.48) / 845, (vw * 0.82) / Math.max(1, boxWidth));
+          alphaMult *= 0.65;
         } else if (targetScene.id === 'contact') {
-          // Contact: person central/lower
-          targetX = 0.5;
-          scale = Math.min((vh * 0.60) / 900, (vw * 0.84) / Math.max(1, boxWidth));
+          // Contact: person central
+          targetX = 0.50;
+          scale = Math.min((vh * 0.56) / 845, (vw * 0.84) / Math.max(1, boxWidth));
+          alphaMult *= 0.90;
         }
       }
 
@@ -209,7 +217,7 @@ export const Stage: React.FC = () => {
     // Check if blade transition is active
     if (state.transition && state.transition.isTransitioning) {
       const { t, fromScene, toScene, fromFrame, toFrame } = state.transition;
-      const skew = 0.2 * vh;
+      const skew = isMobile ? 0.08 * vw : 0.2 * vh;
       const e = -skew + (vw + 2 * skew) * t;
 
       const outgoingShot = frameStore.getShotForFrame(fromFrame);
@@ -217,7 +225,7 @@ export const Stage: React.FC = () => {
 
       // 1. Draw Outgoing Shot:
       // - clip to polygon to the right of the line from (e+skew, 0) to (e-skew, vh)
-      // - shift: +60t px
+      // - shift: +60t px (or 18t on mobile)
       // - alpha: 1 - 0.35t
       if (outgoingShot) {
         ctx.save();
@@ -229,7 +237,7 @@ export const Stage: React.FC = () => {
         ctx.closePath();
         ctx.clip();
 
-        const outShift = 60 * t;
+        const outShift = (isMobile ? 18 : 60) * t;
         const outAlpha = Math.max(0, 1 - 0.35 * t);
         drawShotFrame(fromFrame, outgoingShot, fromScene, outShift, outAlpha);
         ctx.restore();
@@ -237,7 +245,7 @@ export const Stage: React.FC = () => {
 
       // 2. Draw Incoming Shot:
       // - clip to left of same line
-      // - shift: -60(1-t) px
+      // - shift: -60(1-t) px (or -18(1-t) on mobile)
       if (incomingShot) {
         ctx.save();
         ctx.beginPath();
@@ -248,7 +256,7 @@ export const Stage: React.FC = () => {
         ctx.closePath();
         ctx.clip();
 
-        const inShift = -60 * (1 - t);
+        const inShift = (isMobile ? -18 : -60) * (1 - t);
         drawShotFrame(toFrame, incomingShot, toScene, inShift, 1.0);
         ctx.restore();
       }

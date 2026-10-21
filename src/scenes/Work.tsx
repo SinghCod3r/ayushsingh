@@ -37,7 +37,7 @@ export const Work: React.FC = () => {
       // Desktop: 3D deck with depth, tilt, and perspective
       // Mobile: In-place vertical fade and soft translation to avoid horizontal clipping
       const isMobile = window.innerWidth < 820;
-      const exitFade = Math.max(0, 1 - prog.exit * 2.4);
+      const exitFade = Math.max(0, 1 - prog.exit);
 
       cardRefs.current.forEach((card, i) => {
         if (!card) return;

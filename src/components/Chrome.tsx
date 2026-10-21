@@ -357,6 +357,54 @@ export const HUD: React.FC = () => {
         })}
       </nav>
 
+      {/* Mobile Right: Active Section Pill (Fills empty mobile header space) */}
+      <div
+        className="hud-mobile-status"
+        style={{
+          display: 'none',
+          pointerEvents: 'auto',
+          cursor: 'pointer',
+          alignItems: 'center',
+          gap: '7px',
+          padding: '6px 14px',
+          borderRadius: '999px',
+          background: isWhiteTheme ? 'rgba(0, 0, 0, 0.45)' : 'rgba(255, 255, 255, 0.88)',
+          backdropFilter: 'blur(16px)',
+          WebkitBackdropFilter: 'blur(16px)',
+          border: isWhiteTheme
+            ? '1px solid rgba(255, 255, 255, 0.25)'
+            : '1px solid rgba(13, 13, 13, 0.08)',
+          boxShadow: '0 4px 16px rgba(0, 0, 0, 0.06)',
+          transition: 'all 0.25s ease',
+        }}
+        onClick={() => {
+          const next = (activeIndex + 1) % SCENES.length;
+          handleNavClick(next);
+        }}
+      >
+        <span
+          style={{
+            width: '6px',
+            height: '6px',
+            borderRadius: '50%',
+            background: 'var(--red)',
+            display: 'inline-block',
+          }}
+        />
+        <span
+          style={{
+            fontFamily: "'JetBrains Mono', monospace",
+            fontSize: '11px',
+            fontWeight: 700,
+            letterSpacing: '0.04em',
+            textTransform: 'uppercase',
+            color: isWhiteTheme ? '#ffffff' : 'var(--ink)',
+          }}
+        >
+          {navItems[activeIndex]?.label || 'WORK'}
+        </span>
+      </div>
+
       {/* Bottom-right: Mono progress percentage & 2px red vertical rail */}
       <div
         className="hud-progress-rail"

@@ -51,7 +51,7 @@ export const Layers: React.FC = () => {
           heroNameRef.current.style.display = 'none';
         } else {
           heroNameRef.current.style.display = 'flex';
-          const exitFade = Math.max(0, 1 - heroProg.exit * 2.4);
+          const exitFade = Math.max(0, 1 - heroProg.exit);
           const maxOp = isMobile ? 0.08 : 1.0;
           heroNameRef.current.style.opacity = String(exitFade * maxOp);
 
@@ -73,7 +73,7 @@ export const Layers: React.FC = () => {
         } else {
           aboutWashRef.current.style.display = 'block';
           const enterFade = Math.min(1, aboutProg.enter * 1.5);
-          const exitFade = Math.max(0, 1 - aboutProg.exit * 2.4);
+          const exitFade = Math.max(0, 1 - aboutProg.exit);
           const op = enterFade * exitFade;
           aboutWashRef.current.style.opacity = String(op);
           aboutWashRef.current.style.transform = `translate3d(${-(1 - enterFade) * 40}px, 0, 0)`;
@@ -88,7 +88,7 @@ export const Layers: React.FC = () => {
         } else {
           workGridRef.current.style.display = 'block';
           const enterFade = Math.min(1, workProg.enter * 1.8);
-          const exitFade = Math.max(0, 1 - workProg.exit * 2.4);
+          const exitFade = Math.max(0, 1 - workProg.exit);
           workGridRef.current.style.opacity = String(enterFade * exitFade);
           const gridOffset = (workProg.p * 450) % 90;
           workGridRef.current.style.backgroundPosition = `0 ${gridOffset}px`;
@@ -103,7 +103,7 @@ export const Layers: React.FC = () => {
         } else {
           journeyYearRef.current.style.display = 'block';
           const enterFade = Math.min(1, journeyProg.enter * 1.8);
-          const exitFade = Math.max(0, 1 - journeyProg.exit * 2.4);
+          const exitFade = Math.max(0, 1 - journeyProg.exit);
           const maxOp = isMobile ? 0.06 : 1.0;
           journeyYearRef.current.style.opacity = String(enterFade * exitFade * maxOp);
 

@@ -18,7 +18,7 @@ export const Hero: React.FC = () => {
 
       // Mutate DOM through refs only - NO React re-renders while scrolling
       if (contentRef.current) {
-        const exitFade = Math.max(0, 1 - prog.exit * 2.4);
+        const exitFade = Math.max(0, 1 - prog.exit);
         const yOffset = -prog.p * 40;
         contentRef.current.style.opacity = String(exitFade);
         contentRef.current.style.transform = `translate3d(0, ${yOffset}px, 0)`;
