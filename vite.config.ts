@@ -4,10 +4,21 @@ import react from '@vitejs/plugin-react';
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: './',
   server: {
-    port: 3000,
     host: true,
+    port: 5173,
+  },
+  build: {
+    chunkSizeWarningLimit: 1000,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+          gsap: ['gsap', '@gsap/react'],
+          motion: ['motion'],
+          lenis: ['lenis'],
+        },
+      },
+    },
   },
 });
-
