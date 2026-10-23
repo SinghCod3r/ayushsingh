@@ -15,6 +15,7 @@ export const nav = [
   { label: "Writing", href: "#writing" },
   { label: "Talks", href: "#talks" },
   { label: "Contact", href: "#contact" },
+  { label: "Resume", href: "/resume.pdf" },
 ];
 
 /** "LET'S BUILD SOMETHING COOL." -> "Let's build something cool." */

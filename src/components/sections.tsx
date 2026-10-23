@@ -293,12 +293,7 @@ export function Footer() {
   return (
     <footer className="relative z-10 flex flex-col gap-2 border-t border-line px-5 py-6 text-sm text-muted md:flex-row md:justify-between md:px-10">
       <p>© 2026 {site.name}</p>
-      <p>
-        Motion patterns adapted from{" "}
-        <a href="https://skiper-ui.com" target="_blank" rel="noreferrer" className="underline underline-offset-4">
-          Skiper UI
-        </a>
-      </p>
+      <p>Designed and built with ❤️ by <a href="https://github.com/SinghCod3r" target="_blank" rel="noreferrer">SinghCod3r</a></p>
     </footer>
   );
 }
