@@ -1,0 +1,102 @@
+@import "tailwindcss";
+
+/* Light is the default; `.dark` is set on <html> by next-themes. */
+:root {
+  --bg: #f5f5f5;
+  --fg: #0a0a0a;
+  --muted: #6b6b6b;
+  --line: #d9d9d9;
+  --accent: #2f3dff;
+}
+
+.dark {
+  --bg: #070707;
+  --fg: #f2f2f2;
+  --muted: #8a8a8a;
+  --line: #262626;
+  --accent: #8c97ff;
+}
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --font-display: "Bricolage Grotesque Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Hanken Grotesk Variable", ui-sans-serif, system-ui, sans-serif;
+}
+
+html {
+  background: var(--bg);
+  color-scheme: light;
+}
+html.dark {
+  color-scheme: dark;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: clip;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+/* Lenis */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* Kinetic characters start below their mask; GSAP lifts them in. */
+.k-char {
+  display: inline-block;
+  transform: translateY(115%);
+  will-change: transform, font-weight;
+}
+
+/* Scroll-scrubbed words start dim. */
+.k-word {
+  opacity: 0.16;
+}
+
+/* Theme switch: a circle reveal, driven from the toggle. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .k-char {
+    transform: none !important;
+  }
+  .k-word {
+    opacity: 1 !important;
+  }
+}

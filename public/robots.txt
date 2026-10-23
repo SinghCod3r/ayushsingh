@@ -1,5 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://ayushsingh.dev/sitemap.xml
-
