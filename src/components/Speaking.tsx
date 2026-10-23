@@ -1,303 +1,234 @@
-import React, { useState } from 'react';
-import { MapPin, Calendar, ExternalLink, Sparkles, Award, ChevronLeft, ChevronRight, MonitorPlay, Terminal, ShieldAlert } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useGSAP } from '@gsap/react';
+import { ArrowDown, ArrowUpRight, ArrowRight, ExternalLink, X } from 'lucide-react';
 import { portfolioData } from '../../data';
-import { MagneticButton } from './MagneticButton';
-import { AnimatedHeading } from './AnimatedHeading';
+import { SectionLabel } from './SectionLabel';
+import { scrollToTarget } from '../utils/scroll';
 
-interface Slide {
-  id: number;
-  slideNumber: string;
-  tagline: string;
-  title: string;
-  keyBullet: string;
-  visualType: 'stats' | 'code' | 'framework';
-  speakerNote: string;
-}
-
-const slides: Slide[] = [
-  {
-    id: 0,
-    slideNumber: 'SLIDE 01 / 03',
-    tagline: 'THE ASYMMETRIC BURDEN',
-    title: 'The Hallucination Flood in Open Source',
-    keyBullet: 'LLMs reduce PR creation time to 15 seconds while multiplying maintainer verification time to 45 minutes.',
-    visualType: 'stats',
-    speakerNote: 'At OpenPrinting, inbound PR volume jumped 320% following generative AI tooling, but clean merges plummeted by 45%. Volunteer maintainers are absorbing the cognitive tax of synthetic PRs.',
-  },
-  {
-    id: 1,
-    slideNumber: 'SLIDE 02 / 03',
-    tagline: 'SYSTEMS ENGINEERING REALITIES',
-    title: 'Silent Thread & D-Bus Regressions',
-    keyBullet: 'Compilers catch syntax errors in milliseconds; they cannot catch hallucinated IPC parameters or GTK thread deadlocks.',
-    visualType: 'code',
-    speakerNote: 'Plausible-looking code frequently violates async GLib loop conventions. When LLMs write direct UI model mutations inside background threads, desktop users suffer silent freezes.',
-  },
-  {
-    id: 2,
-    slideNumber: 'SLIDE 03 / 03',
-    tagline: 'THE DEFENSE PROTOCOL',
-    title: 'Structural CI & Verification Defenses',
-    keyBullet: 'Mandate hardware repro terminal logs, automated AST signature linting, and genuine intellectual code ownership.',
-    visualType: 'framework',
-    speakerNote: 'We do not ban AI; we demand empirical proof. Contributors must run real pytest suites and provide device verification logs before human review begins.',
-  },
-];
+gsap.registerPlugin(ScrollTrigger);
 
 export const Speaking: React.FC = () => {
-  const speaking = portfolioData.speaking;
-  const talk = speaking.featuredTalk;
-  const [activeSlide, setActiveSlide] = useState(0);
+  const containerRef = useRef<HTMLElement>(null);
+  const headlineRef = useRef<HTMLHeadingElement>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
+  const pastTalksRef = useRef<HTMLDivElement>(null);
 
-  const currentSlide = slides[activeSlide];
+  const [showPresentationModal, setShowPresentationModal] = useState(false);
 
-  const handlePrevSlide = () => {
-    setActiveSlide((prev) => (prev > 0 ? prev - 1 : slides.length - 1));
-  };
+  const talk = portfolioData.speaking.featuredTalk;
 
-  const handleNextSlide = () => {
-    setActiveSlide((prev) => (prev < slides.length - 1 ? prev + 1 : 0));
-  };
+  useGSAP(
+    () => {
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (prefersReducedMotion) return;
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: 'top 80%',
+          toggleActions: 'play none none none',
+        },
+      });
+
+      tl.from(headlineRef.current, {
+        opacity: 0,
+        y: 28,
+        duration: 0.6,
+        ease: 'power3.out',
+      });
+
+      tl.from(
+        cardRef.current,
+        {
+          opacity: 0,
+          y: 24,
+          duration: 0.6,
+          ease: 'power3.out',
+        },
+        '-=0.3'
+      );
+
+      tl.from(
+        pastTalksRef.current,
+        {
+          opacity: 0,
+          y: 20,
+          duration: 0.5,
+          ease: 'power3.out',
+        },
+        '-=0.2'
+      );
+    },
+    { scope: containerRef }
+  );
 
   return (
-    <section
-      id="speaking"
-      className="relative w-full py-20 lg:py-32 bg-[#08080a] text-white border-t border-zinc-800/60 overflow-hidden"
-      style={{ isolation: 'isolate' }}
-    >
-      {/* Background radial accent glow */}
-      <div className="absolute top-1/4 right-0 w-[500px] h-[500px] bg-amber-500/5 rounded-full blur-[140px] pointer-events-none" />
-
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
-        
-        {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
-          <div className="space-y-3">
-            <AnimatedHeading
-              text={speaking.title}
-              className="font-display font-black text-4xl sm:text-6xl lg:text-7xl tracking-tight text-white uppercase"
-            />
-            <p className="text-zinc-400 text-sm sm:text-base max-w-xl font-sans">
-              {speaking.subtitle}
-            </p>
-          </div>
-
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-mono font-medium">
-            <Sparkles size={13} />
-            <span>Keynote Speaker • OOSC 4.0 • IIIT Allahabad</span>
-          </div>
-        </div>
-
-        {/* Main Keynote Feature Stage */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+    <>
+      <section
+        id="talks"
+        ref={containerRef}
+        className="relative w-full py-24 sm:py-32 bg-[#080909] text-[#F2F0E8] overflow-hidden border-t border-white/[0.06]"
+        style={{ isolation: 'isolate' }}
+      >
+        <div className="max-w-7xl mx-auto px-6 sm:px-10 relative z-10">
           
-          {/* Left Column: Keynote Talk Editorial Card */}
-          <div className="lg:col-span-5 rounded-2xl bg-[#0f1115] border border-zinc-800/90 p-6 sm:p-8 flex flex-col justify-between shadow-2xl relative">
-            <div className="space-y-6">
-              
-              {/* Event Badge & Institution */}
-              <div className="flex items-center justify-between flex-wrap gap-2">
-                <span className="px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-mono font-semibold uppercase flex items-center gap-1.5">
-                  <Award size={12} />
-                  Invited Keynote Speaker
-                </span>
-                <span className="text-xs font-mono text-zinc-400 flex items-center gap-1">
-                  <MapPin size={12} className="text-zinc-500" />
-                  {talk.institution}
-                </span>
-              </div>
-
-              {/* Talk Title */}
-              <h3 className="font-display font-black text-2xl sm:text-3xl lg:text-4xl text-white leading-tight">
-                "{talk.title}"
-              </h3>
-
-              {/* Event Meta */}
-              <div className="flex items-center gap-4 text-xs font-mono text-zinc-400">
-                <span className="flex items-center gap-1.5">
-                  <Calendar size={13} className="text-amber-400" />
-                  {talk.date}
-                </span>
-                <span>•</span>
-                <span>{talk.location}</span>
-              </div>
-
-              {/* Talk Summary */}
-              <p className="text-xs sm:text-sm text-zinc-300 font-sans leading-relaxed">
-                {talk.summary}
-              </p>
-
-              {/* Topic Tags */}
-              <div className="flex flex-wrap gap-1.5 pt-1">
-                {talk.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="text-[11px] font-mono px-2.5 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-zinc-300"
-                  >
-                    #{tag}
-                  </span>
-                ))}
-              </div>
-
-            </div>
-
-            {/* Bottom Speaker Profile Link */}
-            <div className="pt-6 mt-6 border-t border-zinc-800/80 flex items-center justify-between flex-wrap gap-4">
-              <div className="text-xs font-mono text-zinc-500">
-                OOSC 4.0 • Hybrid Auditorium
-              </div>
-
-              <a
-                href={portfolioData.personal.socials.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <MagneticButton className="px-4 py-2 rounded-full bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-mono uppercase transition-colors">
-                  <span>Speaker Profile</span>
-                  <ExternalLink size={12} />
-                </MagneticButton>
-              </a>
-            </div>
-
+          {/* Section Label: TALKS */}
+          <div className="mb-8">
+            <SectionLabel label="TALKS" />
           </div>
 
-          {/* Right Column: Interactive Keynote Slide Deck Preview */}
-          <div className="lg:col-span-7 rounded-2xl bg-[#0a0b0e] border border-zinc-800/90 p-6 sm:p-8 flex flex-col justify-between shadow-2xl relative overflow-hidden">
+          {/* Headline: SHARING (White) WHAT I LEARN. (Yellow) */}
+          <h2
+            ref={headlineRef}
+            className="font-display text-6xl sm:text-8xl md:text-9xl leading-[0.88] tracking-wide uppercase mb-12 sm:mb-16"
+          >
+            SHARING <br />
+            <span className="text-[#F5D52F]">WHAT I LEARN.</span>
+          </h2>
+
+          <div className="max-w-xl space-y-10">
             
-            {/* Top Deck Navigation Bar */}
-            <div className="flex items-center justify-between pb-4 border-b border-zinc-800/80 gap-3">
-              <div className="flex items-center gap-2">
-                <div className="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse" />
-                <span className="text-xs font-mono uppercase tracking-wider text-zinc-300 font-semibold flex items-center gap-1.5">
-                  <MonitorPlay size={13} className="text-amber-400" />
-                  Keynote Slide Deck Preview
-                </span>
+            {/* Main Featured Talk Card (Matching Screen 09 in Reference) */}
+            <div
+              ref={cardRef}
+              className="p-6 sm:p-7 rounded-2xl bg-white/[0.025] border border-white/[0.08] backdrop-blur-md space-y-5"
+            >
+              {/* Photo Preview of Keynote Stage */}
+              <div className="relative w-full h-56 sm:h-64 rounded-xl overflow-hidden bg-black border border-white/10 group">
+                <img
+                  src="/images/talks/ayush-keynote.webp"
+                  alt="Ayush Singh speaking at OOSC 4.0, IIIT Allahabad"
+                  className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20" />
+                
+                {/* External link indicator */}
+                <button
+                  onClick={() => setShowPresentationModal(true)}
+                  className="absolute top-3.5 right-3.5 p-2 rounded-lg bg-black/60 border border-white/20 text-[#F2F0E8] hover:text-[#F5D52F] hover:bg-black/80 transition-colors cursor-pointer"
+                  aria-label="Expand keynote slide view"
+                >
+                  <ExternalLink size={16} />
+                </button>
               </div>
 
-              {/* Slide Selector Pills */}
-              <div className="flex items-center gap-1.5">
-                {slides.map((s, idx) => (
-                  <button
-                    key={s.id}
-                    onClick={() => setActiveSlide(idx)}
-                    className={`px-2.5 py-1 rounded-md text-[11px] font-mono transition-all ${
-                      activeSlide === idx
-                        ? 'bg-amber-400 text-black font-bold shadow-md'
-                        : 'bg-zinc-900 text-zinc-400 hover:text-white border border-zinc-800'
-                    }`}
-                  >
-                    0{idx + 1}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Active Slide Canvas (16:9 Presentation Aspect) */}
-            <div className="my-6 p-6 sm:p-8 rounded-xl bg-gradient-to-br from-[#12141a] to-[#0c0d12] border border-zinc-800 flex flex-col justify-between min-h-[300px] sm:min-h-[320px] relative shadow-inner">
-              
-              {/* Slide Header */}
-              <div className="space-y-2">
-                <div className="flex items-center justify-between text-[11px] font-mono">
-                  <span className="text-amber-400 font-bold uppercase tracking-wider">
-                    {currentSlide.slideNumber} • {currentSlide.tagline}
-                  </span>
-                  <span className="text-zinc-500 uppercase">IIIT ALLAHABAD • OOSC 4.0</span>
-                </div>
-
-                <h4 className="font-display font-black text-xl sm:text-2xl lg:text-3xl text-white pt-1">
-                  {currentSlide.title}
-                </h4>
-
-                <p className="text-xs sm:text-sm text-zinc-300 font-sans leading-relaxed pt-2">
-                  {currentSlide.keyBullet}
+              {/* Title & Venue */}
+              <div className="space-y-1.5">
+                <h3 className="font-display text-2xl sm:text-3xl text-[#F2F0E8] tracking-wide leading-tight">
+                  {talk.title}
+                </h3>
+                <p className="font-mono text-xs sm:text-sm text-[#8A8A8A]">
+                  {talk.event} · {talk.institution}
                 </p>
               </div>
 
-              {/* Dynamic Slide Visual Content */}
-              <div className="my-4 pt-4 border-t border-zinc-800/60">
-                {currentSlide.visualType === 'stats' && (
-                  <div className="grid grid-cols-3 gap-3 text-center">
-                    <div className="p-2.5 rounded-lg bg-black/40 border border-zinc-800/80">
-                      <div className="font-display font-black text-xl sm:text-2xl text-amber-400">+320%</div>
-                      <div className="text-[10px] font-mono text-zinc-400">PR Volume</div>
-                    </div>
-                    <div className="p-2.5 rounded-lg bg-black/40 border border-zinc-800/80">
-                      <div className="font-display font-black text-xl sm:text-2xl text-rose-400">-45%</div>
-                      <div className="text-[10px] font-mono text-zinc-400">Merge Rate</div>
-                    </div>
-                    <div className="p-2.5 rounded-lg bg-black/40 border border-zinc-800/80">
-                      <div className="font-display font-black text-xl sm:text-2xl text-emerald-400">45m</div>
-                      <div className="text-[10px] font-mono text-zinc-400">Review Time</div>
-                    </div>
-                  </div>
-                )}
+              {/* Button: View presentation -> */}
+              <button
+                onClick={() => setShowPresentationModal(true)}
+                className="inline-flex items-center justify-center gap-2 w-full py-3 px-5 rounded-xl font-mono text-xs font-semibold uppercase tracking-wider bg-[#F5D52F] text-black hover:bg-white transition-colors cursor-pointer shadow-[0_0_20px_rgba(245,213,47,0.25)]"
+              >
+                <span>View presentation</span>
+                <ArrowRight size={14} />
+              </button>
 
-                {currentSlide.visualType === 'code' && (
-                  <div className="p-3 rounded-lg bg-black/50 border border-zinc-800/80 font-mono text-[11px] space-y-1">
-                    <div className="text-rose-400 flex items-center gap-1">
-                      <ShieldAlert size={12} />
-                      <span>- GLib.idle_add(None) // Unsynchronized Thread Crash</span>
-                    </div>
-                    <div className="text-emerald-400 flex items-center gap-1">
-                      <Terminal size={12} />
-                      <span>+ GLib.idle_add(self._safe_queue_callback, device_id) // Verified</span>
-                    </div>
-                  </div>
-                )}
-
-                {currentSlide.visualType === 'framework' && (
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-[11px] font-mono">
-                    <div className="p-2 rounded bg-zinc-900/80 border border-zinc-800 text-zinc-300">
-                      1. Headless Pytest
-                    </div>
-                    <div className="p-2 rounded bg-zinc-900/80 border border-zinc-800 text-zinc-300">
-                      2. AST Validation
-                    </div>
-                    <div className="p-2 rounded bg-zinc-900/80 border border-zinc-800 text-zinc-300">
-                      3. Repro Hardware Log
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Speaker Notes Callout */}
-              <div className="p-3 rounded-lg bg-zinc-900/70 border border-amber-500/20 text-xs font-sans text-zinc-400 italic">
-                <span className="text-amber-400 font-mono font-semibold not-italic text-[10px] uppercase block mb-1">
-                  Speaker Note
-                </span>
-                "{currentSlide.speakerNote}"
+              {/* Dots indicator below */}
+              <div className="flex items-center justify-center gap-1.5 pt-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#F5D52F]" />
+                <span className="w-1.5 h-1.5 rounded-full bg-white/20" />
+                <span className="w-1.5 h-1.5 rounded-full bg-white/20" />
               </div>
             </div>
 
-            {/* Deck Navigation Controls */}
-            <div className="flex items-center justify-between pt-2">
-              <div className="text-xs font-mono text-zinc-500">
-                Slide {activeSlide + 1} of {slides.length}
-              </div>
+            {/* Past Talks List */}
+            <div ref={pastTalksRef} className="space-y-3 pt-2">
+              <h4 className="font-mono text-xs uppercase tracking-wider text-[#8A8A8A]">
+                Past Talks
+              </h4>
 
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={handlePrevSlide}
-                  className="p-2 rounded-full bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white transition-colors"
-                  aria-label="Previous Slide"
-                >
-                  <ChevronLeft size={16} />
-                </button>
-                <button
-                  onClick={handleNextSlide}
-                  className="p-2 rounded-full bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white transition-colors"
-                  aria-label="Next Slide"
-                >
-                  <ChevronRight size={16} />
-                </button>
+              <div className="p-4 rounded-xl bg-white/[0.015] border border-white/[0.06] flex items-center justify-between group hover:border-[#F5D52F]/30 transition-colors">
+                <div>
+                  <h5 className="font-display text-lg sm:text-xl text-[#F2F0E8] group-hover:text-[#F5D52F] transition-colors">
+                    Open Source for Students
+                  </h5>
+                  <p className="font-mono text-[11px] text-[#8A8A8A]">
+                    Tech Meetup · 2024
+                  </p>
+                </div>
+                <ArrowUpRight size={18} className="text-[#8A8A8A] group-hover:text-[#F5D52F] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
               </div>
+            </div>
+
+            {/* Circular Down Button */}
+            <div className="pt-4">
+              <button
+                onClick={() => scrollToTarget('#contact', -20)}
+                className="w-10 h-10 rounded-full border border-white/20 hover:border-[#F5D52F] flex items-center justify-center text-[#8A8A8A] hover:text-[#F5D52F] transition-colors cursor-pointer group"
+                aria-label="Scroll to Contact section"
+              >
+                <ArrowDown size={16} className="text-[#F2F0E8] group-hover:text-[#F5D52F] group-hover:translate-y-0.5 transition-transform" />
+              </button>
             </div>
 
           </div>
 
         </div>
+      </section>
 
-      </div>
-    </section>
+      {/* Presentation Modal */}
+      {showPresentationModal && (
+        <div
+          className="fixed inset-0 z-50 bg-black/90 backdrop-blur-xl flex items-center justify-center p-4 sm:p-8"
+          role="dialog"
+          aria-modal="true"
+        >
+          <div className="relative w-full max-w-4xl bg-[#0c0d11] border border-white/10 rounded-2xl p-6 sm:p-8 space-y-6">
+            <div className="flex items-start justify-between">
+              <div>
+                <span className="font-mono text-xs text-[#F5D52F] uppercase tracking-wider">
+                  KEYNOTE PRESENTATION · OOSC 4.0
+                </span>
+                <h3 className="font-display text-3xl sm:text-5xl text-[#F2F0E8] uppercase mt-1">
+                  {talk.title}
+                </h3>
+              </div>
+              <button
+                onClick={() => setShowPresentationModal(false)}
+                className="p-2 rounded-lg text-[#8A8A8A] hover:text-[#F5D52F] hover:bg-white/5 transition-colors cursor-pointer"
+                aria-label="Close modal"
+              >
+                <X size={22} />
+              </button>
+            </div>
+
+            <div className="space-y-4 font-sans text-sm sm:text-base text-[#8A8A8A] leading-relaxed">
+              <p>{talk.summary}</p>
+              <div className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.07] font-mono text-xs text-[#F2F0E8] space-y-1">
+                <p><span className="text-[#F5D52F]">Date:</span> {talk.date}</p>
+                <p><span className="text-[#F5D52F]">Location:</span> {talk.location}</p>
+                <p><span className="text-[#F5D52F]">Institution:</span> {talk.institution}</p>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-end gap-3 pt-4 border-t border-white/10">
+              <button
+                onClick={() => setShowPresentationModal(false)}
+                className="px-5 py-2 rounded-xl font-mono text-xs text-[#8A8A8A] hover:text-white transition-colors cursor-pointer"
+              >
+                Close
+              </button>
+              <a
+                href={`mailto:${portfolioData.personal.socials.email}?subject=Inquiry about Keynote: ${talk.title}`}
+                className="px-5 py-2 rounded-xl font-mono text-xs font-semibold uppercase tracking-wider bg-[#F5D52F] text-black hover:bg-white transition-colors"
+              >
+                Request Slides
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 };

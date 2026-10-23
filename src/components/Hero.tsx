@@ -1,54 +1,31 @@
 import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { ChevronDown, Terminal, Code2 } from 'lucide-react';
-import { portfolioData } from '../../data';
+import { ArrowDown } from 'lucide-react';
 import { scrollToTarget } from '../utils/scroll';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const TOTAL_FRAMES = 192;
+// Keyframes strategy: Smooth holds, fewer frames, cinematic interpolation
+const KEY_FRAMES = [1, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 115, 130, 150, 170, 192];
 
 export const Hero: React.FC = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const titleLeftRef = useRef<HTMLHeadingElement>(null);
-  const titleRightRef = useRef<HTMLHeadingElement>(null);
-  const infoRef = useRef<HTMLDivElement>(null);
-  const topBarRef = useRef<HTMLDivElement>(null);
-  const scrollIndicatorRef = useRef<HTMLDivElement>(null);
+  const titleRef = useRef<HTMLDivElement>(null);
+  const rolesRef = useRef<HTMLDivElement>(null);
+  const scrollIndicatorRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    const container = containerRef.current;
-    if (!canvas || !container) return;
+    if (!canvas) return;
+    const canvasCtx = canvas.getContext('2d', { alpha: false });
+    if (!canvasCtx) return;
 
-    const ctx = canvas.getContext('2d', { alpha: false });
-    if (!ctx) return;
+    // Cache of loaded images
+    const images: { [key: number]: HTMLImageElement } = {};
+    let activeFrame = 1;
 
-    // Determine device tier and frame step
-    const isMobile = window.innerWidth < 768;
-    const isTablet = window.innerWidth >= 768 && window.innerWidth < 1024;
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    // Step size: 1 for desktop (all 192 frames), 2 for tablet (96 frames), 3 for mobile (64 frames)
-    const frameStep = isMobile ? 3 : isTablet ? 2 : 1;
-
-    // Cache of images
-    const images: (HTMLImageElement | null)[] = new Array(TOTAL_FRAMES + 1).fill(null);
-    let loadedCount = 0;
-    const framesToLoad: number[] = [];
-
-    for (let i = 1; i <= TOTAL_FRAMES; i += frameStep) {
-      framesToLoad.push(i);
-    }
-    // Always include first and last frames
-    if (!framesToLoad.includes(1)) framesToLoad.unshift(1);
-    if (!framesToLoad.includes(TOTAL_FRAMES)) framesToLoad.push(TOTAL_FRAMES);
-
-    let currentFrameIndex = 1;
-
-    // Canvas sizing with DPR clamp
     const resizeCanvas = () => {
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       const width = window.innerWidth;
@@ -59,155 +36,129 @@ export const Hero: React.FC = () => {
       canvas.style.width = `${width}px`;
       canvas.style.height = `${height}px`;
 
-      ctx.scale(dpr, dpr);
-      renderFrame(currentFrameIndex);
+      canvasCtx.scale(dpr, dpr);
+      drawFrame(activeFrame);
     };
 
-    // Draw frame onto canvas with cover aspect ratio
-    const renderFrame = (index: number) => {
-      // Find closest loaded frame if current isn't loaded yet
-      let imgToDraw = images[index];
-      if (!imgToDraw || !imgToDraw.complete) {
-        // search nearest available frame
-        for (let offset = 1; offset < TOTAL_FRAMES; offset++) {
-          if (index - offset >= 1 && images[index - offset]?.complete) {
-            imgToDraw = images[index - offset];
-            break;
-          }
-          if (index + offset <= TOTAL_FRAMES && images[index + offset]?.complete) {
-            imgToDraw = images[index + offset];
-            break;
+    const drawFrame = (frameNum: number) => {
+      // Find nearest loaded frame
+      let img = images[frameNum];
+      if (!img || !img.complete) {
+        let bestDiff = 999;
+        for (const k of KEY_FRAMES) {
+          if (images[k]?.complete) {
+            const diff = Math.abs(k - frameNum);
+            if (diff < bestDiff) {
+              bestDiff = diff;
+              img = images[k];
+            }
           }
         }
       }
 
-      if (!imgToDraw || !imgToDraw.complete) return;
+      if (!img || !img.complete) return;
 
-      const canvasWidth = window.innerWidth;
-      const canvasHeight = window.innerHeight;
-      const imgWidth = imgToDraw.naturalWidth || 1280;
-      const imgHeight = imgToDraw.naturalHeight || 720;
+      const cw = window.innerWidth;
+      const ch = window.innerHeight;
+      const iw = img.naturalWidth || 1280;
+      const ih = img.naturalHeight || 720;
 
-      // Cover math
-      const scale = Math.max(canvasWidth / imgWidth, canvasHeight / imgHeight);
-      const scaledW = imgWidth * scale;
-      const scaledH = imgHeight * scale;
-      const offsetX = (canvasWidth - scaledW) / 2;
-      const offsetY = (canvasHeight - scaledH) / 2;
+      const scale = Math.max(cw / iw, ch / ih);
+      const sw = iw * scale;
+      const sh = ih * scale;
+      const ox = (cw - sw) / 2;
+      const oy = (ch - sh) / 2;
 
-      ctx.fillStyle = '#08080a';
-      ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-      ctx.drawImage(imgToDraw, offsetX, offsetY, scaledW, scaledH);
+      canvasCtx.fillStyle = '#080909';
+      canvasCtx.fillRect(0, 0, cw, ch);
+      canvasCtx.drawImage(img, ox, oy, sw, sh);
     };
 
-    // Helper to format frame filename: e.g. 1 -> "001", 42 -> "042", 192 -> "192"
-    const getFrameUrl = (frameNum: number) => {
-      const padded = String(frameNum).padStart(3, '0');
+    // Load keyframes progressively
+    const getFrameUrl = (num: number) => {
+      const padded = String(num).padStart(3, '0');
       return `/images/hero-sequence/frame-${padded}.webp`;
     };
 
-    // Progressive loading: Load frame 1 immediately
-    const firstImg = new Image();
-    firstImg.src = getFrameUrl(1);
-    images[1] = firstImg;
-    firstImg.onload = () => {
-      loadedCount++;
+    // Load frame 1 first
+    const frame1 = new Image();
+    frame1.src = getFrameUrl(1);
+    images[1] = frame1;
+    frame1.onload = () => {
       resizeCanvas();
     };
 
-    // Load remaining keyframes in background
-    const loadRemainingFrames = () => {
-      framesToLoad.forEach((frameNum) => {
-        if (frameNum === 1) return;
-        const img = new Image();
-        img.src = getFrameUrl(frameNum);
-        images[frameNum] = img;
-        img.onload = () => {
-          loadedCount++;
-          if (frameNum === currentFrameIndex) {
-            renderFrame(currentFrameIndex);
-          }
-        };
-      });
-    };
-
-    // Start background loading after initial paint
-    const timer = setTimeout(loadRemainingFrames, 80);
+    // Load other keyframes
+    KEY_FRAMES.forEach((num) => {
+      if (num === 1) return;
+      const img = new Image();
+      img.src = getFrameUrl(num);
+      images[num] = img;
+      img.onload = () => {
+        if (activeFrame === num) drawFrame(num);
+      };
+    });
 
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
 
-    // GSAP Timeline & ScrollTrigger setup
-    const ctxTimeline = gsap.context(() => {
-      if (prefersReducedMotion) {
-        // Fallback for reduced motion
-        gsap.to(container, { opacity: 1, duration: 0.5 });
-        return;
-      }
+    // GSAP ScrollTrigger for pinned cinematic hold & controlled frame progression
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      const heroTl = gsap.timeline({
-        scrollTrigger: {
-          id: 'HERO',
-          trigger: container,
-          start: 'top top',
-          end: '+=180%',
-          pin: true,
-          scrub: isMobile ? 0.4 : 0.6,
-          refreshPriority: 10,
-          onUpdate: (self) => {
-            // Map scroll progress to frame
-            const targetFrame = Math.min(
-              TOTAL_FRAMES,
-              Math.max(1, Math.round(self.progress * (TOTAL_FRAMES - 1) + 1))
-            );
-            currentFrameIndex = targetFrame;
-            renderFrame(targetFrame);
-          },
+    const gsapCtx = gsap.context(() => {
+      if (prefersReducedMotion) return;
+
+      const st = ScrollTrigger.create({
+        trigger: containerRef.current,
+        start: 'top top',
+        end: '+=120%',
+        pin: true,
+        scrub: 0.5,
+        onUpdate: (self) => {
+          // Map scroll 0..1 to KEY_FRAMES with smooth holds
+          const index = Math.min(
+            KEY_FRAMES.length - 1,
+            Math.floor(self.progress * KEY_FRAMES.length)
+          );
+          const targetFrame = KEY_FRAMES[index];
+          if (targetFrame !== activeFrame) {
+            activeFrame = targetFrame;
+            drawFrame(targetFrame);
+          }
         },
       });
 
-      // Animate typography on scroll:
-      // Subtle layered movement and fade
-      heroTl.to(
-        [titleLeftRef.current, titleRightRef.current],
-        {
-          yPercent: -20,
-          scale: 0.96,
-          opacity: 0.2,
-          ease: 'power1.out',
+      // Subtle typography fade & lift on scroll
+      gsap.to(titleRef.current, {
+        yPercent: -15,
+        opacity: 0.3,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: 'top top',
+          end: '+=80%',
+          scrub: 0.5,
         },
-        0.2
-      );
+      });
 
-      heroTl.to(
-        infoRef.current,
-        {
-          yPercent: -35,
-          opacity: 0,
-          ease: 'power1.out',
+      gsap.to([rolesRef.current, scrollIndicatorRef.current], {
+        opacity: 0,
+        yPercent: -20,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: 'top top',
+          end: '+=50%',
+          scrub: 0.5,
         },
-        0.3
-      );
+      });
 
-      heroTl.to(
-        [topBarRef.current, scrollIndicatorRef.current],
-        {
-          opacity: 0,
-          scale: 0.9,
-          ease: 'power1.out',
-        },
-        0.15
-      );
-    }, container);
-
-    // Synchronize all ScrollTriggers by DOM order after Hero pin is established
-    ScrollTrigger.sort();
-    ScrollTrigger.refresh();
+      return () => st.kill();
+    }, containerRef);
 
     return () => {
-      clearTimeout(timer);
       window.removeEventListener('resize', resizeCanvas);
-      ctxTimeline.revert();
+      gsapCtx.revert();
     };
   }, []);
 
@@ -215,94 +166,69 @@ export const Hero: React.FC = () => {
     <section
       id="hero"
       ref={containerRef}
-      className="relative w-full h-screen overflow-hidden bg-[#08080a] flex items-center justify-center select-none"
+      className="relative w-full h-screen overflow-hidden bg-[#080909] flex items-center justify-center select-none"
       style={{ isolation: 'isolate' }}
     >
-      {/* Canvas Element for 192-Frame Motion with Top/Bottom Feathering */}
+      {/* 192-frame Canvas Background */}
       <canvas
         ref={canvasRef}
-        className="absolute inset-0 z-0 block w-full h-full object-cover pointer-events-none hero-canvas-mask"
+        className="absolute inset-0 z-0 block w-full h-full object-cover pointer-events-none grayscale contrast-125 brightness-90"
       />
 
-      {/* Cinematic Vignette Overlay with Obsidian Gradients */}
-      <div className="absolute inset-0 z-10 pointer-events-none bg-gradient-to-t from-[#08080a] via-transparent to-[#08080a]/60" />
-      <div className="absolute inset-0 z-10 pointer-events-none bg-gradient-to-r from-[#08080a]/80 via-transparent to-[#08080a]/80" />
-
-      {/* Subtle radial amber glow behind character */}
-      <div className="absolute inset-0 z-0 pointer-events-none flex items-center justify-center">
-        <div className="w-[600px] h-[600px] rounded-full bg-amber-500/10 blur-[140px] pointer-events-none" />
+      {/* Warm Yellow Backlight / Rim Glow behind Character */}
+      <div className="absolute inset-0 z-10 pointer-events-none flex items-center justify-center">
+        <div className="w-[550px] h-[550px] sm:w-[700px] sm:h-[700px] rounded-full bg-[#F5D52F]/12 blur-[140px]" />
       </div>
 
-      {/* Foreground Hero Content Grid */}
-      <div className="relative z-20 w-full max-w-7xl mx-auto h-full flex flex-col justify-between p-6 sm:p-8 lg:p-12 pt-24 sm:pt-28">
-        
-        {/* Top Sub-header */}
-        <div ref={topBarRef} className="flex items-center justify-end w-full">
-          <div className="flex items-center gap-2 text-xs font-mono text-zinc-400">
-            <span className="text-amber-400">✦</span>
-            <span>{portfolioData.personal.location}</span>
-          </div>
-        </div>
+      {/* Cinematic Vignette */}
+      <div className="absolute inset-0 z-10 pointer-events-none bg-gradient-to-t from-[#080909] via-transparent to-[#080909]/70" />
+      <div className="absolute inset-0 z-10 pointer-events-none bg-gradient-to-r from-[#080909]/80 via-transparent to-[#080909]/80" />
 
-        {/* Center Editorial Typography: AYUSH SINGH */}
-        <div className="my-auto w-full pointer-events-none">
+      {/* Foreground Hero Content Grid */}
+      <div className="relative z-20 w-full max-w-7xl mx-auto h-full flex flex-col justify-between p-6 sm:p-10 pt-28 sm:pt-32">
+        
+        {/* Empty space for top navbar balance */}
+        <div className="w-full h-6" />
+
+        {/* Center Typography: AYUSH (White) SINGH (Yellow) */}
+        <div ref={titleRef} className="my-auto w-full pointer-events-none">
           <div className="flex flex-col items-start justify-center">
             
-            {/* FIRST NAME */}
-            <h1
-              ref={titleLeftRef}
-              className="font-display font-black text-6xl sm:text-8xl md:text-9xl lg:text-[13vw] leading-[0.85] tracking-tightest uppercase text-white drop-shadow-[0_15px_35px_rgba(0,0,0,0.8)]"
-            >
-              {portfolioData.personal.firstName}
+            <h1 className="font-display text-7xl sm:text-9xl md:text-[14vw] leading-[0.82] tracking-wide uppercase text-[#F2F0E8] drop-shadow-[0_15px_35px_rgba(0,0,0,0.9)]">
+              AYUSH
             </h1>
 
-            {/* LAST NAME */}
-            <div className="flex items-baseline justify-between w-full">
-              <h1
-                ref={titleRightRef}
-                className="font-display font-black text-6xl sm:text-8xl md:text-9xl lg:text-[13vw] leading-[0.85] tracking-tightest uppercase text-outline-hero drop-shadow-[0_20px_40px_rgba(0,0,0,0.9)]"
-              >
-                {portfolioData.personal.lastName}
-              </h1>
-            </div>
+            <h1 className="font-display text-7xl sm:text-9xl md:text-[14vw] leading-[0.82] tracking-wide uppercase text-[#F5D52F] drop-shadow-[0_15px_35px_rgba(0,0,0,0.9)]">
+              SINGH
+            </h1>
 
           </div>
         </div>
 
-        {/* Bottom Metadata & Scroll Indicator */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-6 pb-2 sm:pb-4 w-full">
+        {/* Bottom Section: Role Metadata & Circular Scroll Pill */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-6 pb-4 sm:pb-6 w-full">
           
-          {/* Supporting Roles */}
-          <div ref={infoRef} className="space-y-1 max-w-md">
-            <div className="flex items-center gap-2 text-sm sm:text-base font-semibold text-zinc-200">
-              <Code2 size={16} className="text-amber-400 shrink-0" />
-              <span>{portfolioData.personal.role}</span>
-            </div>
-            <p className="text-xs sm:text-sm text-zinc-400 font-normal">
-              {portfolioData.personal.subRoles.join(' • ')}
-            </p>
-            <div className="flex items-center gap-2 pt-1 font-mono text-[11px] text-zinc-500">
-              <Terminal size={12} className="text-zinc-400" />
-              <span>The Linux Foundation / OpenPrinting Maintainer</span>
-            </div>
+          {/* Roles */}
+          <div ref={rolesRef} className="space-y-1 font-mono text-xs sm:text-sm text-[#8A8A8A] leading-relaxed">
+            <p className="text-[#F2F0E8] font-semibold text-sm sm:text-base">Software Engineer</p>
+            <p>Open Source Maintainer</p>
+            <p>Builder</p>
           </div>
 
-          {/* Scroll Down Cue */}
-          <div
+          {/* Scroll Down Indicator (Circular Pill matching Reference) */}
+          <button
             ref={scrollIndicatorRef}
-            className="flex items-center gap-3 self-center sm:self-end"
+            onClick={() => scrollToTarget('#about', -20)}
+            className="flex flex-col items-center gap-2 group cursor-pointer text-[#8A8A8A] hover:text-[#F5D52F] transition-colors self-center sm:self-end"
+            aria-label="Scroll to About section"
           >
-            <button
-              onClick={() => scrollToTarget('#about', -20)}
-              className="group flex flex-col items-center gap-1 text-[11px] font-mono tracking-widest text-zinc-400 hover:text-amber-400 transition-colors cursor-pointer"
-              aria-label="Scroll to About section"
-            >
-              <span className="uppercase tracking-wider">SCROLL</span>
-              <div className="w-8 h-8 rounded-full border border-zinc-700/80 group-hover:border-amber-400 flex items-center justify-center transition-colors">
-                <ChevronDown size={14} className="animate-bounce text-zinc-400 group-hover:text-amber-400" />
-              </div>
-            </button>
-          </div>
+            <div className="w-9 h-9 rounded-full border border-white/20 group-hover:border-[#F5D52F] flex items-center justify-center transition-colors">
+              <ArrowDown size={14} className="text-[#F2F0E8] group-hover:text-[#F5D52F] transition-transform group-hover:translate-y-0.5" />
+            </div>
+            <span className="font-mono text-[10px] tracking-[0.2em] uppercase font-semibold">
+              SCROLL
+            </span>
+          </button>
 
         </div>
 

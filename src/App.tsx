@@ -8,11 +8,11 @@ if (typeof window !== 'undefined') {
   (window as any).ScrollTrigger = ScrollTrigger;
   (window as any).gsap = gsap;
 }
+
 import { MouseFollower } from './components/MouseFollower';
 import { PageLoader } from './components/PageLoader';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
-import { SignatureLine } from './components/SignatureLine';
 import { About } from './components/About';
 import { AboutJourney } from './components/AboutJourney';
 import { OpenSource } from './components/OpenSource';
@@ -25,17 +25,15 @@ import { Footer } from './components/Footer';
 
 export const App: React.FC = () => {
   useEffect(() => {
-    // Initialize Lenis smooth scrolling and synchronize with GSAP ScrollTrigger
+    // Initialize Lenis smooth virtual scroll
     const lenis = initSmoothScroll();
     if (typeof window !== 'undefined') {
       (window as any).lenis = lenis;
     }
 
-    // Ensure all triggers created across components are sorted by DOM order
     ScrollTrigger.sort();
     ScrollTrigger.refresh();
 
-    // Refresh again after fonts and images finish layout
     const timer = setTimeout(() => {
       ScrollTrigger.sort();
       ScrollTrigger.refresh();
@@ -48,8 +46,8 @@ export const App: React.FC = () => {
   }, []);
 
   return (
-    <div className="relative min-h-screen bg-[#08080a] text-zinc-100 overflow-x-hidden selection:bg-amber-500/30 selection:text-amber-200">
-      {/* 00. Initial Page-load Animation: Individual Letter Behavior (singhcod3r) */}
+    <div className="relative min-h-screen bg-[#080909] text-[#F2F0E8] overflow-x-hidden selection:bg-[#F5D52F]/30 selection:text-[#F5D52F]">
+      {/* 01. Cinematic Intro Preloader (3-3.5s) */}
       <PageLoader
         onComplete={() => {
           ScrollTrigger.sort();
@@ -57,46 +55,43 @@ export const App: React.FC = () => {
         }}
       />
 
-      {/* Skipper UI Fluid Mouse Follower & Spotlight Glow */}
+      {/* Desktop Fluid Mouse Follower (Disabled on Touch / Reduced Motion) */}
       <MouseFollower />
 
-      {/* Persistent Navigation */}
+      {/* Global Minimalist Navigation Bar */}
       <Navbar />
 
-      {/* Page Flow: Story Chapters */}
+      {/* Main Editorial Story Flow */}
       <main className="relative w-full">
-        {/* 01. Hero with 192-frame Canvas Sequence */}
+        {/* 02. Hero Section (Controlled Frame Progression) */}
         <Hero />
 
-        {/* Signature SVG Line Text Effect */}
-        <SignatureLine />
-
-        {/* 02. About: Profile & Engineering Philosophy */}
+        {/* 03. About: I BUILD THINGS. */}
         <About />
 
-        {/* 03. Journey: Pinned Horizontal Timeline (2022 -> 2026) */}
+        {/* 04. Journey: Vertical Timeline A PATH OF BUILDING. */}
         <AboutJourney />
 
-        {/* 04. Open Source: Upstream Leadership */}
+        {/* 05. Open Source: REAL CONTRIBUTIONS. REAL IMPACT. */}
         <OpenSource />
 
-        {/* 05. Visual & Interactive Skills (3D Core) */}
+        {/* 06. Skills: TOOLS I WORK WITH. */}
         <Skills />
 
-        {/* 06. Production Projects (Work) */}
+        {/* 07. Work: IDEAS INTO REALITY. */}
         <Projects />
 
-        {/* 07. Writings & Publications */}
+        {/* 08. Writings: I ALSO TALK ABOUT TECHNOLOGY. */}
         <Writings />
 
-        {/* 08. Speaking & Keynotes */}
+        {/* 09. Talks: SHARING WHAT I LEARN. */}
         <Speaking />
 
-        {/* 09. Contact & Closing */}
+        {/* 10. Contact: LET'S DO SOMETHING COOL. */}
         <Contact />
       </main>
 
-      {/* 10. Editorial Footer */}
+      {/* Editorial Footer */}
       <Footer />
     </div>
   );

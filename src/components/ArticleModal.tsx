@@ -4,7 +4,7 @@ import { Writing } from '../../data';
 
 interface ArticleModalProps {
   article: Writing | null;
-  isOpen: boolean;
+  isOpen?: boolean;
   onClose: () => void;
 }
 
@@ -13,12 +13,14 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({ article, isOpen, onC
   const [readingProgress, setReadingProgress] = useState(0);
   const [copied, setCopied] = useState(false);
 
+  const isModalOpen = isOpen !== undefined ? isOpen : Boolean(article);
+
   // Close on Escape key
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
     };
-    if (isOpen) {
+    if (isModalOpen) {
       document.body.style.overflow = 'hidden';
       window.addEventListener('keydown', handleKeyDown);
     } else {
@@ -28,7 +30,7 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({ article, isOpen, onC
       document.body.style.overflow = '';
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [isOpen, onClose]);
+  }, [isModalOpen, onClose]);
 
   // Track scroll progress within article modal
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
@@ -39,37 +41,37 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({ article, isOpen, onC
 
   const handleShare = () => {
     if (navigator.clipboard) {
-      navigator.clipboard.writeText(window.location.href);
+      navigator.clipboard.writeText(article?.url || window.location.href);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     }
   };
 
-  if (!isOpen || !article) return null;
+  if (!isModalOpen || !article) return null;
 
   return (
     <div
       role="dialog"
       aria-modal="true"
-      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-md animate-fadeIn"
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/90 backdrop-blur-md"
       onClick={onClose}
     >
       {/* Modal Dialog Card */}
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-4xl h-[92vh] flex flex-col bg-[#0b0c10] border border-zinc-800 rounded-2xl shadow-2xl overflow-hidden"
+        className="relative w-full max-w-4xl h-[92vh] flex flex-col bg-[#0b0c10] border border-white/10 rounded-2xl shadow-2xl overflow-hidden"
       >
         {/* Progress bar */}
         <div
-          className="h-1 bg-amber-400 z-30 transition-all duration-100 ease-out"
+          className="h-1 bg-[#F5D52F] z-30 transition-all duration-100 ease-out"
           style={{ width: `${readingProgress}%` }}
         />
 
         {/* Top Sticky Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-zinc-800/80 bg-[#0d0e13]/90 backdrop-blur-md z-20 shrink-0">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-white/[0.08] bg-[#0d0e13]/90 backdrop-blur-md z-20 shrink-0">
           <button
             onClick={onClose}
-            className="inline-flex items-center gap-2 text-xs font-mono uppercase text-zinc-400 hover:text-white transition-colors"
+            className="inline-flex items-center gap-2 text-xs font-mono uppercase text-[#8A8A8A] hover:text-[#F2F0E8] transition-colors cursor-pointer"
           >
             <ArrowLeft size={14} />
             <span>Back to Portfolio</span>
@@ -78,14 +80,14 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({ article, isOpen, onC
           <div className="flex items-center gap-3">
             <button
               onClick={handleShare}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-amber-400 text-xs font-mono transition-colors"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/[0.03] border border-white/10 text-[#8A8A8A] hover:text-[#F5D52F] text-xs font-mono transition-colors cursor-pointer"
             >
-              {copied ? <Check size={12} className="text-emerald-400" /> : <Share2 size={12} />}
+              {copied ? <Check size={12} className="text-[#F5D52F]" /> : <Share2 size={12} />}
               <span>{copied ? 'Link Copied' : 'Share'}</span>
             </button>
             <button
               onClick={onClose}
-              className="p-1.5 rounded-full bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white transition-colors"
+              className="p-1.5 rounded-full bg-white/[0.03] border border-white/10 text-[#8A8A8A] hover:text-[#F5D52F] transition-colors cursor-pointer"
               aria-label="Close article modal"
             >
               <X size={16} />

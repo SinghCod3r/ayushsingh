@@ -1,427 +1,165 @@
-import React, { useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight, ArrowRight, BookOpen } from 'lucide-react';
 import { portfolioData, Writing } from '../../data';
+import { SectionLabel } from './SectionLabel';
+import { ArticleModal } from './ArticleModal';
 
 gsap.registerPlugin(ScrollTrigger);
 
 export const Writings: React.FC = () => {
-  const sectionRef = useRef<HTMLElement>(null);
-  const row1Ref = useRef<HTMLDivElement>(null);
-  const row2Ref = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLElement>(null);
+  const headlineRef = useRef<HTMLHeadingElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
+  const portraitRef = useRef<HTMLDivElement>(null);
 
-  const writings: Writing[] = portfolioData.writings;
+  const [selectedArticle, setSelectedArticle] = useState<Writing | null>(null);
 
-  // Split articles into Row 1 and Row 2 for opposite continuous movement
-  const row1Articles = [writings[0], writings[1], writings[2]];
-  const row2Articles = [writings[3], writings[4], writings[0]];
+  const writings = portfolioData.writings;
 
   useGSAP(
     () => {
-      const section = sectionRef.current;
-      const row1 = row1Ref.current;
-      const row2 = row2Ref.current;
-      const list = listRef.current;
-      if (!section) return;
-
       const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (prefersReducedMotion) return;
 
-      // =========================================================================
-      // DESKTOP / TABLET CONTINUOUS HORIZONTAL OPPOSING MARQUEES
-      // =========================================================================
-      if (!prefersReducedMotion && row1 && row2) {
-        // Row 1: Moves LEFT -> RIGHT
-        const tween1 = gsap.fromTo(
-          row1,
-          { xPercent: -50 },
-          {
-            xPercent: 0,
-            duration: 38,
-            ease: 'none',
-            repeat: -1,
-          }
-        );
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: 'top 80%',
+          toggleActions: 'play none none none',
+        },
+      });
 
-        // Row 2: Moves RIGHT -> LEFT (subtle speed difference)
-        const tween2 = gsap.fromTo(
-          row2,
-          { xPercent: 0 },
-          {
-            xPercent: -50,
-            duration: 42,
-            ease: 'none',
-            repeat: -1,
-          }
-        );
+      tl.from(headlineRef.current, {
+        opacity: 0,
+        y: 28,
+        duration: 0.6,
+        ease: 'power3.out',
+      });
 
-        // Pause/slow slightly on hover
-        const handleMouseEnter = () => {
-          gsap.to([tween1, tween2], { timeScale: 0.25, duration: 0.5, ease: 'power1.out' });
-        };
-        const handleMouseLeave = () => {
-          gsap.to([tween1, tween2], { timeScale: 1.0, duration: 0.6, ease: 'power1.out' });
-        };
+      tl.from(
+        listRef.current?.children || [],
+        {
+          opacity: 0,
+          y: 20,
+          duration: 0.45,
+          stagger: 0.08,
+          ease: 'power3.out',
+        },
+        '-=0.3'
+      );
 
-        const rowsContainer = row1.parentElement?.parentElement;
-        if (rowsContainer) {
-          rowsContainer.addEventListener('mouseenter', handleMouseEnter);
-          rowsContainer.addEventListener('mouseleave', handleMouseLeave);
-        }
-
-        // Velocity-based subtle scroll acceleration
-        let velocityTimer: ReturnType<typeof setTimeout> | null = null;
-        ScrollTrigger.create({
-          trigger: section,
-          start: 'top bottom',
-          end: 'bottom top',
-          onUpdate: (self) => {
-            const rawVelocity = self.getVelocity();
-            const velocityBonus = Math.min(Math.abs(rawVelocity) / 600, 1.8);
-            const targetSpeed = 1 + velocityBonus;
-
-            gsap.to([tween1, tween2], { timeScale: targetSpeed, duration: 0.2, overwrite: 'auto' });
-
-            if (velocityTimer) clearTimeout(velocityTimer);
-            velocityTimer = setTimeout(() => {
-              gsap.to([tween1, tween2], { timeScale: 1.0, duration: 0.8, ease: 'power2.out', overwrite: 'auto' });
-            }, 120);
-          },
-        });
-      }
-
-      // =========================================================================
-      // EDITORIAL LIST REVEAL (Desktop & Tablet)
-      // =========================================================================
-      if (list && window.innerWidth >= 768) {
-        const rows = list.querySelectorAll<HTMLElement>('.writing-list-row');
-        if (rows.length > 0) {
-          gsap.fromTo(
-            rows,
-            { opacity: 0, y: 24 },
-            {
-              opacity: 1,
-              y: 0,
-              duration: 0.6,
-              stagger: 0.1,
-              ease: 'power2.out',
-              scrollTrigger: {
-                trigger: list,
-                start: 'top 85%',
-                toggleActions: 'play none none reverse',
-              },
-            }
-          );
-        }
-      }
-
-      // =========================================================================
-      // MOBILE CARD STAGGERED REVEAL (Contained & Smooth)
-      // =========================================================================
-      const mobileCards = section.querySelectorAll<HTMLElement>('.mobile-writing-card');
-      if (mobileCards.length > 0 && window.innerWidth < 768) {
-        gsap.fromTo(
-          mobileCards,
-          { opacity: 0, y: 20 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.5,
-            stagger: 0.08,
-            ease: 'power2.out',
-            scrollTrigger: {
-              trigger: section.querySelector('.mobile-cards-container'),
-              start: 'top 85%',
-              toggleActions: 'play none none reverse',
-            },
-          }
-        );
-      }
+      tl.from(
+        portraitRef.current,
+        {
+          opacity: 0,
+          scale: 0.95,
+          duration: 0.7,
+          ease: 'power2.out',
+        },
+        '-=0.4'
+      );
     },
-    { scope: sectionRef }
+    { scope: containerRef }
   );
 
   return (
-    <section
-      id="writings"
-      ref={sectionRef}
-      className="relative w-full py-20 lg:py-32 bg-[#090a0d] text-white border-t border-zinc-800/80 overflow-hidden"
-      style={{ isolation: 'isolate' }}
-    >
-      {/* Ambient background glow */}
-      <div className="absolute top-1/4 right-1/4 w-[500px] h-[500px] bg-amber-500/5 rounded-full blur-[140px] pointer-events-none" />
-      <div className="absolute bottom-1/4 left-1/4 w-[400px] h-[400px] bg-cyan-500/5 rounded-full blur-[130px] pointer-events-none" />
-
-      {/* Top Thin Divider Hand-off from previous section */}
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 mb-12 sm:mb-16">
-        <div className="w-full h-[1px] bg-gradient-to-r from-transparent via-zinc-800 to-transparent" />
-      </div>
-
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
-        
-        {/* ================================================================= */}
-        {/* 1. SECTION HEADER                                                */}
-        {/* ================================================================= */}
-        <div className="space-y-3 mb-10 sm:mb-14">
-          <div className="flex items-baseline gap-3">
-            <h2 className="font-display font-black text-4xl sm:text-6xl lg:text-7xl tracking-tight text-white uppercase">
-              WRITINGS.
-            </h2>
-            <span className="text-amber-400 font-mono text-base sm:text-lg opacity-75">
-              (05)
-            </span>
-          </div>
-
-          <p className="text-zinc-400 text-sm sm:text-base max-w-xl font-sans leading-relaxed">
-            Ideas on AI, open source, Linux, software engineering and building.
-          </p>
+    <>
+      <section
+        id="writings"
+        ref={containerRef}
+        className="relative w-full py-24 sm:py-32 bg-[#080909] text-[#F2F0E8] overflow-hidden border-t border-white/[0.06]"
+        style={{ isolation: 'isolate' }}
+      >
+        {/* Subtle Background Portrait with Yellow Glow */}
+        <div
+          ref={portraitRef}
+          className="absolute bottom-0 right-0 sm:right-6 md:right-12 w-80 sm:w-[480px] md:w-[580px] h-[540px] pointer-events-none opacity-20 sm:opacity-30 select-none z-0 overflow-hidden"
+        >
+          <img
+            src="/images/hero-sequence/frame-185.webp"
+            alt=""
+            className="w-full h-full object-contain grayscale contrast-125 brightness-90"
+            loading="lazy"
+          />
+          {/* Warm yellow ambient glow */}
+          <div className="absolute bottom-10 left-1/2 -translate-x-1/2 w-[340px] h-[340px] rounded-full bg-[#F5D52F]/14 blur-[120px] pointer-events-none" />
         </div>
 
-      </div>
+        <div className="max-w-7xl mx-auto px-6 sm:px-10 relative z-10">
+          
+          {/* Section Label: WRITINGS */}
+          <div className="mb-8">
+            <SectionLabel label="WRITINGS" />
+          </div>
 
-      {/* ================================================================= */}
-      {/* 2. MAIN VISUAL LAYER: TWO HORIZONTAL OPPOSING MARQUEE LINES       */}
-      {/* (Desktop & Tablet only: hidden on mobile)                        */}
-      {/* ================================================================= */}
-      <div className="hidden md:flex flex-col gap-4 my-6 sm:my-8 overflow-hidden select-none border-y border-zinc-800/50 py-6 bg-[#08080a]/60 backdrop-blur-sm">
-        
-        {/* ROW 1: Moves LEFT -> RIGHT */}
-        <div className="w-full overflow-hidden flex">
-          <div
-            ref={row1Ref}
-            className="flex items-center gap-4 shrink-0 will-change-transform"
+          {/* Headline: I ALSO TALK ABOUT (White) TECHNOLOGY. (Yellow) */}
+          <h2
+            ref={headlineRef}
+            className="font-display text-6xl sm:text-8xl md:text-9xl leading-[0.88] tracking-wide uppercase mb-12 sm:mb-16"
           >
-            {/* Primary Track */}
-            {row1Articles.map((article, idx) => (
-              <a
-                key={`r1-orig-${idx}`}
-                href={article.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group inline-flex items-center gap-3.5 px-5 py-3 rounded-xl bg-zinc-900/50 hover:bg-zinc-900/90 border border-zinc-800 hover:border-amber-400/60 transition-all duration-300 shrink-0 text-zinc-300 hover:text-white shadow-sm"
-              >
-                <span className="font-mono text-xs text-amber-400 font-bold">{article.number}</span>
-                <span className="font-display font-bold text-base sm:text-lg tracking-tight uppercase whitespace-nowrap">
-                  {article.shortTitle || article.title}
-                </span>
-                <span className="w-1.5 h-1.5 rounded-full bg-zinc-700 group-hover:bg-amber-400 transition-colors" />
-                <span className="font-mono text-xs text-zinc-400 whitespace-nowrap">{article.date}</span>
-                <ArrowUpRight size={14} className="text-zinc-500 group-hover:text-amber-400 transition-all transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-              </a>
-            ))}
+            I ALSO <br />
+            TALK ABOUT <br />
+            <span className="text-[#F5D52F]">TECHNOLOGY.</span>
+          </h2>
 
-            <div className="flex items-center gap-2 px-3 text-zinc-600 font-mono text-xs select-none">
-              <span>—</span>
-              <span>MEDIUM ARCHIVE</span>
-              <span>—</span>
-            </div>
-
-            {/* Seamless Loop Duplicate (Accessible screen-reader hidden) */}
-            {row1Articles.map((article, idx) => (
-              <a
-                key={`r1-dup-${idx}`}
-                href={article.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                tabIndex={-1}
-                aria-hidden="true"
-                className="group inline-flex items-center gap-3.5 px-5 py-3 rounded-xl bg-zinc-900/50 hover:bg-zinc-900/90 border border-zinc-800 hover:border-amber-400/60 transition-all duration-300 shrink-0 text-zinc-300 hover:text-white shadow-sm"
-              >
-                <span className="font-mono text-xs text-amber-400 font-bold">{article.number}</span>
-                <span className="font-display font-bold text-base sm:text-lg tracking-tight uppercase whitespace-nowrap">
-                  {article.shortTitle || article.title}
-                </span>
-                <span className="w-1.5 h-1.5 rounded-full bg-zinc-700 group-hover:bg-amber-400 transition-colors" />
-                <span className="font-mono text-xs text-zinc-400 whitespace-nowrap">{article.date}</span>
-                <ArrowUpRight size={14} className="text-zinc-500 group-hover:text-amber-400 transition-all transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-              </a>
-            ))}
-
-            <div className="flex items-center gap-2 px-3 text-zinc-600 font-mono text-xs select-none" aria-hidden="true">
-              <span>—</span>
-              <span>MEDIUM ARCHIVE</span>
-              <span>—</span>
-            </div>
-          </div>
-        </div>
-
-        {/* ROW 2: Moves RIGHT -> LEFT (Opposite direction, different speed) */}
-        <div className="w-full overflow-hidden flex">
+          {/* Clean Article Cards List (Matching Screen 08 in Reference) */}
           <div
-            ref={row2Ref}
-            className="flex items-center gap-4 shrink-0 will-change-transform"
+            ref={listRef}
+            className="max-w-2xl space-y-3.5 mb-8"
           >
-            {/* Primary Track */}
-            {row2Articles.map((article, idx) => (
-              <a
-                key={`r2-orig-${idx}`}
-                href={article.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group inline-flex items-center gap-3.5 px-5 py-3 rounded-xl bg-zinc-900/50 hover:bg-zinc-900/90 border border-zinc-800 hover:border-amber-400/60 transition-all duration-300 shrink-0 text-zinc-300 hover:text-white shadow-sm"
+            {writings.map((writing) => (
+              <button
+                key={writing.id}
+                onClick={() => setSelectedArticle(writing)}
+                className="w-full p-4 sm:p-5 rounded-xl bg-white/[0.025] border border-white/[0.08] hover:border-[#F5D52F]/40 flex items-center justify-between text-left group transition-all duration-200 cursor-pointer"
               >
-                <span className="font-mono text-xs text-amber-400 font-bold">{article.number}</span>
-                <span className="font-display font-bold text-base sm:text-lg tracking-tight uppercase whitespace-nowrap">
-                  {article.shortTitle || article.title}
-                </span>
-                <span className="w-1.5 h-1.5 rounded-full bg-zinc-700 group-hover:bg-amber-400 transition-colors" />
-                <span className="font-mono text-xs text-zinc-400 whitespace-nowrap">{article.date}</span>
-                <ArrowUpRight size={14} className="text-zinc-500 group-hover:text-amber-400 transition-all transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-              </a>
-            ))}
-
-            <div className="flex items-center gap-2 px-3 text-zinc-600 font-mono text-xs select-none">
-              <span>✦</span>
-              <span>OPEN SOURCE · SYSTEMS · AI</span>
-              <span>✦</span>
-            </div>
-
-            {/* Seamless Loop Duplicate (Accessible screen-reader hidden) */}
-            {row2Articles.map((article, idx) => (
-              <a
-                key={`r2-dup-${idx}`}
-                href={article.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                tabIndex={-1}
-                aria-hidden="true"
-                className="group inline-flex items-center gap-3.5 px-5 py-3 rounded-xl bg-zinc-900/50 hover:bg-zinc-900/90 border border-zinc-800 hover:border-amber-400/60 transition-all duration-300 shrink-0 text-zinc-300 hover:text-white shadow-sm"
-              >
-                <span className="font-mono text-xs text-amber-400 font-bold">{article.number}</span>
-                <span className="font-display font-bold text-base sm:text-lg tracking-tight uppercase whitespace-nowrap">
-                  {article.shortTitle || article.title}
-                </span>
-                <span className="w-1.5 h-1.5 rounded-full bg-zinc-700 group-hover:bg-amber-400 transition-colors" />
-                <span className="font-mono text-xs text-zinc-400 whitespace-nowrap">{article.date}</span>
-                <ArrowUpRight size={14} className="text-zinc-500 group-hover:text-amber-400 transition-all transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-              </a>
-            ))}
-
-            <div className="flex items-center gap-2 px-3 text-zinc-600 font-mono text-xs select-none" aria-hidden="true">
-              <span>✦</span>
-              <span>OPEN SOURCE · SYSTEMS · AI</span>
-              <span>✦</span>
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
-
-        {/* ================================================================= */}
-        {/* 3. MOBILE COMPOSITION: COMPACT ANIMATED CARD SYSTEM               */}
-        {/* (Mobile only: hidden on md+)                                      */}
-        {/* ================================================================= */}
-        <div className="md:hidden mobile-cards-container space-y-4 my-6 w-full">
-          {writings.map((article) => (
-            <a
-              key={`mobile-${article.id}`}
-              href={article.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mobile-writing-card block w-full p-5 rounded-2xl bg-[#0c0e14]/95 border border-zinc-800/80 active:border-amber-400/60 transition-all shadow-md select-none"
-            >
-              <div className="flex items-center justify-between text-xs font-mono text-zinc-400 mb-2.5">
-                <span className="text-amber-400 font-bold">{article.number}</span>
-                <span>{article.date}</span>
-              </div>
-              
-              <h3 className="font-display font-bold text-base text-zinc-100 tracking-tight leading-snug mb-2">
-                {article.title}
-              </h3>
-              
-              <p className="text-xs font-sans text-zinc-400 leading-relaxed line-clamp-2 mb-3">
-                {article.description}
-              </p>
-
-              <div className="flex items-center justify-between pt-2.5 border-t border-zinc-800/60 text-[11px] font-mono text-amber-400 font-semibold">
-                <span className="text-zinc-500 font-normal">{article.author}</span>
-                <div className="inline-flex items-center gap-1">
-                  <span>Read on Medium</span>
-                  <ArrowUpRight size={12} />
-                </div>
-              </div>
-            </a>
-          ))}
-        </div>
-
-        {/* ================================================================= */}
-        {/* 4. SECONDARY INFORMATION LAYER: EDITORIAL ARTICLE LIST            */}
-        {/* (Desktop & Tablet only: hidden on mobile below 768px)             */}
-        {/* ================================================================= */}
-        <div className="hidden md:block mt-12 sm:mt-16">
-          <div className="flex items-center justify-between pb-4 border-b border-zinc-800/70 mb-6">
-            <span className="text-xs font-mono uppercase tracking-widest text-zinc-400 font-semibold">
-              PUBLISHED ARTICLES & ESSAYS
-            </span>
-            <span className="text-xs font-mono text-amber-400">
-              MEDIUM · @SINGHCOD3R
-            </span>
-          </div>
-
-          <div ref={listRef} className="space-y-4">
-            {writings.map((article) => (
-              <a
-                key={`list-${article.id}`}
-                href={article.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="writing-list-row group block p-5 sm:p-6 md:p-7 rounded-2xl bg-gradient-to-r from-[#0c0e14]/90 to-[#08090d]/90 border border-zinc-800/80 hover:border-amber-400/60 transition-all duration-300 shadow-lg hover:shadow-[0_12px_36px_rgba(245,158,11,0.08)] relative overflow-hidden"
-              >
-                <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
-                  {/* Left: Number + Title + Excerpt */}
-                  <div className="flex items-start gap-4 sm:gap-6 flex-1">
-                    <span className="font-mono text-sm sm:text-base font-bold text-amber-400/90 shrink-0 pt-0.5">
-                      {article.number}
-                    </span>
-                    <div className="space-y-2 flex-1">
-                      <h3 className="font-display font-bold text-base sm:text-lg md:text-xl text-white group-hover:text-amber-300 transition-colors tracking-tight leading-snug">
-                        {article.title}
-                      </h3>
-                      <p className="font-sans text-xs sm:text-sm text-zinc-400 leading-relaxed max-w-3xl">
-                        {article.description}
-                      </p>
-                    </div>
+                <div className="flex items-center gap-3.5 sm:gap-4">
+                  {/* Square Thumbnail Icon */}
+                  <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-lg bg-black/60 border border-white/10 flex items-center justify-center shrink-0 group-hover:border-[#F5D52F]/50 transition-colors">
+                    <BookOpen size={18} className="text-[#F5D52F]" />
                   </div>
 
-                  {/* Right: Meta & Read on Medium button */}
-                  <div className="flex items-center md:flex-col md:items-end justify-between md:justify-start gap-2 shrink-0 pt-2 md:pt-0 border-t md:border-t-0 border-zinc-800/60">
-                    <div className="flex items-center gap-2 text-xs font-mono text-zinc-400">
-                      <span className="text-zinc-500">{article.date}</span>
-                      <span>·</span>
-                      <span className="text-zinc-400">{article.author}</span>
-                    </div>
-                    <div className="inline-flex items-center gap-1.5 text-xs font-mono font-semibold text-amber-400 group-hover:text-amber-300 transition-colors pt-1">
-                      <span>Read on Medium</span>
-                      <ArrowUpRight size={14} className="transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                    </div>
+                  {/* Title & Date */}
+                  <div className="space-y-0.5">
+                    <h3 className="font-display text-lg sm:text-2xl text-[#F2F0E8] group-hover:text-[#F5D52F] tracking-wide uppercase transition-colors line-clamp-1">
+                      {writing.shortTitle || writing.title}
+                    </h3>
+                    <p className="font-mono text-[11px] text-[#8A8A8A]">
+                      {writing.date} · {writing.category || 'Article'}
+                    </p>
                   </div>
                 </div>
-              </a>
+
+                {/* Arrow */}
+                <div className="p-2 text-[#8A8A8A] group-hover:text-[#F5D52F] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform shrink-0">
+                  <ArrowUpRight size={18} />
+                </div>
+              </button>
             ))}
           </div>
-        </div>
 
-        {/* Transition Out of Writings Hand-off to Speaking */}
-        <div className="w-full mt-10 md:mt-20 flex items-center justify-end md:justify-between text-xs font-mono text-zinc-400 pt-6 border-t border-zinc-800/60">
-          <span className="hidden md:inline text-zinc-500 uppercase tracking-widest">
-            06 // WRITINGS COMPLETE
-          </span>
+          {/* View all writings -> */}
           <a
             href="https://singhcod3r.medium.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 text-amber-400 hover:text-amber-300 transition-colors font-semibold uppercase"
+            className="inline-flex items-center gap-2 font-mono text-xs sm:text-sm text-[#8A8A8A] hover:text-[#F5D52F] transition-colors group"
           >
-            <span>View All on Medium</span>
-            <ArrowUpRight size={14} />
+            <span>View all writings</span>
+            <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
           </a>
-        </div>
 
-      </div>
-    </section>
+        </div>
+      </section>
+
+      {/* Article Modal */}
+      <ArticleModal
+        article={selectedArticle}
+        onClose={() => setSelectedArticle(null)}
+      />
+    </>
   );
 };

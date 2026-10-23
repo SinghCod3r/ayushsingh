@@ -17,7 +17,7 @@ export const SectionLabel: React.FC<SectionLabelProps> = ({
   label,
   icon,
   className = '',
-  colorClass = 'text-amber-400',
+  colorClass = 'text-[#F5D52F]',
   disableScrollTrigger = false,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -35,7 +35,7 @@ export const SectionLabel: React.FC<SectionLabelProps> = ({
         charsRef.current,
         {
           opacity: 0,
-          y: 8,
+          y: 6,
         },
         {
           opacity: 1,
@@ -45,7 +45,7 @@ export const SectionLabel: React.FC<SectionLabelProps> = ({
           ease: 'power2.out',
           scrollTrigger: {
             trigger: container,
-            start: 'top 85%',
+            start: 'top 90%',
             toggleActions: 'play none none none',
           },
         }
@@ -59,9 +59,9 @@ export const SectionLabel: React.FC<SectionLabelProps> = ({
   return (
     <div
       ref={containerRef}
-      className={`inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-[11px] font-mono uppercase tracking-wider select-none ${colorClass} ${className}`}
+      className={`inline-flex items-center gap-2 text-xs sm:text-sm font-mono font-bold uppercase tracking-[0.22em] select-none ${colorClass} ${className}`}
     >
-      {icon && <span className="shrink-0">{icon}</span>}
+      {icon && <span className="shrink-0 text-[#F5D52F]">{icon}</span>}
       <span className="flex items-center">
         {label.split('').map((char, index) => (
           <span

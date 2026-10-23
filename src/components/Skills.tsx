@@ -1,121 +1,231 @@
-import React, { useState } from 'react';
-import { Cpu } from 'lucide-react';
-import { portfolioData, TechCategory } from '../../data';
+import React, { useState, useRef } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useGSAP } from '@gsap/react';
 import { SectionLabel } from './SectionLabel';
-import { SkillsKineticTitle } from './skills/SkillsKineticTitle';
-import { TechSphere3D } from './skills/TechSphere3D';
-import { MobileTechList } from './skills/MobileTechList';
+import { TechIcon } from './skills/TechIcon';
 
-const CATEGORIES: { id: TechCategory; label: string }[] = [
-  { id: 'all', label: 'ALL' },
-  { id: 'languages', label: 'LANGUAGES' },
-  { id: 'frontend', label: 'FRONTEND' },
-  { id: 'backend', label: 'BACKEND' },
-  { id: 'systems', label: 'SYSTEMS' },
-  { id: 'tools', label: 'TOOLS' },
-  { id: 'cloud', label: 'CLOUD' },
+gsap.registerPlugin(ScrollTrigger);
+
+type CategoryKey = 'languages' | 'frontend' | 'backend' | 'systems';
+
+interface SkillCategory {
+  key: CategoryKey;
+  label: string;
+  items: {
+    name: string;
+    iconKey: string;
+    color: string;
+  }[];
+}
+
+const CATEGORIES: SkillCategory[] = [
+  {
+    key: 'languages',
+    label: 'Languages',
+    items: [
+      { name: 'Python', iconKey: 'SiPython', color: '#38bdf8' },
+      { name: 'JavaScript', iconKey: 'SiJavascript', color: '#f7df1e' },
+      { name: 'TypeScript', iconKey: 'SiTypescript', color: '#3178c6' },
+      { name: 'Java', iconKey: 'FaJava', color: '#f89820' },
+    ],
+  },
+  {
+    key: 'frontend',
+    label: 'Frontend',
+    items: [
+      { name: 'React', iconKey: 'SiReact', color: '#61dafb' },
+      { name: 'Next.js', iconKey: 'SiNextdotjs', color: '#ffffff' },
+      { name: 'Tailwind', iconKey: 'SiTailwindcss', color: '#38bdf8' },
+      { name: 'HTML5 Canvas', iconKey: 'SiHtml5', color: '#e34f26' },
+    ],
+  },
+  {
+    key: 'backend',
+    label: 'Backend',
+    items: [
+      { name: 'Node.js', iconKey: 'SiNodedotjs', color: '#5fa04e' },
+      { name: 'FastAPI', iconKey: 'SiFastapi', color: '#05998b' },
+      { name: 'Express', iconKey: 'SiExpress', color: '#ffffff' },
+      { name: 'PostgreSQL', iconKey: 'SiPostgresql', color: '#4169e1' },
+    ],
+  },
+  {
+    key: 'systems',
+    label: 'Systems',
+    items: [
+      { name: 'Linux', iconKey: 'SiLinux', color: '#fcc624' },
+      { name: 'GTK', iconKey: 'SiGtk', color: '#e11d48' },
+      { name: 'CUPS / IPP', iconKey: 'CupsIcon', color: '#10b981' },
+      { name: 'D-Bus IPC', iconKey: 'DbusIcon', color: '#f59e0b' },
+    ],
+  },
 ];
 
 export const Skills: React.FC = () => {
-  const [activeCategory, setActiveCategory] = useState<TechCategory>('all');
-  const technologies = portfolioData.skills.technologies;
+  const containerRef = useRef<HTMLElement>(null);
+  const headlineRef = useRef<HTMLHeadingElement>(null);
+  const cardsGridRef = useRef<HTMLDivElement>(null);
+  const portraitRef = useRef<HTMLDivElement>(null);
+
+  const [activeCategory, setActiveCategory] = useState<CategoryKey>('languages');
+
+  const currentCategory = CATEGORIES.find((c) => c.key === activeCategory) || CATEGORIES[0];
+
+  // Animate grid cards when tab changes
+  const handleCategoryChange = (key: CategoryKey) => {
+    if (key === activeCategory) return;
+    setActiveCategory(key);
+
+    if (cardsGridRef.current) {
+      gsap.fromTo(
+        cardsGridRef.current.children,
+        { opacity: 0, scale: 0.92, y: 10 },
+        {
+          opacity: 1,
+          scale: 1,
+          y: 0,
+          duration: 0.35,
+          stagger: 0.05,
+          ease: 'power2.out',
+        }
+      );
+    }
+  };
+
+  useGSAP(
+    () => {
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (prefersReducedMotion) return;
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: 'top 80%',
+          toggleActions: 'play none none none',
+        },
+      });
+
+      tl.from(headlineRef.current, {
+        opacity: 0,
+        y: 28,
+        duration: 0.6,
+        ease: 'power3.out',
+      });
+
+      tl.from(
+        cardsGridRef.current?.children || [],
+        {
+          opacity: 0,
+          y: 20,
+          duration: 0.5,
+          stagger: 0.08,
+          ease: 'power3.out',
+        },
+        '-=0.3'
+      );
+
+      tl.from(
+        portraitRef.current,
+        {
+          opacity: 0,
+          scale: 0.95,
+          duration: 0.7,
+          ease: 'power2.out',
+        },
+        '-=0.4'
+      );
+    },
+    { scope: containerRef }
+  );
 
   return (
     <section
       id="skills"
-      className="relative w-full py-20 lg:py-32 bg-[#08080a] text-white border-t border-zinc-800/80 overflow-hidden"
+      ref={containerRef}
+      className="relative w-full py-24 sm:py-32 bg-[#080909] text-[#F2F0E8] overflow-hidden border-t border-white/[0.06]"
       style={{ isolation: 'isolate' }}
     >
-      {/* Ambient Atmospheric Accents (Subtle and minimal) */}
-      <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-amber-500/5 rounded-full blur-[140px] pointer-events-none" />
-      <div className="absolute bottom-1/4 right-1/4 w-[450px] h-[450px] bg-cyan-500/5 rounded-full blur-[140px] pointer-events-none" />
-
-      {/* Top Divider Hand-off */}
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 mb-12 sm:mb-16">
-        <div className="w-full h-[1px] bg-gradient-to-r from-transparent via-zinc-800 to-transparent" />
+      {/* Subtle Background Portrait Looking Up with Yellow Glow */}
+      <div
+        ref={portraitRef}
+        className="absolute bottom-0 right-0 sm:right-10 w-72 sm:w-[440px] md:w-[520px] h-[480px] pointer-events-none opacity-20 sm:opacity-30 select-none z-0 overflow-hidden"
+      >
+        <img
+          src="/images/hero-sequence/frame-170.webp"
+          alt=""
+          className="w-full h-full object-contain grayscale contrast-125 brightness-90"
+          loading="lazy"
+        />
+        {/* Warm yellow ambient glow */}
+        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 w-[320px] h-[320px] rounded-full bg-[#F5D52F]/14 blur-[120px] pointer-events-none" />
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
+      <div className="max-w-7xl mx-auto px-6 sm:px-10 relative z-10">
         
-        {/* ================================================================= */}
-        {/* 1. EDITORIAL HEADER & KINETIC TITLE                               */}
-        {/* ================================================================= */}
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-12 sm:mb-16">
-          <div className="space-y-4 max-w-3xl">
-            <SectionLabel label="04 // CAPABILITIES" icon={<Cpu size={12} />} />
-            
-            {/* Kinetic Typography: "TOOLS I PLAY WITH." */}
-            <SkillsKineticTitle />
-          </div>
-
-          {/* Editorial Note & Context */}
-          <div className="max-w-sm space-y-2 lg:text-right">
-            <span className="inline-block font-mono text-xs uppercase tracking-wider text-amber-400 font-semibold">
-              {portfolioData.skills.editorialNote}
-            </span>
-            <p className="text-zinc-400 text-xs sm:text-sm font-sans leading-relaxed">
-              Real technology identities from low-level POSIX drivers and upstream Linux subsystems to high-throughput web applications.
-            </p>
-          </div>
+        {/* Section Label: SKILLS */}
+        <div className="mb-8">
+          <SectionLabel label="SKILLS" />
         </div>
 
-        {/* ================================================================= */}
-        {/* 2. DESKTOP VIEW: 3D ROTATING TECHNOLOGY SPHERE (md+)              */}
-        {/* ================================================================= */}
-        <div className="hidden md:block">
-          {/* Minimal Editorial Category Navigation (No bulky rounded pills) */}
-          <div className="flex items-center gap-6 lg:gap-8 border-b border-zinc-800/70 pb-3 mb-6">
-            {CATEGORIES.map((cat) => {
-              const isActive = activeCategory === cat.id;
-              const count =
-                cat.id === 'all'
-                  ? technologies.length
-                  : technologies.filter((t) => t.category === cat.id).length;
+        {/* Headline: TOOLS (White) I WORK WITH. (Yellow) */}
+        <h2
+          ref={headlineRef}
+          className="font-display text-6xl sm:text-8xl md:text-9xl leading-[0.88] tracking-wide uppercase mb-10"
+        >
+          TOOLS <br />
+          <span className="text-[#F5D52F]">I WORK WITH.</span>
+        </h2>
 
-              return (
-                <button
-                  key={cat.id}
-                  onClick={() => setActiveCategory(cat.id)}
-                  className="group relative pb-2 text-xs font-mono uppercase tracking-widest transition-colors cursor-pointer"
-                >
-                  <span
-                    className={`transition-colors ${
-                      isActive
-                        ? 'text-amber-400 font-bold'
-                        : 'text-zinc-400 hover:text-zinc-200'
-                    }`}
-                  >
-                    {cat.label}
-                    <span className="ml-1.5 text-[10px] opacity-70">
-                      ({count})
-                    </span>
-                  </span>
-
-                  {/* Clean yellow indicator line */}
-                  {isActive && (
-                    <span className="absolute bottom-0 left-0 w-full h-[2px] bg-amber-400 rounded-full" />
-                  )}
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Interactive 3D Spherical Tech Ball (Attached to luminous center point) */}
-          <TechSphere3D
-            technologies={technologies}
-            activeCategory={activeCategory}
-          />
+        {/* Category Pills (Active = Solid Yellow Pill) */}
+        <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 mb-10 max-w-xl">
+          {CATEGORIES.map((cat) => {
+            const isActive = activeCategory === cat.key;
+            return (
+              <button
+                key={cat.key}
+                onClick={() => handleCategoryChange(cat.key)}
+                className={`px-4 sm:px-5 py-1.5 sm:py-2 rounded-full font-mono text-xs sm:text-sm font-semibold tracking-wider transition-all duration-200 cursor-pointer ${
+                  isActive
+                    ? 'bg-[#F5D52F] text-black shadow-[0_0_15px_rgba(245,213,47,0.35)]'
+                    : 'bg-white/[0.03] text-[#8A8A8A] border border-white/[0.08] hover:text-[#F2F0E8] hover:border-white/20'
+                }`}
+              >
+                {cat.label}
+              </button>
+            );
+          })}
         </div>
 
-        {/* ================================================================= */}
-        {/* 3. MOBILE VIEW: TOUCH 3D SPHERE + COMPACT CHIPS (< md)            */}
-        {/* ================================================================= */}
-        <div className="md:hidden space-y-6">
-          <TechSphere3D
-            technologies={technologies}
-            activeCategory={activeCategory}
-          />
-          <MobileTechList technologies={technologies} />
+        {/* 4 Cards Grid (Matching Screen 06 in Reference) */}
+        <div
+          ref={cardsGridRef}
+          className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 max-w-2xl mb-12"
+        >
+          {currentCategory.items.map((item, idx) => (
+            <div
+              key={idx}
+              className="p-6 rounded-2xl bg-white/[0.025] border border-white/[0.08] flex flex-col items-center justify-center gap-4 hover:border-[#F5D52F]/40 transition-all duration-300 group"
+            >
+              <div className="w-14 h-14 rounded-full bg-black/60 border border-white/10 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-md">
+                <TechIcon
+                  iconKey={item.iconKey}
+                  style={{ color: item.color }}
+                  className="w-7 h-7"
+                />
+              </div>
+              <span className="font-display text-xl sm:text-2xl text-[#F2F0E8] tracking-wide group-hover:text-[#F5D52F] transition-colors">
+                {item.name}
+              </span>
+            </div>
+          ))}
+        </div>
+
+        {/* Editorial Quote Note Card */}
+        <div className="max-w-md p-4 sm:p-5 rounded-xl bg-white/[0.02] border border-white/[0.07] backdrop-blur-sm">
+          <p className="font-sans text-xs sm:text-sm text-[#8A8A8A] leading-relaxed italic">
+            "I use the right tool for the right problem, and I'm always learning new ones."
+          </p>
         </div>
 
       </div>

@@ -90,7 +90,7 @@ export const MouseFollower: React.FC = () => {
           translateX: '-50%',
           translateY: '-50%',
         }}
-        className="fixed top-0 left-0 w-[420px] h-[420px] rounded-full pointer-events-none select-none blur-3xl opacity-35 bg-[radial-gradient(circle,rgba(245,158,11,0.12)_0%,rgba(245,158,11,0.03)_50%,transparent_75%)]"
+        className="fixed top-0 left-0 w-[420px] h-[420px] rounded-full pointer-events-none select-none blur-3xl opacity-25 bg-[radial-gradient(circle,rgba(245,213,47,0.1)_0%,rgba(245,213,47,0.02)_50%,transparent_75%)]"
       />
 
       {/* 2. Skipper Glowing Follower Ring / Interactive Badge */}
@@ -106,16 +106,16 @@ export const MouseFollower: React.FC = () => {
           height: cursorMode === 'project' ? 72 : cursorMode === 'hover' ? 44 : cursorMode === 'text' ? 18 : 26,
           borderColor:
             cursorMode === 'project'
-              ? 'rgba(245, 158, 11, 0.9)'
+              ? 'rgba(245, 213, 47, 0.9)'
               : cursorMode === 'hover'
-              ? 'rgba(245, 158, 11, 0.6)'
-              : 'rgba(161, 161, 170, 0.25)',
+              ? 'rgba(245, 213, 47, 0.6)'
+              : 'rgba(245, 213, 47, 0.25)',
           backgroundColor:
             cursorMode === 'project'
-              ? 'rgba(245, 158, 11, 0.2)'
+              ? 'rgba(245, 213, 47, 0.2)'
               : cursorMode === 'hover'
-              ? 'rgba(245, 158, 11, 0.12)'
-              : 'rgba(245, 158, 11, 0.02)',
+              ? 'rgba(245, 213, 47, 0.12)'
+              : 'rgba(245, 213, 47, 0.02)',
         }}
         transition={{
           type: 'spring',
