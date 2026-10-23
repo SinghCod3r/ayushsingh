@@ -1,121 +1,129 @@
-import React from 'react';
-import { Sparkles, ArrowDown, Terminal, Cpu, Award, Globe } from 'lucide-react';
+import React, { useRef } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useGSAP } from '@gsap/react';
 import { portfolioData } from '../../../data';
-import { KineticHeading } from './KineticHeading';
-import { scrollToTarget } from '../../utils/scroll';
+
+gsap.registerPlugin(ScrollTrigger);
+
+const CORE_FACTS = [
+  {
+    num: '01',
+    title: 'Software Engineering',
+    desc: 'End-to-end web apps, custom interpreters, and high-performance developer tooling built with TypeScript, Python, and modern frameworks.',
+  },
+  {
+    num: '02',
+    title: 'Open Source Leadership',
+    desc: 'Active maintainer for The Linux Foundation’s OpenPrinting project, with 25+ merged pull requests across critical system repositories.',
+  },
+  {
+    num: '03',
+    title: 'Systems & Architecture',
+    desc: 'Hands-on experience with Linux desktop subsystems, D-Bus IPC, CUPS raster filters, and asynchronous worker-thread execution.',
+  },
+  {
+    num: '04',
+    title: 'Speaking & Research',
+    desc: 'Invited keynote speaker at IIIT Allahabad (OOSC 4.0) sharing empirical analysis on upstream open source maintenance and AI code quality.',
+  },
+];
 
 export const About: React.FC = () => {
-  const stats = portfolioData.personal.stats;
+  const containerRef = useRef<HTMLDivElement>(null);
+  const headlineRef = useRef<HTMLHeadingElement>(null);
+  const cardsRef = useRef<HTMLDivElement>(null);
 
-  const statIcons = [
-    <Terminal size={16} className="text-amber-400" />,
-    <Globe size={16} className="text-cyan-400" />,
-    <Award size={16} className="text-emerald-400" />,
-    <Cpu size={16} className="text-orange-400" />,
-  ];
+  useGSAP(
+    () => {
+      const container = containerRef.current;
+      const headline = headlineRef.current;
+      const cards = cardsRef.current;
+      if (!container || !headline || !cards) return;
+
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (prefersReducedMotion) return;
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          id: 'ABOUT_REVEAL',
+          trigger: container,
+          start: 'top 75%',
+          end: 'top 30%',
+          scrub: 0.5,
+        },
+      });
+
+      tl.from(headline, {
+        y: 30,
+        opacity: 0,
+        ease: 'power2.out',
+      });
+
+      tl.from(
+        cards.children,
+        {
+          y: 24,
+          opacity: 0,
+          stagger: 0.08,
+          ease: 'power2.out',
+        },
+        '-=0.2'
+      );
+    },
+    { scope: containerRef }
+  );
 
   return (
     <section
       id="about"
-      className="relative w-full py-20 lg:py-28 bg-[#08080a] text-white border-t border-zinc-800/80 overflow-hidden"
+      ref={containerRef}
+      className="relative w-full py-24 lg:py-36 bg-transparent text-zinc-100 border-t border-zinc-800/60 overflow-hidden"
       style={{ isolation: 'isolate' }}
     >
-      {/* Ambient background glow */}
-      <div className="absolute top-1/3 right-10 w-[500px] h-[500px] bg-amber-500/5 rounded-full blur-[140px] pointer-events-none" />
-      <div className="absolute bottom-10 left-10 w-[450px] h-[450px] bg-cyan-500/5 rounded-full blur-[130px] pointer-events-none" />
-
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
+      <div className="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
         
-        {/* ========================================================= */}
-        {/* SECTION HEADER & BIO GRID                                 */}
-        {/* ========================================================= */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
-          
-          {/* Left Column: Heading, Animated Text, and 4-Stat Metric Cards */}
-          <div className="lg:col-span-6 space-y-6">
-            <div className="space-y-3">
-              <KineticHeading
-                text="I BUILD THINGS"
-                variant="telemetry"
-                className="font-display font-extrabold text-4xl sm:text-5xl lg:text-6xl tracking-tight leading-[0.98] text-white"
-              />
-              <div className="text-xs sm:text-sm font-mono text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-orange-400 to-amber-200 font-semibold tracking-wider uppercase">
-                DOWN TO THE KERNEL · UPSTREAM ARCHITECTURE
-              </div>
+        {/* Section Identifier */}
+        <div className="mb-8">
+          <span className="text-[11px] font-mono uppercase tracking-widest text-zinc-500">
+            About • Engineering Philosophy
+          </span>
+        </div>
 
-              <p className="text-zinc-400 text-sm sm:text-base font-sans leading-relaxed pt-1 max-w-xl">
-                Software engineer and Linux Foundation maintainer dedicated to low-level system stability, developer tooling, and modern distributed architectures.
+        {/* Big Editorial Statement */}
+        <div className="max-w-4xl mb-16 lg:mb-24">
+          <h2
+            ref={headlineRef}
+            className="font-display font-medium text-3xl sm:text-4xl lg:text-5xl tracking-tight leading-[1.2] text-zinc-100"
+          >
+            I build software, contribute to open source, and enjoy turning complex systems problems into useful, high-impact products.
+          </h2>
+          <p className="mt-6 text-zinc-400 font-sans text-base sm:text-lg leading-relaxed max-w-2xl">
+            {portfolioData.personal.bio}
+          </p>
+        </div>
+
+        {/* 4 Clear Core Facts Grid */}
+        <div
+          ref={cardsRef}
+          className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 pt-8 border-t border-zinc-800/60"
+        >
+          {CORE_FACTS.map((fact) => (
+            <div key={fact.num} className="space-y-2.5">
+              <span className="text-xs font-mono text-amber-400/90 font-medium tracking-wider">
+                {fact.num}
+              </span>
+              <h3 className="font-display font-bold text-lg sm:text-xl text-zinc-100 tracking-tight">
+                {fact.title}
+              </h3>
+              <p className="text-sm text-zinc-400 font-sans leading-relaxed max-w-md">
+                {fact.desc}
               </p>
             </div>
-
-            {/* 4-Stat Metric Grid */}
-            <div className="grid grid-cols-2 gap-4 pt-4 border-t border-zinc-800/80 max-w-lg">
-              {stats.map((stat, i) => (
-                <div
-                  key={i}
-                  className="p-4 rounded-xl bg-zinc-900/60 border border-zinc-800/80 hover:border-zinc-700 transition-colors"
-                >
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-[11px] font-mono uppercase text-zinc-400">
-                      {stat.label}
-                    </span>
-                    {statIcons[i] || <Sparkles size={14} className="text-amber-400" />}
-                  </div>
-                  <div className="font-display font-bold text-2xl sm:text-3xl text-white">
-                    {stat.value}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Right Column: Bio Narrative & Story In Motion Visual Frame */}
-          <div className="lg:col-span-6 space-y-6 lg:pt-4">
-            <div className="space-y-4 text-zinc-300 font-sans text-base sm:text-lg leading-relaxed">
-              <p>
-                I am a software engineer focused on low-level Linux systems, developer tooling, and modern distributed applications. As an active maintainer for <strong className="text-white font-medium">The Linux Foundation’s OpenPrinting</strong> project, I solve real-world concurrency, driver-loading, and hardware-discovery challenges used by millions of Linux users worldwide.
-              </p>
-              <p className="text-zinc-400 text-sm sm:text-base">
-                My engineering philosophy is simple: write maintainable upstream code, understand the full stack down to the kernel and IPC layers, and bridge low-level stability with fluid, modern interfaces.
-              </p>
-            </div>
-
-            {/* Visual Accent Badge with Hero Pose Thumbnail & Downward Link */}
-            <div className="p-4 rounded-2xl bg-gradient-to-r from-[#12141a] to-[#0c0d12] border border-zinc-800/80 flex items-center justify-between shadow-xl">
-              <div className="flex items-center gap-3.5">
-                <div className="w-12 h-12 rounded-full overflow-hidden border border-amber-500/40 bg-black shrink-0 shadow-md">
-                  <img
-                    src="/images/hero-sequence/frame-192.webp"
-                    alt="Ayush Singh"
-                    className="w-full h-full object-cover scale-110"
-                    loading="lazy"
-                  />
-                </div>
-                <div>
-                  <div className="text-[10px] font-mono uppercase tracking-widest text-amber-400 font-semibold">
-                    STORY IN MOTION
-                  </div>
-                  <div className="font-display font-bold text-sm text-white">
-                    2022 → 2026 Upstream Trajectory
-                  </div>
-                </div>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => scrollToTarget('#journey', -10)}
-                className="inline-flex items-center gap-1.5 text-xs font-mono text-amber-400 hover:text-amber-300 transition-colors cursor-pointer bg-zinc-900/80 border border-zinc-800 px-3 py-1.5 rounded-full"
-              >
-                <span>Timeline</span>
-                <ArrowDown size={12} />
-              </button>
-            </div>
-          </div>
-
+          ))}
         </div>
 
       </div>
     </section>
   );
 };
-

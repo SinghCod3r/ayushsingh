@@ -1,15 +1,14 @@
 export { DesktopApp } from './DesktopApp';
+export { PersistentPortraitSequence } from './PersistentPortraitSequence';
 export { About as DesktopAbout } from './About';
+export { WhatIDo as DesktopWhatIDo } from './WhatIDo';
+export { TechStack as DesktopTechStack } from './TechStack';
 export { AboutJourney as DesktopAboutJourney } from './AboutJourney';
 export { Contact as DesktopContact } from './Contact';
 export { Footer as DesktopFooter } from './Footer';
 export { Hero as DesktopHero } from './Hero';
-export { MouseFollower as DesktopMouseFollower } from './MouseFollower';
 export { Navbar as DesktopNavbar } from './Navbar';
 export { OpenSource as DesktopOpenSource } from './OpenSource';
 export { PageLoader as DesktopPageLoader } from './PageLoader';
 export { Projects as DesktopProjects } from './Projects';
-export { SignatureLine as DesktopSignatureLine } from './SignatureLine';
-export { Skills as DesktopSkills } from './Skills';
 export { Speaking as DesktopSpeaking } from './Speaking';
-export { Writings as DesktopWritings } from './Writings';

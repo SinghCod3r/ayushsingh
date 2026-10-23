@@ -23,7 +23,7 @@ export const Skills: React.FC = () => {
   return (
     <section
       id="skills"
-      className="relative w-full py-20 lg:py-32 bg-[#08080a] text-white border-t border-zinc-800/80 overflow-hidden"
+      className="relative w-full py-20 lg:py-32 bg-transparent text-white border-t border-zinc-800/80 overflow-hidden"
       style={{ isolation: 'isolate' }}
     >
       {/* Ambient Atmospheric Accents (Subtle and minimal) */}

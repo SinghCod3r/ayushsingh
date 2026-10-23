@@ -147,7 +147,7 @@ export const Writings: React.FC = () => {
     <section
       id="writings"
       ref={sectionRef}
-      className="relative w-full py-20 lg:py-32 bg-[#090a0d] text-white border-t border-zinc-800/80 overflow-hidden"
+      className="relative w-full py-20 lg:py-32 bg-transparent text-white border-t border-zinc-800/80 overflow-hidden"
       style={{ isolation: 'isolate' }}
     >
       {/* Ambient background glow */}

@@ -1,24 +1,23 @@
 import React from 'react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { MouseFollower } from './MouseFollower';
 import { PageLoader } from './PageLoader';
 import { Navbar } from './Navbar';
+import { PersistentPortraitSequence } from './PersistentPortraitSequence';
 import { Hero } from './Hero';
-import { SignatureLine } from './SignatureLine';
 import { About } from './About';
-import { AboutJourney } from './AboutJourney';
-import { OpenSource } from './OpenSource';
-import { Skills } from './Skills';
+import { WhatIDo } from './WhatIDo';
+import { TechStack } from './TechStack';
 import { Projects } from './Projects';
-import { Writings } from './Writings';
+import { OpenSource } from './OpenSource';
+import { AboutJourney } from './AboutJourney';
 import { Speaking } from './Speaking';
 import { Contact } from './Contact';
 import { Footer } from './Footer';
 
 export const DesktopApp: React.FC = () => {
   return (
-    <div className="relative min-h-screen bg-[#08080a] text-zinc-100 overflow-x-hidden selection:bg-amber-500/30 selection:text-amber-200">
-      {/* 00. Initial Page-load Animation: Individual Letter Behavior (singhcod3r) */}
+    <div className="relative min-h-screen bg-[#08080a] text-zinc-100 overflow-x-hidden selection:bg-amber-500/20 selection:text-amber-200">
+      {/* 00. Minimal Cinematic Text Intro: "SINGH CODE 3R" */}
       <PageLoader
         onComplete={() => {
           ScrollTrigger.sort();
@@ -26,47 +25,46 @@ export const DesktopApp: React.FC = () => {
         }}
       />
 
-      {/* Skipper UI Fluid Mouse Follower & Spotlight Glow */}
-      <MouseFollower />
-
-      {/* Persistent Navigation */}
+      {/* Persistent Minimal Editorial Navigation */}
       <Navbar />
 
+      {/* Persistent Cinematic Portrait Sequence Canvas */}
+      <PersistentPortraitSequence />
+
       {/* Page Flow: Story Chapters */}
-      <main className="relative w-full">
-        {/* 01. Hero with 192-frame Canvas Sequence */}
+      <main className="relative z-10 w-full">
+        {/* 01. Hero: Spacious 2-Column Identity & Visual */}
         <Hero />
 
-        {/* Signature SVG Line Text Effect */}
-        <SignatureLine />
-
-        {/* 02. About: Profile & Engineering Philosophy */}
+        {/* 02. About: Concise Editorial Statement & 4 Core Pillars */}
         <About />
 
-        {/* 03. Journey: Pinned Horizontal Timeline (2022 -> 2026) */}
-        <AboutJourney />
+        {/* 03. What I Do: 01 to 05 Numbered Capabilities */}
+        <WhatIDo />
 
-        {/* 04. Open Source: Upstream Leadership */}
-        <OpenSource />
+        {/* 04. Tech Stack: Typographic Matrix (Languages, Frontend, Backend, Systems) */}
+        <TechStack />
 
-        {/* 05. Visual & Interactive Skills (3D Core) */}
-        <Skills />
-
-        {/* 06. Production Projects (Work) */}
+        {/* 05. Selected Work: Editorial Showcase of Real Production Projects */}
         <Projects />
 
-        {/* 07. Writings & Publications */}
-        <Writings />
+        {/* 06. Open Source: The Linux Foundation / OpenPrinting Maintainer */}
+        <OpenSource />
 
-        {/* 08. Speaking & Keynotes */}
+        {/* 07. Experience: Concise Editorial Journey & Track Record */}
+        <AboutJourney />
+
+        {/* 08. Speaking & Writings: Conference Keynote & Published Systems Articles */}
         <Speaking />
 
-        {/* 09. Contact & Closing */}
+        {/* 09. Contact: Large Typography "LET'S BUILD SOMETHING." */}
         <Contact />
       </main>
 
-      {/* 10. Editorial Footer */}
+      {/* 10. Clean Minimal Footer */}
       <Footer />
     </div>
   );
 };
+
+export default DesktopApp;
