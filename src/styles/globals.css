@@ -44,6 +44,10 @@ body {
 
 /* Typography utilities */
 .font-display {
+  font-family: 'Syne', -apple-system, sans-serif;
+}
+
+.font-editorial {
   font-family: 'Bebas Neue', 'Anton', sans-serif;
   letter-spacing: 0.02em;
 }

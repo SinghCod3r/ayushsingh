@@ -6,9 +6,14 @@ gsap.registerPlugin(ScrollTrigger);
 
 let lenisInstance: Lenis | null = null;
 
-export function initSmoothScroll(): Lenis {
+export function initSmoothScroll(): Lenis | null {
   if (typeof window === 'undefined') {
-    return {} as Lenis;
+    return null;
+  }
+
+  // On mobile devices (< 768px), use native scrolling for lag-free touch response
+  if (window.innerWidth < 768) {
+    return null;
   }
 
   // Check reduced motion
